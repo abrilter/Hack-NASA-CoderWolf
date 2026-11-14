@@ -1,0 +1,64 @@
+{
+  "_nota": "Dueño: Rol 5. Todos los diálogos del juego viven aquí. Se pueden cambiar sin tocar el código.",
+
+  "intro": [
+    { "titulo": "Una noche de estrellas", "texto": "Miras el cielo con tu familia. Una luz cruza muy rápido: es la Estación Espacial. Algún dia quieres explorar el espacio." },
+    { "titulo": "Noticia urgente", "texto": "La Dra. Itzel Ramos estudiaba el hielo del polo sur de la Luna con Chispa, su robot. Chispa detectó que viene una tormenta solar enorme." },
+    { "titulo": "Problemas", "texto": "La radio de la base se daño, Chispa se perdió en un cráter y a Itzel se le acaba el oxígeno. Sus datos pueden proteger los satélites de la Tierra." },
+    { "titulo": "Se busca rescatista", "texto": "Todos los astronautas están en otra misión. El Control de Misión busca a alguien valiente. No hay edad límite!" }
+  ],
+
+  "carta": {
+    "pregunta_nombre": "Escoge tu nombre clave:",
+    "nombres": ["Cometa", "Nova", "Órbita", "Luna Azul"],
+    "pregunta_motivo": "Quiero ir al rescate porque...",
+    "motivos": [
+      { "texto": "Quiero ayudar a Itzel y Chispa", "respuesta": "Un buen rescatista piensa primero en los demás!" },
+      { "texto": "Me encanta el espacio", "respuesta": "La curiosidad mueve a los exploradores!" },
+      { "texto": "Quiero proteger la Tierra", "respuesta": "Esa responsabilidad es justo lo que buscamos!" }
+    ],
+    "elegido": "Has sido elegido. Antes de ir, pasarás la simulación de la misión."
+  },
+
+  "centro_control": {
+    "titulo": "Centro de Control",
+    "instruccion": "Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
+    "no_cabe": "No cabe en la mochila!",
+    "objetos": {
+      "oxigeno":  "Tanque de oxígeno: +20 de oxígeno.",
+      "escudo":   "Escudo portátil: protege de la radiación.",
+      "linterna": "Linterna: hay cráteres donde nunca llega el Sol.",
+      "radio":    "Kit de radio: repara la radio de Itzel.",
+      "botiquin": "Botiquín: por si alguien se lastima.",
+      "comida":   "Comida: energía para el viaje."
+    }
+  },
+
+  "equipo": {
+    "traje_titulo": "Escoge tu traje",
+    "nave_titulo": "Escoge tu nave"
+  },
+
+  "viaje": {
+    "titulo": "Alerta solar!",
+    "aviso": "Chispa: el Sol lanzó una nube a {velocidad} km/s. Llega en unas {horas} horas!"
+  },
+
+  "aterrizaje": {
+    "instruccion": "Mantén presionado para frenar",
+    "exito": "Aterrizaje perfecto! En la Luna no hay aire: solo los propulsores frenan.",
+    "fallo": "Aterrizaje brusco. Empieza a frenar antes."
+  },
+
+  "ruta": { "titulo": "¿Cómo llegamos a Itzel?" },
+
+  "rescate": {
+    "titulo": "Encontraste a Itzel y Chispa!",
+    "pregunta": "¿Reparamos la radio para avisar a la Tierra ya, o salimos de inmediato?"
+  },
+
+  "final": {
+    "exito": "Salvaste a Itzel y a Chispa. Los satélites de la Tierra están protegidos!",
+    "fallo": "Esta vez no alcanzó. Los astronautas reales también practican muchas veces."
+  }
+}
