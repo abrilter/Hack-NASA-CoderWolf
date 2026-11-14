@@ -7,7 +7,7 @@ import { texto, titulo, boton } from "../ui.js";
 const GRAVEDAD_LUNA = 1.62;   // m/s²
 const PX_POR_METRO = 5;
 const SUELO = 160;
-const VEL_SEGURA = 2;         // m/s
+const VEL_SEGURA = 10;         // m/s
 
 export class Aterrizaje extends Phaser.Scene {
   constructor() { super("Aterrizaje"); }
