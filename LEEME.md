@@ -3,7 +3,7 @@
 Juego web en pixel art (Phaser 3) para el reto Junior Astronaut Mission Trainer, NASA Space Apps 2026.
 
 ## Cómo correrlo
-1. Instalar **VS Code** y la extensión **Live Server**.
+1. Instalar **VS Code** y la extensión **Live Server**. xd
 2. Abrir esta carpeta en VS Code.
 3. Clic derecho en `index.html` → **Open with Live Server**.
 

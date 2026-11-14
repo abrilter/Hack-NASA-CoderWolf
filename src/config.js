@@ -6,6 +6,10 @@
 export const ANCHO = 320;
 export const ALTO = 180;
 
+// Cuántas veces se agranda la imagen por dentro del juego (pixeles más pequeños
+// y texto nítido). Las escenas siguen usando coordenadas de 320x180.
+export const ZOOM = 4;
+
 // Colores provisionales. TODO(Rol 3): reemplazar por la paleta elegida en Lospec.
 export const COLOR = {
   fondo: 0x0b1026,

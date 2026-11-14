@@ -41,7 +41,7 @@ export class CentroControl extends Phaser.Scene {
 
     this.destinoX = null;
     this.alLlegar = null;
-    this.input.on("pointerdown", p => { if (p.y > 110) this.caminarA(p.x, null); });
+    this.input.on("pointerdown", p => { if (p.worldY > 110) this.caminarA(p.worldX, null); });
     this.teclas = this.input.keyboard.createCursorKeys();
   }
 

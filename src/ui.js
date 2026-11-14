@@ -1,6 +1,6 @@
 // Piezas de interfaz reutilizables en pixel art. Dueño: Rol 1.
 // TODO(Rol 3): cambiar la fuente por una fuente pixel (ej. desde Google Fonts).
-import { ANCHO, COLOR } from "./config.js";
+import { ANCHO, COLOR, ZOOM } from "./config.js";
 
 const FUENTE = "monospace";
 
@@ -12,7 +12,7 @@ export function texto(escena, x, y, contenido, opciones = {}) {
     align: opciones.align || "center",
     wordWrap: { width: opciones.ancho || ANCHO - 20 },
     lineSpacing: 2
-  }).setOrigin(opciones.origenX ?? 0.5, opciones.origenY ?? 0).setResolution(4);
+  }).setOrigin(opciones.origenX ?? 0.5, opciones.origenY ?? 0).setResolution(ZOOM);
 }
 
 export function titulo(escena, contenido, y = 12) {
