@@ -9,11 +9,12 @@
 // ejemplo como real) y se puede tocar para abrir su página.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, navegarConTeclado, llenar } from "../ui.js";
-import { crearTexturasMochila, crearTextura } from "../pixelart.js";
-import { crearTexturasExterior } from "../arteExterior.js";
-import { finalDeMision, proteccion } from "../modelo/simulacion.js";
+import { titulo, texto, boton, etiquetaDato, navegarConTeclado, llenar } from "../ui.js";
+import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
+import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
 import { fechaLarga } from "../nasa/sol.js";
+import { crearTexturasMochila} from "../pixelart.js";
+import { crearTexturasExterior } from "../arteExterior.js";
 
 
 // ---------------------------------------------------------------- insignia (A-10)
