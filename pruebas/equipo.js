@@ -28,7 +28,7 @@ class CargaPrueba extends Phaser.Scene {
 
 // Reemplaza a la Misión 4: muestra lo que Equipo dejó en el estado compartido
 class Viaje extends Phaser.Scene {
-  constructor() { super("Viaje"); }
+  constructor() { super("Aterrizaje"); }
   create() {
     const r = `Traje: ${estado.traje?.id} · Nave: ${estado.nave?.id} · Oxígeno: ${estado.oxigeno}`;
     console.info("[prueba] fin de la Misión 3 →", r, estado.bitacora);

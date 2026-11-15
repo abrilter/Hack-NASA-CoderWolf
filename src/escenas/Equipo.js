@@ -601,18 +601,6 @@ export class Equipo extends Phaser.Scene {
     this.bAccion = texto(this, 0, 26, "", { tam: TAM, ancho: 116, color: COLOR.tenue });
     this.burbuja.add([this.fondoBurbuja, this.bNombre, this.bVentaja, this.bCosto, this.bAccion]);
 
-    // dato real del radar (polo sur lunar) con su fuente NASA
-    // si datos.json no trae el dato (o no cargó), la escena sigue funcionando
-    const dato = estado.datos?.polo_sur || { texto: this.t.tecnicos[0], fuente: "NASA", ejemplo: true };
-    if (!estado.datos?.polo_sur) console.warn("[Equipo] falta datos.polo_sur en datos/datos.json: se usa un dato de ejemplo");
-    // a la izquierda del radar, para no tapar el radar ni el indicador
-    this.burbujaDato = this.add.container(78, 26).setDepth(1002).setVisible(false);
-    const etiqueta = texto(this, 0, 3, dato.ejemplo ? this.t.dato_ejemplo : this.t.dato_real, { tam: TAM, color: "#ffcd75" });
-    const cuerpo = texto(this, 0, 11, dato.texto, { tam: TAM, ancho: 140 });
-    const fuente = texto(this, 0, 13 + cuerpo.height, dato.fuente, { tam: 5, ancho: 140, color: COLOR.tenue });
-    const alto = Math.ceil(fuente.y + fuente.height + 3);
-    const fondo = this.add.rectangle(0, 0, 148, alto, COLOR.panel).setStrokeStyle(1, AMARILLO).setOrigin(0.5, 0);
-    this.burbujaDato.add([fondo, etiqueta, cuerpo, fuente]);
   }
 
   // Cambia {proteccion}, {gastoO2}, etc. por los números de la opción
@@ -708,7 +696,6 @@ export class Equipo extends Phaser.Scene {
     this.saliendo = true;
     this.controlActivo = false;
     this.burbuja.setVisible(false);
-    this.burbujaDato.setVisible(false);
     this.flechaRampa.setVisible(false);
 
     estado.traje = this.trajeElegido;
@@ -731,7 +718,7 @@ export class Equipo extends Phaser.Scene {
       this.tweens.add({ targets: [n.sprite, fuego, ...n.luces], y: "-=170", duration: 1800, delay: 500, ease: "Cubic.easeIn" });
       this.time.delayedCall(1900, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0);
-        this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("Viaje"));
+        this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("Aterrizaje"));
       });
     });
   }
@@ -892,7 +879,7 @@ export class Equipo extends Phaser.Scene {
       if (a.tipo === "traje") a.foco.setFillStyle(0x4fd1ff, 0.10);
       if (a.tipo === "nave" && a.opcion !== this.naveElegida) a.foco.setStrokeStyle(0);
       if (a.tipo === "bascula") { this.textoTierra.setText("-- kg"); this.textoLuna.setText(""); }
-      if (a.tipo === "pantalla") { this.marcoRadar.setVisible(false); this.burbujaDato.setVisible(false); }
+      if (a.tipo === "pantalla") { this.marcoRadar.setVisible(false); }
     }
     this.activa = cerca;
     if (!cerca) return this.burbuja.setVisible(false);
@@ -908,7 +895,7 @@ export class Equipo extends Phaser.Scene {
       this.decir(this.llenar(this.t.bascula, { tierra, luna }) + " " + (traje ? this.t.bascula_luna : this.t.bascula_base), 5500);
     }
     if (cerca.tipo === "arco") this.decir(this.t["arco_" + this.trajeVisible], 4000);
-    if (cerca.tipo === "pantalla") { this.marcoRadar.setVisible(true); this.burbujaDato.setVisible(true); this.decir(this.t.pista, 5500); }
+    if (cerca.tipo === "pantalla") { this.marcoRadar.setVisible(true); this.decir(this.t.pista, 5500); }
     if (cerca.tipo === "compuerta") this.decir(this.listos() ? this.t.bit_listos : this.t.bit_falta);
     if (cerca.tipo === "rampa") return this.abordar();
     this.mostrarBurbuja(cerca);

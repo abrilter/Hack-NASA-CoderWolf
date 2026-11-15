@@ -1,7 +1,7 @@
 // Misión 6: la ruta hacia Itzel, calculada por el modelo. Dueño: Rol 4 + Rol 2.
 import { ANCHO } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, barras, datoReal } from "../ui.js";
+import { titulo, texto, boton, barras } from "../ui.js";
 import { opcionesDeRuta, aplicar, explicar } from "../modelo/simulacion.js";
 
 export class Ruta extends Phaser.Scene {
@@ -16,7 +16,6 @@ export class Ruta extends Phaser.Scene {
     opcionesDeRuta(estado.datos, estado).forEach((op, i) =>
       boton(this, ANCHO / 2, 70 + i * 26, op.texto, () => this.resultado(op), 240));
 
-    datoReal(this, { fuente: estado.datos.rutas_fuente, ejemplo: estado.datos.rutas[0].ejemplo });
   }
 
   resultado(op) {

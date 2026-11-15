@@ -415,7 +415,6 @@ export class CentroControl extends Phaser.Scene {
       }
       if (o.id === OBLIGATORIO) { this.mochila.unshift(o.id); this.decir(this.t.oxigeno_ok); }
       else { this.mochila.push(o.id); this.decir(this.t.reacciones[o.id]); }
-      if (o.id === "linterna") this.mostrarTarjeta("tarjeta");
     }
     this.iconos[o.id].setAlpha(this.lleva(o.id) ? 0.25 : 1);
     this.actualizarHud();
@@ -554,9 +553,7 @@ export class CentroControl extends Phaser.Scene {
     [0, 4, 8].forEach(d => g.fillStyle(0xffcd75).fillRect(lx + d - 1, 99, 2, 2)); fila(96, t.ruta);
 
     this.lineaRobot(t.robot);
-    this.btn(200, 163, t.dato, () => this.mostrarTarjeta("tarjeta_mapa"), 70);
     this.btn(272, 163, t.volver, () => this.cerrarPanel(), 56);
-    if (primeraVez) this.luego(2200, () => this.mostrarTarjeta("tarjeta_mapa"));
   }
 
   // ---------------------------------------------------------------- revisión

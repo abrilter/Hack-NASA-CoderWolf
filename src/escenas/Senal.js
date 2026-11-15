@@ -252,9 +252,7 @@ export class Senal extends Intro {
     [0, 4, 8].forEach(d => g.fillStyle(0xffcd75).fillRect(lx + d - 1, 99, 2, 2)); fila(96, t.ruta);
 
     this.lineaRobot(t.robot);
-    this.btn(200, 163, t.dato, () => this.mostrarTarjeta("tarjeta_mapa"), 70);
     this.btn(272, 163, "Continuar ▸", () => this.continuar(), 56);
-    if (primeraVez) this.luego(2200, () => this.mostrarTarjeta("tarjeta_mapa"));
   }
 
   // ---------------------------------------------------------------- sonidos (Web Audio, sin archivos)

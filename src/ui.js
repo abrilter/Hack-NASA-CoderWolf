@@ -29,13 +29,6 @@ export function boton(escena, x, y, contenido, alPresionar, ancho = 120) {
   return { caja, etiqueta };
 }
 
-// Etiqueta obligatoria cada vez que se muestra un dato de la NASA
-export function datoReal(escena, registro) {
-  const aviso = registro.ejemplo ? "DATO DE EJEMPLO · " : "Dato real · ";
-  return texto(escena, ANCHO / 2, 170, aviso + registro.fuente + (registro.fecha ? " · " + registro.fecha : ""),
-    { tam: 6, color: COLOR.tenue });
-}
-
 // Barras de oxígeno, escudo y radiación (esquina superior izquierda)
 export function barras(escena, estado) {
   [["O2", estado.oxigeno, COLOR.oxigeno], ["ESC", estado.escudo, COLOR.escudo], ["RAD", estado.radiacion, COLOR.radiacion]]
