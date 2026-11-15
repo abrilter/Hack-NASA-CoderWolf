@@ -22,7 +22,8 @@ import { crearTexturasExterior } from "../arteExterior.js";
 const SUELO = 136;                 // donde pisa el astronauta
 const ASTRO = { x: 80, alto: 24 };
 const ZONA = { x1: 0, x2: 176, y1: 34 };   // recuadro de la ilustración
-const REFUGIO_Y = { saliente: 96, rover: 92 };   // donde el refugio frena partículas
+const ROVER_ESCALA = 1.5;          // rover 60×32 junto al astronauta de 24 px de alto
+const REFUGIO_Y = { saliente: 96, rover: SUELO - Math.round(19 * ROVER_ESCALA) };   // donde el refugio frena partículas (rover: su techo)
 
 export class Tormenta extends Phaser.Scene {
   constructor() { super("Tormenta"); }
@@ -98,8 +99,9 @@ export class Tormenta extends Phaser.Scene {
       this.refugio.add(g);
       this.astro.setX(ASTRO.x);
     } else if (id === "rover") {
-      // el rover apoyado en el suelo y el astronauta agachado debajo
-      const c = this.add.container(ASTRO.x + 2, SUELO).setScale(2);
+      // el rover apoyado en el suelo y el astronauta agachado pegado a él.
+      // Con ROVER_ESCALA el hueco bajo el chasis (~12 px) deja caber al astronauta agachado.
+      const c = this.add.container(ASTRO.x + 2, SUELO).setScale(ROVER_ESCALA);
       c.add([this.add.image(-20, -21, "rover_cuerpo").setOrigin(0), this.add.image(-13, -6, "rover_rueda"), this.add.image(11, -6, "rover_rueda")]);
       this.refugio.add(c);
       this.astro.setScale(1, 0.5);
