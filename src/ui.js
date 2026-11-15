@@ -29,15 +29,36 @@ export function boton(escena, x, y, contenido, alPresionar, ancho = 120) {
   return { caja, etiqueta };
 }
 
-// Barras de oxígeno, escudo y radiación (esquina superior izquierda)
-export function barras(escena, estado) {
-  [["O2", estado.oxigeno, COLOR.oxigeno], ["ESC", estado.escudo, COLOR.escudo], ["RAD", estado.radiacion, COLOR.radiacion]]
-    .forEach(([nombre, valor, color], i) => {
-      const y = 6 + i * 8;
-      texto(escena, 4, y - 3, nombre, { tam: 6, origenX: 0, align: "left" });
-      escena.add.rectangle(24, y, 40, 4, 0x0a0f24).setOrigin(0, 0.5);
-      escena.add.rectangle(24, y, Math.max(0, Math.min(40, valor * 0.4)), 4, color).setOrigin(0, 0.5);
-    });
+// Etiqueta obligatoria cada vez que se muestra un dato de la NASA.
+// Si el registro trae "link", la etiqueta se puede tocar para abrir la fuente.
+export function datoReal(escena, registro) {
+  const aviso = registro.ejemplo ? "DATO DE EJEMPLO · " : "Dato real · ";
+  const etiqueta = texto(escena, ANCHO / 2, 170,
+    aviso + registro.fuente + (registro.fecha ? " · " + registro.fecha : "") + (registro.link ? " ↗" : ""),
+    { tam: 6, color: COLOR.tenue });
+  if (registro.link) {
+    etiqueta.setInteractive({ useHandCursor: true })
+      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(registro.link, "_blank", "noopener"); });
+  }
+  return etiqueta;
+}
+
+// Barras de recursos (esquina superior izquierda). Cada escena muestra solo
+// las que usa, por ejemplo: barras(this, estado, ["oxigeno", "energia"])
+const BARRAS = {
+  oxigeno:   ["O2",  COLOR.oxigeno],
+  escudo:    ["ESC", COLOR.escudo],
+  radiacion: ["RAD", COLOR.radiacion],
+  energia:   ["ENE", COLOR.energia]
+};
+export function barras(escena, estado, recursos = ["oxigeno", "escudo", "radiacion"]) {
+  recursos.forEach((id, i) => {
+    const [nombre, color] = BARRAS[id];
+    const y = 6 + i * 8;
+    texto(escena, 4, y - 3, nombre, { tam: 6, origenX: 0, align: "left" });
+    escena.add.rectangle(24, y, 40, 4, 0x0a0f24).setOrigin(0, 0.5);
+    escena.add.rectangle(24, y, Math.max(0, Math.min(40, estado[id] * 0.4)), 4, color).setOrigin(0, 0.5);
+  });
 }
 
 // Muestra una lista de páginas de texto con botón "Siguiente"

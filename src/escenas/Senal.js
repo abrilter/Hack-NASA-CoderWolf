@@ -47,8 +47,8 @@ export class Senal extends Intro {
 
   alTerminar() {
     this.avanzar = () => this.tarjeta?.visible && this.cerrarTarjeta();
-    this.crearTarjeta();
-    this.abrirMinijuego();
+    // El minijuego y el mapa ahora se consultan con STELLA en el Centro de Control
+    this.continuar();
   }
 
   continuar() {

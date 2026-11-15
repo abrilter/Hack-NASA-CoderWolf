@@ -11,6 +11,23 @@ import { Ruta } from "./escenas/Ruta.js";
 import { Rescate } from "./escenas/Rescate.js";
 import { Final } from "./escenas/Final.js";
 
+import { estado } from "./estado.js";
+import { ORDEN } from "./config.js";
+
+// Derrota a mitad de partida: si el oxígeno llegó a 0 o la radiación a 100,
+// cualquier cambio de escena después de la Carta va directo al Final
+// (donde Chispa explica por qué). Así ninguna escena tiene que revisarlo.
+// La partida nueva empieza en la Carta (y en "Jugar otra vez").
+const iniciarEscena = Phaser.Scenes.ScenePlugin.prototype.start;
+Phaser.Scenes.ScenePlugin.prototype.start = function (clave, datos) {
+  const i = ORDEN.indexOf(clave);
+  if (i > ORDEN.indexOf("Carta") && clave !== "Final" && estado.causaDerrota()) {
+    console.info(`[derrota] ${estado.causaDerrota()}: ${clave} → Final`);
+    clave = "Final";
+  }
+  return iniciarEscena.call(this, clave, datos);
+};
+
 // Agranda la cámara de cada escena por ZOOM para que el lienzo tenga más
 // resolución, sin cambiar las coordenadas (0..320, 0..180) de las escenas.
 class ZoomPixel extends Phaser.Plugins.ScenePlugin {
@@ -33,5 +50,5 @@ new Phaser.Game({
   physics: { default: "arcade" },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-  scene: [Carga, Intro, Carta, Senal, CentroControl, Equipo, Aterrizaje, Ruta, Rescate, Final]
+  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Senal, Viaje, Ruta, Rescate, Final]
 });
