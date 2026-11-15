@@ -118,6 +118,60 @@ const ASTRO_PIERNAS = [
   ]
 ];
 
+// ----------------------------------------------------------------- Dra. Itzel
+// Misma figura chibi que el astronauta, con casco de burbuja: se ve su cara
+// (h cabello, S piel, e ojos, m boca). Traje lavanda de científica y el tobillo
+// vendado (W) por la herida del Rescate. Cuadro 1: parpadea y cambian las luces.
+const ITZEL_CASCO = [
+  [
+    ".....kkkkkk.....",
+    "...kkccvvvvkk...",
+    "..kcvhhhhhhvvk..",
+    ".kcvhhhhhhhhvvk.",
+    ".kvhhSSSSSShhvk.",
+    ".kvhSSSSSSSShvk.",
+    ".kvhSSeSSeSShvk.",
+    ".kvhSSSSSSSShvk.",
+    "..kvhSSmmSShvk..",
+    "...kkvvvvvvkk...",
+    "...kkkCCCCkkk..."
+  ]
+];
+ITZEL_CASCO.push(ITZEL_CASCO[0].map((fila, i) => i === 6 ? ".kvhSSSSSSSShvk." : fila));   // ojos cerrados
+const ITZEL_TORSO = [
+  [
+    "....kkCCCCkk....",
+    "...kAkAAAAkAk...",
+    "...kAkAyrAkAk...",
+    "...kAkACCAkAk...",
+    "...kGkBAABkGk...",
+    "....kkCCCCkk....",
+    "....kAAAAAAk...."
+  ]
+];
+ITZEL_TORSO.push(ITZEL_TORSO[0].map((fila, i) => i === 2 ? "...kAkAryAkAk..." : fila));   // luces alternan
+const ITZEL_PIERNAS = [
+  "....kAAkkAAk....",
+  "....kAAkkWWk....",
+  "....kBAkkWWk....",
+  "....kDDkkDDk....",
+  "...kDDDkkDDDk...",
+  "...kkkkkkkkkk..."
+];
+const PALETA_ITZEL = {
+  k: K, A: 0xa47de0, B: 0x5d275d, C: 0xffcd75, G: 0xf4f4f4, D: 0x333c57, W: 0xf4f4f4,
+  v: 0xa8e4ff, c: 0xffffff, h: 0x3b2a1d, S: 0xb86f50, e: 0x1a1c2c, m: 0x8f3b3b,
+  y: 0x5cff8a, r: 0xff5c5c
+};
+
+// Crea "itzel_0" (quieta) e "itzel_1" (parpadeo), de 32×32 con el origen en los pies
+export function crearTexturasItzel(escena) {
+  const vacia = ".".repeat(32);
+  [0, 1].forEach(f => crearTextura(escena, `itzel_${f}`,
+    [...Array(8).fill(vacia), ...[...ITZEL_CASCO[f], ...ITZEL_TORSO[f], ...ITZEL_PIERNAS].map(fila => "........" + fila + "........")],
+    PALETA_ITZEL));
+}
+
 // Cada traje cambia los colores A/B/C. "base" es el uniforme antes de elegir.
 export const COLORES_TRAJE = {
   base:     { A: 0x3b5dc9, B: 0x29366f, C: 0xffcd75, P: 0x566c86, G: 0xc2c3c7, D: 0x333c57 },

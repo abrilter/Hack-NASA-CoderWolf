@@ -9,8 +9,22 @@
     "ejemplo": true
   },
 
+  "modelo": {
+    "_nota": "Números del modelo de decisiones (Rol 4). Verificados con pruebas/balance.html; si cambian alguno, vuelvan a abrir esa página. Ver ANALISIS.md, sección 2.3.",
+    "duracion_tormenta_h": 12,
+    "factor_oscuro": 1.5,
+    "reposo": 0.5,
+    "sin_comida_o2": 10,
+    "sin_botiquin_o2": 8,
+    "radio_con_kit_o2": 5,
+    "radio_sin_kit_o2": 15,
+    "ruta_tras_refugio": "cresta",
+    "cme_min_kms": 1000
+  },
+
   "radiacion": {
-    "dosis_juego_por_hora": 4,
+    "_nota": "dosis_juego_por_hora es un VALOR DE JUEGO (puntos de radiación por hora de tormenta sin protección; 100 = se pierde). dato_real_uSv_hora es el dato de RadLab que se muestra en pantalla.",
+    "dosis_juego_por_hora": 20,
     "dato_real_uSv_hora": 0,
     "fuente": "NASA OSDR RadLab",
     "link": "https://visualization.osdr.nasa.gov/radlab/gui/data-api/",
@@ -20,10 +34,17 @@
   "rover": { "kmh": 0.5, "fuente": "COMPLETAR", "ejemplo": true },
 
   "rutas": [
-    { "nombre": "Cortar por el cráter", "km": 8,  "subida_m": 2500, "oscura": true,  "ejemplo": true },
-    { "nombre": "Rodear por la cresta", "km": 14, "subida_m": 300,  "oscura": false, "ejemplo": true }
+    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 2000, "oscura": true,  "ejemplo": true },
+    { "id": "cresta", "nombre": "Rodear por la cresta", "km": 16, "subida_m": 100,  "oscura": false, "ejemplo": true }
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
+  "rutas_link": "https://trek.nasa.gov/moon/",
+
+  "fuentes_extra": [
+    { "_nota": "Datos NASA que se muestran en el juego y no están en otra parte de este archivo. Si su misión muestra un dato nuevo, agréguenlo aquí para que salga en la pantalla final." },
+    { "tema": "Gravedad de la Luna (1.62 m/s²)", "fuente": "NASA Moon Fact Sheet", "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "ejemplo": false },
+    { "tema": "Cráteres donde nunca llega el Sol", "fuente": "NASA Lunar Reconnaissance Orbiter (LRO)", "link": "https://lunar.gsfc.nasa.gov/", "ejemplo": false }
+  ],
 
   "zona_aterrizaje": {
     "nombre": "borde del cráter Shackleton",
@@ -35,9 +56,15 @@
   },
 
   "planta": {
-    "texto": "COMPLETAR con un estudio real de OSDR",
-    "fuente": "NASA OSDR",
-    "link": "https://osdr.nasa.gov/",
-    "ejemplo": true
+    "_nota": "Verificado en la metadata de OSDR (osdr.nasa.gov/osdr/data/osd/meta/476). Las plantas se sembraron en mayo de 2021 y se cosecharon el día 20.",
+    "estudio": "Plants grown in Apollo lunar regolith present stress-associated transcriptomes that inform prospects for lunar exploration",
+    "autores": "Paul, Elardo y Ferl",
+    "especie": "Arabidopsis thaliana",
+    "muestras_apolo": [11, 12, 17],
+    "doi": "10.1038/s42003-022-03334-8",
+    "fuente": "NASA OSDR · OSD-476 (Paul, Elardo y Ferl)",
+    "fecha": "2022-05-16",
+    "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-476",
+    "ejemplo": false
   }
 }

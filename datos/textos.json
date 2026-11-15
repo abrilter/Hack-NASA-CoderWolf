@@ -186,15 +186,58 @@
     "fallo": "Aterrizaje brusco: llegaste a {vel} m/s y lo seguro era {segura} m/s. Empieza a frenar antes y en pulsos."
   },
 
-  "ruta": { "titulo": "¿Cómo llegamos a Itzel?" },
+  "ruta": {
+    "titulo": "¿Cómo llegamos a Itzel?",
+    "tormenta": "La tormenta llega en {horas} h. ¿Por dónde vamos?",
+    "boton": "{nombre} ({km} km, {horas} h)",
+    "boton_refugio": "Refugiarse y esperar ({horas} h)",
+    "antes": "La tormenta tardó {hT} h y el rescate {hR} h. ¡Llegamos {dif} h antes!",
+    "expuestos": "La tormenta llegó en {hT} h y el rescate tardó {hR} h. Estuvimos {exp} h bajo la tormenta.",
+    "refugio": "Esperamos {espera} h en el refugio a que pasara la tormenta y luego fuimos a {ruta}. Nadie recibió radiación, pero gastamos mucho oxígeno.",
+    "sin_linterna": " Sin linterna, el cráter oscuro nos hizo ir más lento.",
+    "sin_comida": " Sin comida, la espera nos cansó más."
+  },
 
   "rescate": {
     "titulo": "Encontraste a Itzel y Chispa!",
-    "pregunta": "¿Reparamos la radio para avisar a la Tierra ya, o salimos de inmediato?"
+    "pregunta": "¿Reparamos la radio para avisar a la Tierra ya, o salimos de inmediato?",
+    "herida_si": "Itzel se lastimó el tobillo. ¡Con el botiquín la curaste y puede caminar bien!",
+    "herida_no": "Itzel se lastimó el tobillo y no hay botiquín: el regreso será más lento (-{costo} O2).",
+    "reparar": "Reparar radio ({costo} O2)",
+    "salir": "Salir ya",
+    "nota_reparar": "Reparaste la radio: los datos llegaron a la Tierra a tiempo.",
+    "nota_salir": "Saliste rápido; los datos llegarán al volver.",
+    "nota_herida": "Sin botiquín, Itzel caminó más despacio y gastamos más oxígeno.",
+    "planta_boton": "▸ La planta de Chispa",
+    "planta_titulo": "¡La planta de Chispa!",
+    "planta_texto": "Chispa cuidó esta plantita en la base. Es de verdad: en 2021, científicos sembraron esta misma planta (Arabidopsis) en suelo lunar traído por las misiones Apolo 11, 12 y 17. ¡Todas las semillas germinaron! Pero crecieron más lento y se estresaron, porque el suelo lunar es muy duro para las plantas.",
+    "planta_cerrar": "Toca para cerrar",
+    "nota_planta": "Chispa trajo su planta: crecer plantas en suelo lunar es posible, pero difícil (NASA OSDR)."
   },
 
   "final": {
+    "titulo_exito": "Misión cumplida!",
+    "titulo_fallo": "La misión regresó",
+    "resumen_fuentes": "Ciencia de la NASA en este juego: {reales} datos reales y {ejemplo} de ejemplo (todavía no verificados).",
+    "ver_fuentes": "Fuentes NASA",
+    "otra_vez": "Jugar otra vez",
+    "titulo_fuentes": "Fuentes NASA",
+    "leyenda_fuentes": "✓ Dato real: medido por la NASA, con su página.  ⚠ Dato de ejemplo: un número de prueba que aún no verificamos. Toca una fila para abrir su fuente.",
+    "etiqueta_real": "Dato real",
+    "etiqueta_ejemplo": "Dato de ejemplo",
+    "titulo_bitacora": "Bitácora de la misión",
+    "bitacora_mas": "… y {n} decisiones más (toca para ver todo)",
+    "cerrar": "Cerrar",
+    "mi_insignia": "Mi insignia",
+    "titulo_insignia": "Diseña tu insignia de misión",
+    "insignia_mision": "Rescate en el Polo Sur Lunar",
+    "forma": "Forma",
+    "color": "Color",
+    "simbolo": "Símbolo",
+    "lista": "¡Lista!",
     "exito": "Salvaste a Itzel y a Chispa. Los satélites de la Tierra están protegidos!",
-    "fallo": "Esta vez no alcanzó. Los astronautas reales también practican muchas veces."
+    "fallo": "Esta vez no alcanzó. Los astronautas reales también practican muchas veces.",
+    "causa_oxigeno": "Chispa: ¡Nos quedamos sin oxígeno (quedó en {oxigeno})! El aire se gasta con cada hora de camino y con cada subida. La próxima vez prueba una ruta más corta, un traje que gaste menos aire o llevar el tanque extra.",
+    "causa_radiacion": "Chispa: La tormenta solar nos alcanzó y la radiación llegó a {radiacion} (el límite es 100). La próxima vez carga el escudo, usa un traje que proteja más o refúgiate antes de que llegue la tormenta."
   }
 }

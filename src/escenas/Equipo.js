@@ -8,23 +8,14 @@
 // y el niño sube para despegar → Misión 4.
 // Figuras en pixel art hechas con mapas de letras (src/pixelart.js).
 // TODO(Rol 3): reemplazar por PNG cuando estén listos.
-import { ANCHO, ALTO, COLOR } from "../config.js";
+import { ANCHO, ALTO, COLOR, TRAJES, NAVES, O2_TANQUE } from "../config.js";
 import { estado } from "../estado.js";
 import { texto } from "../ui.js";
 import { crearTexturasEquipo } from "../pixelart.js";
 import { horasDeLlegada } from "../modelo/simulacion.js";
 
-// TODO(Rol 4): ajustar valores para que ninguna opción sea mejor en todo
-// peso: kg del traje (solo se muestra en la báscula y cambia la velocidad al caminar)
-const TRAJES = [
-  { id: "blindado", proteccion: 0.3, gastoO2: 2.5, peso: 35 },
-  { id: "ligero",   proteccion: 0.1, gastoO2: 1.6, peso: 12 }
-];
-const NAVES = [
-  { id: "grande",  agilidad: 0.8, combustible: 140, oxigenoExtra: 20, w: 46 },
-  { id: "pequena", agilidad: 1.3, combustible: 90,  oxigenoExtra: 0,  w: 32 }
-];
-const O2_TANQUE = 20;        // si la mochila trae el tanque de oxígeno
+// Los números de trajes y naves están en config.js (balance compartido con el
+// modelo y el modo prueba). Se verifican con pruebas/balance.html.
 const PESO_NINO = 30;        // kg del niño sin traje (para la báscula)
 const LENTITUD_BLINDADO = 0.6;
 // Probabilidad de que el traje frene un puntito de radiación en el arco
