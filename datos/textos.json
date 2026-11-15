@@ -78,9 +78,18 @@
   },
 
   "aterrizaje": {
-    "instruccion": "Mantén presionado para frenar",
-    "exito": "Aterrizaje perfecto! En la Luna no hay aire: solo los propulsores frenan.",
-    "fallo": "Aterrizaje brusco. Empieza a frenar antes."
+    "titulo": "Misión 5 · Aterrizaje",
+    "instruccion": "Mantén presionado (clic, ↑ o ESPACIO) para encender el propulsor",
+    "explicacion": "En la Luna casi no hay aire: los paracaídas y las alas no sirven. Solo los propulsores frenan la nave contra la gravedad lunar (1.62 m/s²).",
+    "tu_nave": "{nave}: frena {empuje} m/s² y lleva {combustible} de combustible.",
+    "elige": "Elige la dificultad:",
+    "dificultades": { "facil": "Fácil", "normal": "Normal", "dificil": "Difícil" },
+    "zona": "ZONA DE ATERRIZAJE",
+    "sin_combustible": "¡Sin combustible!",
+    "titulo_exito": "¡Aterrizaje!",
+    "titulo_fallo": "¡Ups!",
+    "exito": "Tocaste el suelo a {vel} m/s. ¡Perfecto! En la Luna no hay aire: solo los propulsores frenan.",
+    "fallo": "Aterrizaje brusco: llegaste a {vel} m/s y lo seguro era {segura} m/s. Empieza a frenar antes y en pulsos."
   },
 
   "ruta": { "titulo": "¿Cómo llegamos a Itzel?" },
