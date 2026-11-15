@@ -25,6 +25,15 @@
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
 
+  "zona_aterrizaje": {
+    "nombre": "borde del cráter Shackleton",
+    "lat": -89.67,
+    "lon": 129.78,
+    "fuente": "NASA Moon Trek",
+    "link": "https://trek.nasa.gov/moon/",
+    "ejemplo": false
+  },
+
   "planta": {
     "texto": "COMPLETAR con un estudio real de OSDR",
     "fuente": "NASA OSDR",
