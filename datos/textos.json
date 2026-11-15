@@ -401,7 +401,34 @@
     "expuestos": "La tormenta llegó en {hT} h y el rescate tardó {hR} h. Estuvimos {exp} h bajo la tormenta.",
     "refugio": "Esperamos {espera} h en el refugio a que pasara la tormenta y luego fuimos a {ruta}. Nadie recibió radiación, pero gastamos mucho oxígeno.",
     "sin_linterna": " Sin linterna, el cráter oscuro nos hizo ir más lento.",
-    "sin_comida": " Sin comida, la espera nos cansó más."
+    "sin_comida": " Sin comida, la espera nos cansó más.",
+    "inicio": "BASE",
+    "itzel": "Última señal de Itzel",
+    "nombre_crater": "CRÁTER",
+    "nombre_cresta": "CRESTA",
+    "sol": "Sol",
+    "tiempo_acelerado": "tiempo acelerado",
+    "pasa_cursor": "Pasa el cursor o toca una ruta",
+    "tiempo": "Tiempo: {horas} h",
+    "oxigeno": "Oxígeno: {o2}",
+    "radiacion": "Radiación: +{rad}",
+    "radiacion_no": "Radiación: 0 (llegas antes de la tormenta)",
+    "sin_linterna_corto": "Sin linterna vas más lento.",
+    "ir": "Ir por aquí",
+    "continuar": "Continuar",
+    "bitacora": "Ruta: {nombre} ({horas} h).",
+    "rutas": {
+      "crater": {
+        "nombre": "Por el cráter",
+        "gana": "Es corta: llegas antes y gastas menos oxígeno.",
+        "cuesta": "Es oscura y empinada. Te lleva al cráter helado."
+      },
+      "cresta": {
+        "nombre": "Por la cresta",
+        "gana": "Es plana y con luz. No pasa por el cráter.",
+        "cuesta": "Es larga: más horas afuera, más oxígeno y más radiación si llega la tormenta."
+      }
+    }
   },
 
   "rescate": {

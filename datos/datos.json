@@ -34,7 +34,7 @@
   "rover": { "kmh": 0.5, "fuente": "COMPLETAR", "ejemplo": true },
 
   "rutas": [
-    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 2000, "oscura": true,  "ejemplo": true },
+    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 400, "oscura": true,  "ejemplo": true },
     { "id": "cresta", "nombre": "Rodear por la cresta", "km": 16, "subida_m": 100,  "oscura": false, "ejemplo": true }
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
@@ -53,6 +53,14 @@
     "fuente": "NASA Moon Trek",
     "link": "https://trek.nasa.gov/moon/",
     "ejemplo": false
+  },
+
+  "luz_polo_sur": {
+    "_nota": "Dato de la escena Ruta. Sigue como ejemplo hasta que alguien revise el enlace y cambie ejemplo a false.",
+    "texto": "En el polo sur de la Luna el Sol va pegado al horizonte y da vueltas alrededor. Las sombras son muy largas y hay cráteres donde nunca llega la luz.",
+    "fuente": "NASA LRO / Moon Trek",
+    "link": "https://science.nasa.gov/mission/lro/",
+    "ejemplo": true
   },
 
   "polo_sur": {
