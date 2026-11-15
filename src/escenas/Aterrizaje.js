@@ -2,6 +2,9 @@
 // La nave cae con la gravedad lunar real (1.62 m/s²). Mantener presionado
 // (clic, ↑ o ESPACIO) = propulsor: frena y gasta combustible. En la Luna casi
 // no hay aire, así que solo el propulsor puede frenar.
+// Junto a la zona de aterrizaje está la base lunar. Solo si el aterrizaje es
+// correcto, el astronauta baja de la nave, camina hasta la base y entra →
+// siguiente escena (preparar el equipo). Si falla, solo puede reintentar.
 // Fondo, nave y fuego en pixel art hechos con código (src/pixelart.js).
 import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
@@ -34,6 +37,9 @@ const SUELO = 150;                         // y de las patas al tocar el piso
 const NAVE_X = 190;
 const ZONA = { x1: 168, x2: 212 };         // D-11: zona de aterrizaje marcada
 const HORIZONTE = 120;
+// Base lunar pegada al borde izquierdo (coordenadas de 320×180); la cúpula chica
+// queda medio cortada por la orilla, como si la base siguiera fuera de cuadro.
+const BASE = { cx: 36, w: 50, h: 26, puertaX: 72, chicaX: 2 };
 
 // Fuego del propulsor: 2 cuadros. W centro casi blanco, Y amarillo, O naranja, R rojo.
 const FUEGO = [
@@ -71,12 +77,14 @@ export class Aterrizaje extends Phaser.Scene {
     this.naveDatos = estado.nave || NAVE_PRUEBA;
     this.prop = PROPULSOR[this.naveDatos.id] || PROPULSOR.pequena;
     this.fase = "eligiendo";          // eligiendo → jugando → terminado
+    this.entrando = false;            // true mientras entra a la base
     this.presionado = false;
 
     crearTexturasEquipo(this);
     FUEGO.forEach((f, i) => crearTextura(this, `fuego_${i}`, f, PALETA_FUEGO));
 
     this.dibujarFondo();
+    this.dibujarBase();
     this.crearZona();
     this.crearNave();
     barras(this, estado);
@@ -98,8 +106,8 @@ export class Aterrizaje extends Phaser.Scene {
 
   // ---------------------------------------------------------------- fondo
   // Polo sur lunar: cielo negro con estrellas, la Tierra baja en el horizonte,
-  // montañas iluminadas de lado por el Sol rasante, un cráter en sombra
-  // permanente (con hielo) y el suelo gris lleno de crateritos.
+  // montañas iluminadas de lado por el Sol rasante y el suelo gris lleno de
+  // crateritos.
   dibujarFondo() {
     const g = this.add.graphics();
     const r = (c, x, y, w, h) => g.fillStyle(c).fillRect(x, y, w, h);
@@ -150,15 +158,6 @@ export class Aterrizaje extends Phaser.Scene {
       else r(0x566c86, x, y, 1, 1);
     }
 
-    // cráter en sombra permanente (como Shackleton) con brillitos de hielo
-    g.fillStyle(0x0b1026).fillEllipse(70, 140, 92, 14);
-    g.fillStyle(0x05070f).fillEllipse(72, 141, 78, 9);
-    for (let x = 26; x < 116; x++) if (x % 3) r(0x94b0c2, x, 133 + Math.round(Math.abs(x - 70) / 14), 1, 1);
-    [[52, 141], [66, 142], [80, 140], [94, 141], [60, 143]].forEach(([x, y]) => {
-      const hielo = this.add.rectangle(x, y, 1, 1, 0xbff3ff).setOrigin(0);
-      this.tweens.add({ targets: hielo, alpha: 0.1, duration: 900 + x * 7, yoyo: true, repeat: -1 });
-    });
-
     // suelo
     r(0x94b0c2, 0, SUELO - 2, ANCHO, ALTO - SUELO + 2);
     r(0xc2c3c7, 0, SUELO - 2, ANCHO, 1);
@@ -174,6 +173,82 @@ export class Aterrizaje extends Phaser.Scene {
     // franja de abajo para el texto de la fuente
     r(0x1a1c2c, 0, 166, ANCHO, ALTO - 166);
     r(0x333c57, 0, 166, ANCHO, 1);
+  }
+
+  // ---------------------------------------------------------------- base lunar
+  // Base blanca con franjas naranjas a la izquierda: cúpula principal con
+  // ventanas y antena, cúpula chica con paneles solares y el módulo de entrada
+  // (esclusa) con la puerta mirando a la plataforma (hacia la derecha).
+  dibujarBase() {
+    const g = this.add.graphics();
+    const r = (c, x, y, w, h) => g.fillStyle(c).fillRect(x, y, w, h);
+    const piso = SUELO - 2;
+    const C = {
+      borde: 0x333c57, blanco: 0xf4f4f4, brillo: 0xffffff, sombra: 0xc2c3c7,
+      naranja: 0xef7d57, naranjaClaro: 0xffa300, naranjaOscuro: 0xb13e53
+    };
+
+    // cúpula hecha por filas: blanca con juntas naranjas, franja naranja abajo,
+    // lado iluminado a la izquierda (Sol rasante) y sombra a la derecha
+    const cupula = (cx, w, h, paneles) => {
+      for (let y = 0; y < h; y++) {
+        const mitad = Math.round((w / 2) * Math.sqrt(1 - (y / h) ** 2));
+        if (mitad <= 0) continue;
+        const fila = piso - y, franja = y < 3 || y % paneles === 0;
+        r(C.borde, cx - mitad - 1, fila, mitad * 2 + 2, 1);
+        r(franja ? C.naranja : C.blanco, cx - mitad, fila, mitad * 2, 1);
+        r(franja ? C.naranjaClaro : C.brillo, cx - mitad, fila, Math.max(1, Math.round(mitad * 0.35)), 1);
+        r(franja ? C.naranjaOscuro : C.sombra, cx + Math.round(mitad * 0.55), fila, Math.round(mitad * 0.45), 1);
+      }
+      r(C.borde, cx - 2, piso - h, 5, 1);
+    };
+
+    // antena con plato y luz roja que parpadea
+    const ax = BASE.cx - 6, arriba = piso - BASE.h;
+    r(0x566c86, ax, arriba - 12, 1, 14);
+    r(C.blanco, ax - 3, arriba - 13, 7, 1);
+    r(C.naranja, ax - 2, arriba - 12, 5, 1);
+    const luzAntena = this.add.rectangle(ax, arriba - 15, 1, 1, 0xff5c5c).setOrigin(0);
+    this.tweens.add({ targets: luzAntena, alpha: 0.1, duration: 700, yoyo: true, repeat: -1 });
+
+    // paneles solares detrás de la cúpula chica (pegada a la orilla izquierda)
+    r(0x566c86, BASE.chicaX + 2, piso - 22, 1, 22);
+    for (let i = 0; i < 3; i++) {
+      r(0x1d2b53, BASE.chicaX - 4 + i * 4, piso - 28, 3, 6);
+      r(0x29adff, BASE.chicaX - 4 + i * 4, piso - 28, 3, 1);
+    }
+
+    cupula(BASE.cx, BASE.w, BASE.h, 5);
+    // túnel entre las cúpulas (blanco con franja naranja)
+    const t1 = BASE.chicaX, t2 = BASE.cx - 20;
+    r(C.borde, t1, piso - 7, t2 - t1, 7);
+    r(C.blanco, t1, piso - 6, t2 - t1, 6);
+    r(C.brillo, t1, piso - 6, t2 - t1, 1);
+    r(C.naranja, t1, piso - 3, t2 - t1, 2);
+    cupula(BASE.chicaX, 22, 12, 4);
+
+    // ventanas con luz cálida que titila
+    [-16, -6, 4, 14].forEach((dx, i) => {
+      r(C.borde, BASE.cx + dx - 1, piso - 13, 5, 4);
+      const v = this.add.rectangle(BASE.cx + dx, piso - 12, 3, 2, 0xfff27a).setOrigin(0);
+      this.tweens.add({ targets: v, alpha: 0.55, duration: 900 + i * 230, yoyo: true, repeat: -1 });
+    });
+
+    // módulo de entrada (esclusa) naranja con franja blanca; la puerta mira a la derecha
+    const px = BASE.puertaX;
+    r(C.borde, px - 12, piso - 15, 18, 15);
+    r(C.naranja, px - 11, piso - 14, 16, 14);
+    r(C.naranjaClaro, px - 11, piso - 14, 16, 1);
+    r(C.naranjaOscuro, px - 11, piso - 13, 4, 13);
+    r(C.blanco, px - 11, piso - 4, 16, 2);
+    r(0x1a1c2c, px - 3, piso - 11, 7, 11);                     // marco de la puerta
+    this.puerta = this.add.rectangle(px - 2, piso - 10, 5, 10, C.sombra).setOrigin(0);
+    this.luzPuerta = this.add.rectangle(px, piso - 13, 1, 1, 0x5cff8a).setOrigin(0);
+    this.tweens.add({ targets: this.luzPuerta, alpha: 0.2, duration: 450, yoyo: true, repeat: -1 });
+
+    // camino de la puerta a la plataforma y letrero
+    for (let x = px + 6; x < ZONA.x1 - 2; x += 4) r(0x566c86, x, SUELO, 2, 1);
+    texto(this, BASE.cx - 4, arriba - 24, this.t.base, { tam: 5, color: "#ffa300" });
   }
 
   // D-11: plataforma de aterrizaje marcada con balizas que parpadean
@@ -354,19 +429,105 @@ export class Aterrizaje extends Phaser.Scene {
     }
 
     const cx = ANCHO / 2 + 40;
-    this.add.rectangle(cx, 76, 220, 92, 0x0b1026, 0.92).setStrokeStyle(1, ok ? 0x5cff8a : 0xff5c5c);
-    titulo(this, ok ? this.t.titulo_exito : this.t.titulo_fallo, 36).setX(cx);
     const msg = (ok ? this.t.exito : this.t.fallo)
       .replace("{vel}", vel.toFixed(1)).replace("{segura}", this.dif.segura);
-    texto(this, cx, 54, msg, { tam: 7, ancho: 204 });
+    this.panelFin = [
+      this.add.rectangle(cx, 76, 220, 92, 0x0b1026, 0.92).setStrokeStyle(1, ok ? 0x5cff8a : 0xff5c5c),
+      titulo(this, ok ? this.t.titulo_exito : this.t.titulo_fallo, 36).setX(cx),
+      texto(this, cx, 54, msg, { tam: 7, ancho: 204 })
+    ];
 
     if (ok) {
+      // Solo con un aterrizaje correcto se entra a la base (sola, sin botón)
       estado.bitacora.push(`Aterrizaste en el polo sur lunar a ${vel.toFixed(1)} m/s.`);
-      boton(this, cx, 108, "Continuar", () => this.scene.start(siguienteEscena(this.scene.key)));
+      this.panelFin.push(texto(this, cx, 108, this.t.entrando_base, { tam: 6, color: "#5cff8a" }));
+      this.time.delayedCall(2500, () => this.entrarBase());
     } else {
       estado.oxigeno -= 5;
       boton(this, cx - 52, 108, "Reintentar (-5 O2)", () => this.scene.restart({ dificultad: this.dificultad }), 100);
       boton(this, cx + 52, 108, "Cambiar dificultad", () => this.scene.restart({}), 100);
     }
+  }
+
+  // ---------------------------------------------------------------- entrar a la base
+  // El astronauta baja de la nave, camina hasta la esclusa, la puerta se abre,
+  // entra y se ve un letrero de bienvenida → siguiente escena.
+  entrarBase() {
+    if (this.entrando) return;
+    this.entrando = true;
+    this.panelFin.forEach(o => o.destroy());
+
+    const traje = estado.traje?.id || "ligero", piso = SUELO - 1;
+    const astro = this.add.image(NAVE_X, piso, `astro_${traje}_0`).setOrigin(0.5, 1).setScale(0.5).setAlpha(0)
+      .setFlipX(BASE.puertaX < NAVE_X);              // mira hacia la base
+    const sombra = this.add.ellipse(NAVE_X, piso, 8, 2, 0x333c57, 0.6).setAlpha(0);
+    let paso = 0;
+    const caminar = this.time.addEvent({ delay: 150, loop: true, paused: true, callback: () => {
+      paso = 1 - paso;
+      astro.setTexture(`astro_${traje}_${paso}`);
+      sombra.x = astro.x;
+    } });
+
+    this.tweens.chain({ tweens: [
+      // baja de la nave
+      { targets: [astro, sombra], alpha: 1, duration: 400 },
+      // camina hasta la puerta
+      { targets: astro, x: BASE.puertaX + 0.5, duration: 1800,
+        onStart: () => { caminar.paused = false; },
+        onComplete: () => {
+          caminar.paused = true;
+          astro.setTexture(`astro_${traje}_0`);
+          sombra.x = astro.x;
+          this.abrirPuerta();
+        } },
+      // espera a que se abra y entra
+      { targets: [astro, sombra], alpha: 0, delay: 600, duration: 400, onComplete: () => this.cerrarPuerta() }
+    ] });
+  }
+
+  abrirPuerta() {
+    this.luzPuerta.setFillStyle(0xfff27a);
+    this.brillo = this.add.rectangle(this.puerta.x, this.puerta.y, 5, 9, 0xfff27a, 0.85).setOrigin(0);
+    this.children.moveBelow(this.brillo, this.puerta);
+    this.tweens.add({ targets: this.puerta, scaleY: 0, duration: 400 });
+  }
+
+  cerrarPuerta() {
+    this.tweens.add({ targets: this.puerta, scaleY: 1, duration: 400, onComplete: () => {
+      this.brillo?.destroy();
+      this.luzPuerta.setFillStyle(0x5cff8a);
+      this.cameras.main.fadeOut(500, 0, 0, 0);
+      this.cameras.main.once("camerafadeoutcomplete", () => this.bienvenida());
+    } });
+  }
+
+  // Dentro de la base: letrero de bienvenida y luego a preparar el equipo
+  bienvenida() {
+    this.tweens.killAll();
+    this.time.removeAllEvents();
+    this.children.removeAll(true);
+    this.cameras.main.fadeIn(400, 0, 0, 0);
+    this.add.rectangle(0, 0, ANCHO, ALTO, 0x0b1026).setOrigin(0);
+    // pasillo: piso, paredes y luces del techo
+    this.add.rectangle(0, 120, ANCHO, 60, 0x1d2650).setOrigin(0);
+    this.add.rectangle(0, 120, ANCHO, 1, 0x4fd1ff).setOrigin(0);
+    for (let x = 20; x < ANCHO; x += 40) {
+      const l = this.add.rectangle(x, 24, 12, 2, 0xfff27a);
+      this.tweens.add({ targets: l, alpha: 0.4, duration: 600 + x, yoyo: true, repeat: -1 });
+    }
+    const traje = estado.traje?.id || "ligero";
+    this.add.image(60, 150, `astro_${traje}_0`).setOrigin(0.5, 1);
+    titulo(this, this.t.base_titulo, 52);
+    texto(this, ANCHO / 2, 76, this.t.base_texto, { tam: 7, ancho: 250 });
+    // sigue sola a preparar el equipo (un clic lo adelanta)
+    let listo = false;
+    const seguir = () => {
+      if (listo) return;
+      listo = true;
+      this.cameras.main.fadeOut(400, 0, 0, 0);
+      this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start(siguienteEscena(this.scene.key)));
+    };
+    this.time.delayedCall(4500, seguir);
+    this.input.once("pointerdown", seguir);
   }
 }

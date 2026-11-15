@@ -16,7 +16,7 @@
 import { ANCHO, ALTO, COLOR, OBJETOS, CAPACIDAD_MOCHILA, O2_TANQUE, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { texto, boton } from "../ui.js";
-import { crearTexturasMochila, crearTextura } from "../pixelart.js";
+import { crearTexturasMochila, crearTextura, crearAstro32 } from "../pixelart.js";
 import { Stella } from "../stella.js";
 
 const PARED = 88;            // donde termina la pared y empieza el piso
@@ -79,6 +79,8 @@ export class CentroControl extends Phaser.Scene {
     };
 
     crearTexturasMochila(this);
+    // el astronauta lleva el traje que eligió en Equipo
+    this.astroClave = crearAstro32(this, estado.traje?.id);
     crearTextura(this, "px_estrella", ESTRELLA, { k: 0x1a1c2c, Y: 0xffcd75 });
     this.dibujarSala();
     this.crearMonitor();
@@ -324,7 +326,7 @@ export class CentroControl extends Phaser.Scene {
     this.paso = 0;
     this.tiempoPaso = 0;
     this.sombra = this.add.ellipse(0, 0, 14, 4, 0x1a1c2c, 0.4);
-    this.astro = this.add.image(150, ALTO + 30, "astro32_0").setOrigin(0.5, 1);
+    this.astro = this.add.image(150, ALTO + 30, `${this.astroClave}_0`).setOrigin(0.5, 1);
     this.sombraChispa = this.add.ellipse(0, 0, 8, 3, 0x1a1c2c, 0.3);
     this.chispa = this.add.image(174, 120, "chispa_px");
     this.dialogo = texto(this, 0, 0, "", { tam: 6, ancho: 150, origenY: 1 })
@@ -1164,7 +1166,7 @@ export class CentroControl extends Phaser.Scene {
     this.tiempoPaso += delta;
     if (camina && this.tiempoPaso > 160) { this.tiempoPaso = 0; this.paso = 1 - this.paso; }
     if (!camina) this.paso = 0;
-    this.astro.setTexture(`astro32_${this.paso}`).setDepth(this.astro.y);
+    this.astro.setTexture(`${this.astroClave}_${this.paso}`).setDepth(this.astro.y);
     this.sombra.setPosition(this.astro.x, this.astro.y).setDepth(this.astro.y - 0.5);
 
     // Chispa flota detrás del astronauta
