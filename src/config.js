@@ -52,7 +52,7 @@ export const MISIONES_JSON = { Diario: "diario" };   // diario.json: solo trae l
 //   &sinred=1  → no consulta DONKI (arranca al instante)
 // Valores "normales" (Guía: nave pequeña, traje ligero, mochila con oxígeno y escudo)
 export const ESTADO_PRUEBA = {
-  nombreClave: "Cometa",
+  nombreClave: "Comet",
   traje: "ligero",
   nave: "pequena",
   mochila: ["oxigeno", "escudo"],

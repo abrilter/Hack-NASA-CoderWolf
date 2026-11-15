@@ -1,7 +1,7 @@
 {
   "_nota": "Bitácora de ejemplo para abrir el Diario solo: index.html?escena=Diario. Valores parecidos a una partida real (traje ligero, ruta por el cráter, saliente en la tormenta).",
   "prueba": {
-    "nombreClave": "Cometa",
+    "nombreClave": "Comet",
     "traje": "ligero",
     "nave": "pequena",
     "mochila": [
@@ -53,8 +53,8 @@
       }
     },
     "bitacora": [
-      "Mochila lista: Tanque de oxígeno, Linterna, Kit de radio (9 kg).",
-      "Huellas: primero seguiste el rastro del rover de carga y perdiste 8 de oxígeno (5 pistas revisadas)."
+      "Backpack ready: Oxygen tank, Flashlight, Radio kit (9 kg).",
+      "Tracks: you first followed the cargo rover's track and lost 8 oxygen (5 clues checked)."
     ]
   }
 }

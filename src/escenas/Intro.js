@@ -53,7 +53,7 @@ export class Intro extends Phaser.Scene {
     this.tweens.killAll(); this.time.removeAllEvents(); this.children.removeAll(true);
     this.cameras.main.fadeIn(300);
     this.dibujar(this.paso);
-    this.dialogo(typeof p === "string" ? { titulo: "Control de Misión", texto: p } : p);
+    this.dialogo(typeof p === "string" ? { titulo: "Mission Control", texto: p } : p);
   }
 
   // Una escena hija puede cambiar estas tres (páginas, dibujo y qué pasa al terminar)

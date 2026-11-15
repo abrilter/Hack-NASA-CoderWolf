@@ -82,7 +82,7 @@ export function barraDePruebas(juego) {
 
 // Lo mínimo para que cualquier escena abra aunque no se haya pasado por las anteriores
 function completarEstado() {
-  if (!estado.nombreClave) estado.nombreClave = "Cometa";
+  if (!estado.nombreClave) estado.nombreClave = "Comet";
   if (!estado.traje) estado.traje = TRAJES.find(t => t.id === "ligero");
   if (!estado.nave) estado.nave = NAVES.find(n => n.id === "pequena");
   if (!estado.mochila?.length) estado.mochila = ["oxigeno", "escudo"];

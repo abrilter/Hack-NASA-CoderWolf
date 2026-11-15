@@ -47,15 +47,15 @@ const PALETA_ICONOS = { k: CONTORNO, y: 0xef7d57, Y: 0xffcd75, c: 0xbff3ff, M: 0
 // qué dibujo lleva cada tema (por palabras del tema)
 function iconoFuente(tema = "") {
   const t = tema.toLowerCase();
-  if (/radiaci/.test(t)) return "ico_rad";
-  if (/planta/.test(t)) return "planta";
-  if (/rover|velocidad/.test(t)) return "rover_cuerpo";
-  if (/huella/.test(t)) return "ico_huella";
-  if (/polvo/.test(t)) return "roca_1";
-  if (/luz/.test(t)) return "px_obj_linterna";
-  if (/fr[ií]o|hielo|cr[aá]ter|sombra/.test(t)) return "ico_frio";
-  if (/hueso|m[uú]sculo|estaci/.test(t)) return "astro32_0";
-  if (/tormenta|cme|sol/.test(t)) return "ico_sol";
+  if (/radiaci|radiation/.test(t)) return "ico_rad";
+  if (/planta|plant/.test(t)) return "planta";
+  if (/rover|velocidad|speed/.test(t)) return "rover_cuerpo";
+  if (/huella|footprint|track/.test(t)) return "ico_huella";
+  if (/polvo|dust/.test(t)) return "roca_1";
+  if (/luz|light/.test(t)) return "px_obj_linterna";
+  if (/fr[ií]o|hielo|cr[aá]ter|sombra|cold|ice|crater|shadow/.test(t)) return "ico_frio";
+  if (/hueso|m[uú]sculo|estaci|bone|muscle|station/.test(t)) return "astro32_0";
+  if (/tormenta|cme|sol|storm|sun/.test(t)) return "ico_sol";
   return "luna_px";
 }
 
@@ -235,7 +235,7 @@ export class Final extends Phaser.Scene {
     if (!peor) return llenar(this.t["causa_" + recurso], { oxigeno: Math.round(estado.oxigeno), radiacion: Math.round(estado.radiacion) });
     return llenar(this.t.finales.evacuacion.voz, {
       recurso: this.t["recurso_" + recurso], decision: peor.decision,
-      valor: recurso === "oxigeno" ? `${peor.oxigeno} O2` : `+${peor.radiacion} radiación`
+      valor: recurso === "oxigeno" ? `${peor.oxigeno} O2` : `+${peor.radiacion} ${this.t.recurso_radiacion}`
     });
   }
 
@@ -257,7 +257,7 @@ export class Final extends Phaser.Scene {
     if (m.ruta) add(tx.ruta?.rutas?.[m.ruta.id]?.nombre || m.ruta.id,
       m.ruta.oxigeno === undefined ? "" : efectos(m.ruta.oxigeno, m.ruta.radiacion), m.ruta.oxigeno || 0, m.ruta.radiacion || 0);
     if (m.crater) add(t.c_crater, llenar(t.c_crater_efecto, { o2: m.crater.oxigeno, choques: m.crater.choques }), m.crater.oxigeno);
-    const huellas = estado.bitacora.find(b => b.startsWith("Huellas"));
+    const huellas = estado.bitacora.find(b => b.startsWith((estado.textos.huellas.bitacora_bien || "").split(":")[0]));
     if (huellas) add(huellas, "");
     if (m.rocas) add(tx.rocas.opciones[m.rocas.eleccion].nombre, efectos(m.rocas.oxigeno, 0), m.rocas.oxigeno || 0);
     if (m.tormenta) add(tx.tormenta.opciones[m.tormenta.eleccion].nombre, efectos(m.tormenta.oxigeno, m.tormenta.radiacion), m.tormenta.oxigeno, m.tormenta.radiacion);

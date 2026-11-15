@@ -1,25 +1,59 @@
 {
   "_nota": "Dueño: Rol 4. Todo lo que tenga \"ejemplo\": true es de prueba y se ve en pantalla como DATO DE EJEMPLO. Reemplazar por datos reales con su enlace y cambiar a false.",
-
   "cme": {
     "_nota": "Tormenta de respaldo del modo prueba (la misma que en cme_historicas).",
-    "nombre": "la gran tormenta de mayo de 2024",
+    "nombre": "the great storm of May 2024",
     "fecha": "2024-05-10",
     "velocidad_kms": 1332,
     "fuente": "NASA DONKI (CMEAnalysis)",
     "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/30672/-1",
     "ejemplo": false
   },
-
   "cme_historicas": [
-    {"_nota": "Tormentas reales que iban hacia la Tierra, verificadas en NASA DONKI (CMEAnalysis), para cuando DONKI no contesta o el Sol está tranquilo. Se elige una al azar. Agreguen solo valores vistos en DONKI, con su enlace (pruebas/tormentas.html)."},
-    {"nombre": "la tormenta de San Patricio de 2015", "fecha": "2015-03-15", "velocidad_kms": 1000, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/8839/-1", "ejemplo": false},
-    {"nombre": "la tormenta de Halloween de 2021", "fecha": "2021-10-28", "velocidad_kms": 1109, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/18107/-1", "ejemplo": false},
-    {"nombre": "la gran tormenta de mayo de 2024", "fecha": "2024-05-10", "velocidad_kms": 1332, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/30672/-1", "ejemplo": false},
-    {"nombre": "la tormenta de octubre de 2024", "fecha": "2024-10-09", "velocidad_kms": 1509, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/33877/-1", "ejemplo": false},
-    {"nombre": "la tormenta de la gran llamarada de septiembre de 2017", "fecha": "2017-09-06", "velocidad_kms": 1636, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/27283/-1", "ejemplo": false}
+    {
+      "_nota": "Tormentas reales que iban hacia la Tierra, verificadas en NASA DONKI (CMEAnalysis), para cuando DONKI no contesta o el Sol está tranquilo. Se elige una al azar. Agreguen solo valores vistos en DONKI, con su enlace (pruebas/tormentas.html)."
+    },
+    {
+      "nombre": "the St. Patrick's Day storm of 2015",
+      "fecha": "2015-03-15",
+      "velocidad_kms": 1000,
+      "fuente": "NASA DONKI (CMEAnalysis)",
+      "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/8839/-1",
+      "ejemplo": false
+    },
+    {
+      "nombre": "the Halloween storm of 2021",
+      "fecha": "2021-10-28",
+      "velocidad_kms": 1109,
+      "fuente": "NASA DONKI (CMEAnalysis)",
+      "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/18107/-1",
+      "ejemplo": false
+    },
+    {
+      "nombre": "the great storm of May 2024",
+      "fecha": "2024-05-10",
+      "velocidad_kms": 1332,
+      "fuente": "NASA DONKI (CMEAnalysis)",
+      "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/30672/-1",
+      "ejemplo": false
+    },
+    {
+      "nombre": "the October 2024 storm",
+      "fecha": "2024-10-09",
+      "velocidad_kms": 1509,
+      "fuente": "NASA DONKI (CMEAnalysis)",
+      "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/33877/-1",
+      "ejemplo": false
+    },
+    {
+      "nombre": "the storm of the great flare of September 2017",
+      "fecha": "2017-09-06",
+      "velocidad_kms": 1636,
+      "fuente": "NASA DONKI (CMEAnalysis)",
+      "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/27283/-1",
+      "ejemplo": false
+    }
   ],
-
   "modelo": {
     "_nota": "Números del modelo de decisiones (Rol 4). Verificados con pruebas/balance.html; si cambian alguno, vuelvan a abrir esa página. Ver ANALISIS.md, sección 2.3.",
     "duracion_tormenta_h": 12,
@@ -31,7 +65,6 @@
     "cme_min_kms": 1000,
     "cme_max_juego_kms": 1700
   },
-
   "radiacion": {
     "_nota": "dosis_juego_por_hora es un VALOR DE JUEGO (puntos de radiación por hora de tormenta sin protección; 100 = se pierde). dato_real_uSv_hora es el dato de RadLab que se muestra en pantalla.",
     "dosis_juego_por_hora": 20,
@@ -40,72 +73,101 @@
     "link": "https://visualization.osdr.nasa.gov/radlab/gui/data-api/",
     "ejemplo": true
   },
-
-  "rover": { "kmh": 0.5, "fuente": "NASA VIPER, rover del polo sur: 0.36 km/h normal y 0.72 km/h máximo (el juego usa 0.5)", "link": "https://assets.science.nasa.gov/content/dam/science/psd/lunar-science/documents/2025-02-13_VIPER_Updated_Technical_Briefing_Presentation-Shared.pdf", "fecha": "2025", "ejemplo": false },
-
+  "rover": {
+    "kmh": 0.5,
+    "fuente": "NASA VIPER, south pole rover: 0.36 km/h normal and 0.72 km/h top speed (the game uses 0.5)",
+    "link": "https://assets.science.nasa.gov/content/dam/science/psd/lunar-science/documents/2025-02-13_VIPER_Updated_Technical_Briefing_Presentation-Shared.pdf",
+    "fecha": "2025",
+    "ejemplo": false
+  },
   "rutas": [
-    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 400, "oscura": true, "parte_escena": 0.5,  "ejemplo": true },
-    { "id": "cresta", "nombre": "Rodear por la cresta", "km": 12, "subida_m": 100,  "oscura": false, "ejemplo": true }
+    {
+      "id": "crater",
+      "nombre": "Cut through the crater",
+      "km": 10,
+      "subida_m": 400,
+      "oscura": true,
+      "parte_escena": 0.5,
+      "ejemplo": true
+    },
+    {
+      "id": "cresta",
+      "nombre": "Go around along the ridge",
+      "km": 12,
+      "subida_m": 100,
+      "oscura": false,
+      "ejemplo": true
+    }
   ],
-  "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
+  "rutas_fuente": "NASA Moon Trek (lunar south pole)",
   "rutas_link": "https://trek.nasa.gov/moon/",
-
   "fuentes_extra": [
-    { "_nota": "Datos NASA que se muestran en el juego y no están en otra parte de este archivo. Si su misión muestra un dato nuevo, agréguenlo aquí para que salga en la pantalla final." },
-    { "tema": "Las huellas del Apolo siguen en la Luna (fotos de LRO)", "fuente": "NASA LRO", "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/", "ejemplo": false },
-    { "tema": "Gravedad de la Luna (1.62 m/s²)", "fuente": "NASA Moon Fact Sheet", "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "ejemplo": false }
+    {
+      "_nota": "Datos NASA que se muestran en el juego y no están en otra parte de este archivo. Si su misión muestra un dato nuevo, agréguenlo aquí para que salga en la pantalla final."
+    },
+    {
+      "tema": "The Apollo footprints are still on the Moon (LRO photos)",
+      "fuente": "NASA LRO",
+      "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/",
+      "ejemplo": false
+    },
+    {
+      "tema": "Moon's gravity (1.62 m/s²)",
+      "fuente": "NASA Moon Fact Sheet",
+      "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+      "ejemplo": false
+    }
   ],
-
   "zona_aterrizaje": {
-    "nombre": "borde del cráter Shackleton",
+    "nombre": "rim of Shackleton crater",
     "lat": -89.67,
     "lon": 129.78,
     "fuente": "NASA Moon Trek",
     "link": "https://trek.nasa.gov/moon/",
     "ejemplo": false
   },
-
   "luz_polo_sur": {
     "_nota": "Dato de la escena Ruta. Verificado en NASA Science: el Sol siempre va cerca del horizonte en los polos y las sombras son largas.",
-    "texto": "En el polo sur de la Luna el Sol va pegado al horizonte y da vueltas alrededor. Las sombras son muy largas y hay cráteres donde nunca llega la luz.",
-    "fuente": "NASA Science · sombras cerca del polo sur (LRO)",
+    "texto": "At the Moon's south pole the Sun stays right on the horizon and circles around. Shadows are very long and there are craters where light never reaches.",
+    "fuente": "NASA Science · shadows near the south pole (LRO)",
     "link": "https://science.nasa.gov/resource/shadows-near-the-moons-south-pole/",
     "ejemplo": false
   },
-
   "polo_sur": {
-    "texto": "En el polo sur de la Luna hay cráteres donde nunca da el Sol. Son de los lugares más fríos del sistema solar (unos -240 °C) y guardan hielo de agua.",
+    "texto": "At the Moon's south pole there are craters where the Sun never shines. They're among the coldest places in the solar system (about -240 °C) and they hold water ice.",
     "fuente": "NASA LRO (Lunar Reconnaissance Orbiter)",
     "link": "https://science.nasa.gov/mission/lro/",
     "ejemplo": false
   },
-
   "planta": {
     "_nota": "Verificado en la metadata de OSDR (osdr.nasa.gov/osdr/data/osd/meta/476). Las plantas se sembraron en mayo de 2021 y se cosecharon el día 20.",
     "estudio": "Plants grown in Apollo lunar regolith present stress-associated transcriptomes that inform prospects for lunar exploration",
-    "autores": "Paul, Elardo y Ferl",
+    "autores": "Paul, Elardo and Ferl",
     "especie": "Arabidopsis thaliana",
-    "muestras_apolo": [11, 12, 17],
+    "muestras_apolo": [
+      11,
+      12,
+      17
+    ],
     "doi": "10.1038/s42003-022-03334-8",
-    "fuente": "NASA OSDR · OSD-476 (Paul, Elardo y Ferl)",
+    "fuente": "NASA OSDR · OSD-476 (Paul, Elardo and Ferl)",
     "fecha": "2022-05-16",
     "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-476",
     "ejemplo": false
   },
-
   "crater_helado": {
     "_nota": "Escena CraterHelado (Rol 5). 'juego' son valores de juego para balancear; los datos NASA llevan fuente y enlace.",
     "temperatura": {
-      "texto": "En los cráteres de sombra permanente la sonda LRO midió más de 200 °C bajo cero (menos de −238 °C; −248 °C en el cráter Hermite).",
-      "fuente": "NASA LRO (Diviner): más de 200 °C bajo cero",
+      "texto": "In permanently shadowed craters the LRO probe measured colder than 200 °C below zero (below −238 °C; −248 °C in Hermite crater).",
+      "fuente": "NASA LRO (Diviner): colder than 200 °C below zero",
       "link": "https://svs.gsfc.nasa.gov/cgi-bin/details.cgi?aid=10595",
       "fecha": "2010",
       "ejemplo": false
     },
     "polvo": {
       "_nota": "Verificado: NASA/TM-2005-213610, Gaier, The Effects of Lunar Dust on EVA Systems During the Apollo Missions (abrasión de visores y sellos, trajes trabados).",
-      "texto": "El polvo lunar es afilado: en las misiones Apolo rayó visores y dañó sellos de los trajes.",
-      "fuente": "NASA NTRS · Gaier, el polvo lunar en las misiones Apolo",
+      "texto": "Lunar dust is sharp: on the Apollo missions it scratched visors and damaged suit seals.",
+      "fuente": "NASA NTRS · Gaier, lunar dust on the Apollo missions",
       "link": "https://ntrs.nasa.gov/citations/20050160460",
       "fecha": "2005",
       "ejemplo": false
@@ -132,14 +194,19 @@
   },
   "viaje": {
     "_nota": "Escena Viaje (alerta solar en pleno vuelo). Valores de juego. escudo: el escudo de la nave (sube la protección: proteccion() usa escudo/100 × 0.5). acelerar: llegar antes a la Luna gastando combustible del aterrizaje.",
-    "escudo": { "escudo": 30, "oxigeno": -6 },
-    "acelerar": { "horas_ganadas": 3, "combustible_factor": 0.7 },
+    "escudo": {
+      "escudo": 30,
+      "oxigeno": -6
+    },
+    "acelerar": {
+      "horas_ganadas": 3,
+      "combustible_factor": 0.7
+    },
     "guardar": {}
   },
-
   "rocas": {
     "_nota": "Escena Rocas (Rol 2). 'juego' son valores de juego. A pie, el oxígeno sube con los kg que carga (mochila + traje) y más con el traje blindado.",
-    "texto": "En la Luna la gravedad es de 1.62 m/s²: la sexta parte que en la Tierra. Por eso todo pesa la sexta parte.",
+    "texto": "On the Moon gravity is 1.62 m/s²: one sixth of Earth's. That's why everything weighs one sixth as much.",
     "fuente": "NASA Moon Fact Sheet",
     "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
     "ejemplo": false,
@@ -150,17 +217,15 @@
       "blindado_factor": 1.4
     }
   },
-
   "huellas": {
     "_nota": "Números de juego de la escena Huellas (Rol 4): oxígeno por pista revisada y por seguir el rastro equivocado.",
     "o2_pista": 1,
     "o2_error": 8,
-    "texto": "En la Luna no hay viento ni lluvia. Por eso las huellas y las marcas de ruedas duran muchísimo. La nave LRO de la NASA fotografió las de las misiones Apolo: ¡siguen ahí!",
-    "fuente": "NASA LRO · sitio de aterrizaje del Apolo 17",
+    "texto": "The Moon has no wind or rain. That's why footprints and wheel tracks last a very long time. NASA's LRO spacecraft photographed the ones from the Apollo missions: they're still there!",
+    "fuente": "NASA LRO · Apollo 17 landing site",
     "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/",
     "ejemplo": false
   },
-
   "tormenta": {
     "_nota": "Escena Tormenta (Rol 5). Valores de juego. proteccion = parte de las partículas que detiene el refugio (nunca todas). La fuerza sale de radiacion.dosis_juego_por_hora y la velocidad de la CME de DONKI.",
     "vel_referencia_kms": 1500,
@@ -194,7 +259,6 @@
       }
     }
   },
-
   "rescate_aire": {
     "_nota": "Escena Rescate (Rol 5): decisiones del aire y del regreso. Valores de juego.",
     "manguera_fraccion": 0.3,
@@ -209,20 +273,18 @@
     "caminar_dos": 1.2,
     "ayuda_factor": 0.5
   },
-
   "itzel_estacion": {
     "_nota": "Contexto en la voz de Itzel. Es lo que pasa en la Estación Espacial, NO en la Luna.",
-    "tema": "Hueso y músculo en la Estación Espacial",
-    "texto": "En la Estación Espacial, los astronautas pierden hueso y músculo si no hacen ejercicio. En la Luna aún se investiga.",
-    "fuente": "NASA OSDR (estudios en la Estación Espacial)",
+    "tema": "Bone and muscle on the Space Station",
+    "texto": "On the Space Station, astronauts lose bone and muscle if they don't exercise. On the Moon, it's still being studied.",
+    "fuente": "NASA OSDR (Space Station studies)",
     "link": "https://osdr.nasa.gov/bio/",
     "ejemplo": false
   },
-
   "planta_espacio": {
     "_nota": "Verificado en la metadata de OSDR (osdr.nasa.gov/osdr/data/osd/meta/38): 'Arabidopsis seeds were flown to the International Space Station and allowed to germinate and grow for 3 days in microgravity'. Misión SpaceX-5, experimento BRIC-20.",
-    "tema": "Plantas que crecen en el espacio",
-    "texto": "En 2015, semillas de Arabidopsis viajaron a la Estación Espacial (misión SpaceX-5). Allá germinaron y crecieron 3 días sin gravedad.",
+    "tema": "Plants that grow in space",
+    "texto": "In 2015, Arabidopsis seeds traveled to the Space Station (SpaceX-5 mission). Up there they sprouted and grew for 3 days without gravity.",
     "fuente": "NASA OSDR · OSD-38 (BRIC-20)",
     "fecha": "2015",
     "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-38",
