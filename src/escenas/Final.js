@@ -9,14 +9,11 @@
 // ejemplo como real) y se puede tocar para abrir su página.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, etiquetaDato, navegarConTeclado, llenar } from "../ui.js";
-import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
-import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
-import { fechaLarga } from "../nasa/sol.js";
 import { titulo, texto, boton, navegarConTeclado, llenar } from "../ui.js";
 import { crearTexturasMochila, crearTextura } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
 import { finalDeMision, proteccion } from "../modelo/simulacion.js";
+import { fechaLarga } from "../nasa/sol.js";
 
 
 // ---------------------------------------------------------------- insignia (A-10)
@@ -164,17 +161,6 @@ export class Final extends Phaser.Scene {
     this.miniInsignia();
     boton(this, 264, 145, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
     boton(this, 160, 167, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
-  }
-
-  lineaSol(y) {
-    const t = this.t, c = estado.datos.cme;
-    if (!c?.fecha) return;
-    const plantilla = c.en_vivo ? t.sol_vivo : c.nombre ? t.sol_famosa : t.sol_real;
-    // columna derecha, debajo de lo que dice Chispa (a la izquierda está la ilustración)
-    const linea = texto(this, 126, Math.min(y, 112), llenar(plantilla, { fecha: fechaLarga(c.fecha), vel: c.velocidad_kms, nombre: c.nombre }),
-      { tam: 5, ancho: 186, origenX: 0, align: "left", color: "#ff8a5c" });
-    if (c.link) linea.setInteractive({ useHandCursor: true })
-      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(c.link, "_blank", "noopener"); });
   }
 
   lineaSol(y) {
