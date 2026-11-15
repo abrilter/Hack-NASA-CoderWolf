@@ -57,11 +57,12 @@ export function velocidadDeJuego(datos) {
   return Math.min(M.cme_max_juego_kms ?? Infinity, Math.max(M.cme_min_kms ?? 0, v));
 }
 
-// "2024-05-10" → "10 de mayo de 2024"
+// "2024-05-10" → "May 10, 2024" (formato y meses en textos.json → comun)
 export function fechaLarga(iso) {
   const meses = estado.textos?.comun?.meses || [];
   const [a, m, d] = (iso || "").split("-").map(Number);
-  return a && m && d && meses[m - 1] ? `${d} de ${meses[m - 1]} de ${a}` : iso || "";
+  const formato = estado.textos?.comun?.fecha || "{mes} {dia}, {anio}";
+  return a && m && d && meses[m - 1] ? formato.replace("{mes}", meses[m - 1]).replace("{dia}", d).replace("{anio}", a) : iso || "";
 }
 
 // Tormenta famosa del pasado (todas con su fuente NASA en datos.json)

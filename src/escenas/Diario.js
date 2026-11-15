@@ -133,7 +133,7 @@ export class Diario extends Phaser.Scene {
     }
 
     // huellas (solo queda en la bitácora: se reconoce por la frase de error)
-    const huellas = estado.bitacora.find(b => b.startsWith("Huellas"));
+    const huellas = estado.bitacora.find(b => b.startsWith((estado.textos.huellas.bitacora_bien || "").split(":")[0]));
     if (huellas) {
       const plantillaMal = tx.huellas?.bitacora_mal || "";
       const mal = plantillaMal && huellas.startsWith(plantillaMal.split("{")[0]);
@@ -181,7 +181,7 @@ export class Diario extends Phaser.Scene {
       });
     }
     if (r.mensajes?.length) {
-      const lista = r.mensajes.map(id => "«" + tx.rescate.mensajes[id].nombre + "»").join(" y ");
+      const lista = r.mensajes.map(id => "«" + tx.rescate.mensajes[id].nombre + "»").join(` ${estado.textos.comun.y} `);
       const falta = MENSAJES.find(id => !r.mensajes.includes(id));
       add({
         clave: "mensajes", titulo: P.mensajes.titulo,

@@ -334,7 +334,7 @@ export class Aterrizaje extends Phaser.Scene {
       titulo(this, this.t.titulo, 32).setX(ANCHO / 2 + 40),
       texto(this, ANCHO / 2 + 40, 48, this.t.explicacion, { tam: 7, ancho: 204 }),
       texto(this, ANCHO / 2 + 40, 92, this.t.tu_nave
-        .replace("{nave}", op?.nombre || "Nave")
+        .replace("{nave}", op?.nombre || "Ship")
         .replace("{empuje}", empuje)
         .replace("{combustible}", Math.round(this.naveDatos.combustible * (estado.misiones?.viaje?.combustibleFactor ?? 1))), { tam: 6, ancho: 204, color: "#ffcd75" }),
       texto(this, ANCHO / 2 + 40, 112, this.t.elige, { tam: 7 })

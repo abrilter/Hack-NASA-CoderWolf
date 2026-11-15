@@ -35,14 +35,14 @@ export function barraDePruebas(juego) {
 
   const lista = document.createElement("select");
   lista.style.cssText = ESTILO;
-  lista.title = "Ir directo a una escena";
+  lista.title = "Go straight to a scene";
   let todas = [];
   // la lista se arma cuando el juego ya registró sus escenas
   const llenarLista = () => {
     todas = Object.keys(juego.scene.keys).filter(k => k !== "Carga");
     const fuera = todas.filter(k => !ORDEN.includes(k));
     lista.replaceChildren();
-    [...ORDEN.map((k, i) => [k, `${i + 1}. ${k}`]), ...fuera.map(k => [k, `· ${k} (fuera del recorrido)`])]
+    [...ORDEN.map((k, i) => [k, `${i + 1}. ${k}`]), ...fuera.map(k => [k, `· ${k} (outside the story)`])]
       .filter(([k]) => todas.includes(k))
       .forEach(([k, txt]) => { const o = document.createElement("option"); o.value = k; o.textContent = txt; lista.append(o); });
   };
@@ -67,8 +67,8 @@ export function barraDePruebas(juego) {
     ir(ORDEN[j]);
   }
 
-  caja.append(etiqueta, boton("◀", "Escena anterior", () => mover(-1)),
-    boton("Saltar ▶", "Siguiente escena de la historia", () => mover(1)), lista);
+  caja.append(etiqueta, boton("◀", "Previous scene", () => mover(-1)),
+    boton("Skip ▶", "Next scene in the story", () => mover(1)), lista);
   document.body.append(caja);
 
   // muestra en qué escena estás y el oxígeno
@@ -82,7 +82,7 @@ export function barraDePruebas(juego) {
 
 // Lo mínimo para que cualquier escena abra aunque no se haya pasado por las anteriores
 function completarEstado() {
-  if (!estado.nombreClave) estado.nombreClave = "Cometa";
+  if (!estado.nombreClave) estado.nombreClave = "Comet";
   if (!estado.traje) estado.traje = TRAJES.find(t => t.id === "ligero");
   if (!estado.nave) estado.nave = NAVES.find(n => n.id === "pequena");
   if (!estado.mochila?.length) estado.mochila = ["oxigeno", "escudo"];

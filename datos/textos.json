@@ -1,178 +1,215 @@
 {
   "_nota": "Dueño: Rol 5. Todos los diálogos del juego viven aquí. Se pueden cambiar sin tocar el código.",
-
   "pantalla_titulo": {
     "nombre": "STELLA'S RIDE",
-    "presenta": "CoderWolf presenta",
-    "subtitulo": "Rescate en el Polo Sur Lunar",
-    "empezar": "Toca o presiona Enter para empezar",
-    "sol_consultando": "☀ Consultando el Sol…",
-    "sol_en_vivo": "☀ El Sol lanzó una nube el {fecha} a {vel} km/s: es tu tormenta.",
-    "sol_tranquilo": "☀ El Sol está tranquilo: entrenarás con {nombre}.",
-    "sol_sin_red": "☀ Sin conexión: entrenarás con la tormenta real del {fecha}."
+    "presenta": "CoderWolf presents",
+    "subtitulo": "Rescue at the Lunar South Pole",
+    "empezar": "Tap or press Enter to start",
+    "sol_consultando": "☀ Checking the Sun…",
+    "sol_en_vivo": "☀ The Sun launched a cloud on {fecha} at {vel} km/s: that's your storm.",
+    "sol_tranquilo": "☀ The Sun is calm: you'll train with {nombre}.",
+    "sol_sin_red": "☀ No connection: you'll train with the real storm of {fecha}."
   },
-
   "comun": {
     "_nota": "Etiquetas de las fuentes NASA (ui.js → etiquetaDato). en_vivo / no_en_vivo solo salen en el dato de DONKI.",
-    "dato_real": "Dato real",
-    "dato_ejemplo": "DATO DE EJEMPLO",
-    "en_vivo": "en vivo",
-    "no_en_vivo": "no en vivo",
-    "consultado": "(consultado el {fecha})",
-    "meses": ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
-  },
-
-  "intro": [
-    { "titulo": "Una noche de estrellas", "texto": "Miras el cielo con tu familia. Una luz cruza muy rápido: es la Estación Espacial. Algún día quieres explorar el espacio." },
-    { "titulo": "Noticia urgente", "texto": "La Dra. Itzel Ramos estudiaba el hielo del polo sur de la Luna con Chispa, su robot. Chispa detectó que viene una tormenta solar enorme." },
-    { "titulo": "Problemas", "texto": "La radio de la base se dañó, Chispa se perdió en un cráter y a Itzel se le acaba el oxígeno. Sus datos pueden proteger los satélites de la Tierra." },
-    { "titulo": "Se busca rescatista", "texto": "Todos los astronautas están en otra misión. El Control de Misión busca a alguien valiente. ¡No hay edad límite!" }
-  ],
-
-  "carta": {
-    "responde": "Control de Misión responde",
-    "ir": "Ir al hangar",
-    "pregunta_nombre": "Escoge tu nombre clave:",
-    "nombres": ["Cometa", "Nova", "Órbita", "Luna Azul"],
-    "pregunta_motivo": "Quiero ir al rescate porque...",
-    "motivos": [
-      { "texto": "Quiero ayudar a Itzel y Chispa", "respuesta": "¡Un buen rescatista piensa primero en los demás!" },
-      { "texto": "Me encanta el espacio", "respuesta": "¡La curiosidad mueve a los exploradores!" },
-      { "texto": "Quiero proteger la Tierra", "respuesta": "¡Esa responsabilidad es justo lo que buscamos!" }
+    "dato_real": "Real data",
+    "dato_ejemplo": "EXAMPLE DATA",
+    "en_vivo": "live",
+    "no_en_vivo": "not live",
+    "consultado": "(checked on {fecha})",
+    "meses": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
     ],
-    "elegido": "Has sido elegido. Antes de ir, pasarás la simulación de la misión."
+    "y": "and",
+    "fecha": "{mes} {dia}, {anio}"
   },
-
+  "intro": [
+    {
+      "titulo": "A starry night",
+      "texto": "You look at the sky with your family. A light crosses very fast: it's the Space Station. Someday you want to explore space."
+    },
+    {
+      "titulo": "Breaking news",
+      "texto": "Dr. Itzel Ramos was studying the ice at the Moon's south pole with Chispa, her robot dog. Chispa detected a huge solar storm coming."
+    },
+    {
+      "titulo": "Trouble",
+      "texto": "The base radio broke, Chispa got lost in a crater, and Itzel is running out of oxygen. Her data could protect Earth's satellites."
+    },
+    {
+      "titulo": "Rescuer wanted",
+      "texto": "All the astronauts are on another mission. Mission Control is looking for someone brave. There's no age limit!"
+    }
+  ],
+  "intro_letrero": "RESCUER\nWANTED",
+  "carta": {
+    "responde": "Mission Control replies",
+    "ir": "Go to the hangar",
+    "pregunta_nombre": "Choose your code name:",
+    "nombres": [
+      "Comet",
+      "Nova",
+      "Orbit",
+      "Blue Moon"
+    ],
+    "pregunta_motivo": "I want to join the rescue because...",
+    "motivos": [
+      {
+        "texto": "I want to help Itzel and Chispa",
+        "respuesta": "A good rescuer thinks of others first!"
+      },
+      {
+        "texto": "I love space",
+        "respuesta": "Curiosity drives explorers!"
+      },
+      {
+        "texto": "I want to protect Earth",
+        "respuesta": "That sense of responsibility is just what we need!"
+      }
+    ],
+    "elegido": "You've been chosen. Before you go, you'll complete the mission simulation."
+  },
   "centro_control": {
     "prefijo_stella": "STELLA: ",
-    "sombra": "sombra",
-    "bitacora": "Mochila: {lista} ({kg} kg).",
-    "titulo": "La mochila",
-    "letrero": "CENTRO DE CONTROL",
-    "bienvenida": "Explora la zona de la mochila: junto a la puerta está STELLA, el monitor que analiza la misión. Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
-    "mochila": "MOCHILA",
-    "no_cabe": "¡No cabe! Pasarías de 10 kg. Deja algo primero.",
-    "tomar": "{nombre} a la mochila (+{peso} kg).",
-    "dejar": "Dejaste {nombre} en la repisa.",
-    "accion": "Enter o clic: tomar / dejar",
-    "puerta": "SALIDA",
+    "sombra": "shadow",
+    "bitacora": "Backpack: {lista} ({kg} kg).",
+    "titulo": "The backpack",
+    "letrero": "CONTROL CENTER",
+    "bienvenida": "Explore the backpack area: by the door is STELLA, the monitor that analyzes the mission. Tap an object to take it or leave it. Only 10 kg fit.",
+    "mochila": "BACKPACK",
+    "no_cabe": "It doesn't fit! You'd go over 10 kg. Leave something first.",
+    "tomar": "{nombre} into the backpack (+{peso} kg).",
+    "dejar": "You left {nombre} on the shelf.",
+    "accion": "Enter or click: take / leave",
+    "puerta": "EXIT",
     "nombres": {
-      "oxigeno": "Tanque de oxígeno",
-      "escudo": "Escudo de radiación",
-      "radio": "Kit de radio",
-      "botiquin": "Botiquín",
-      "comida": "Comida",
-      "linterna": "Linterna"
+      "oxigeno": "Oxygen tank",
+      "escudo": "Radiation shield",
+      "radio": "Radio kit",
+      "botiquin": "First-aid kit",
+      "comida": "Food",
+      "linterna": "Flashlight"
     },
     "objetos": {
-      "oxigeno": "Tanque de oxígeno: +20 de oxígeno.",
-      "escudo": "Escudo portátil: protege de la radiación.",
-      "linterna": "Linterna: hay cráteres donde nunca llega el Sol.",
-      "radio": "Kit de radio: repara la radio de Itzel.",
-      "botiquin": "Botiquín: por si alguien se lastima.",
-      "comida": "Comida: energía para el viaje."
+      "oxigeno": "Oxygen tank: +20 oxygen.",
+      "escudo": "Portable shield: protects from radiation.",
+      "linterna": "Flashlight: some craters never get sunlight.",
+      "radio": "Radio kit: fixes Itzel's radio.",
+      "botiquin": "First-aid kit: in case someone gets hurt.",
+      "comida": "Food: energy for the trip."
     },
     "tarjeta": {
-      "titulo": "Dato NASA · Linterna",
-      "texto": "En el polo sur de la Luna hay cráteres donde nunca llega la luz del Sol. Allá abajo todo está oscuro y helado.",
-      "fuente": "Dato real · NASA Lunar Reconnaissance Orbiter (LRO)",
-      "cerrar": "Clic para cerrar"
+      "titulo": "NASA fact · Flashlight",
+      "texto": "At the Moon's south pole there are craters where sunlight never reaches. Down there everything is dark and frozen.",
+      "fuente": "Real data · NASA Lunar Reconnaissance Orbiter (LRO)",
+      "cerrar": "Click to close"
     },
     "tarjeta_mapa": {
-      "titulo": "DATO NASA",
-      "texto": "En el polo sur de la Luna existen regiones de cráteres que permanecen en sombra permanente. Sin luz del Sol, una linterna es clave para explorar.",
-      "fuente": "Dato real · NASA Lunar Reconnaissance Orbiter (LRO)",
-      "cerrar": "Clic para cerrar"
+      "titulo": "NASA FACT",
+      "texto": "At the Moon's south pole there are craters that stay in permanent shadow. Without sunlight, a flashlight is key to exploring.",
+      "fuente": "Real data · NASA Lunar Reconnaissance Orbiter (LRO)",
+      "cerrar": "Click to close"
     },
-    "inicial": "¡Antes de salir, hay algo muy importante! Necesitamos llevar un tanque de oxígeno adicional para ayudar a Itzel y Chispa. ¡No podemos iniciar el rescate sin él!",
-    "oxigeno_ok": "¡Excelente! Tenemos nuestra reserva de oxígeno. Ahora contamos con 6 kg para elegir el resto del equipo.",
-    "oxigeno_fijo": "El tanque de oxígeno es EQUIPO OBLIGATORIO: se queda en la mochila. Si necesitas espacio, deja un objeto opcional.",
-    "falta_traje_nave": "¡Alto, astronauta! La puerta no abre: todavía no tienes traje y cohete. Primero elígelos en el hangar.",
-    "falta_oxigeno": "¡Espera, astronauta! Nos falta el tanque de oxígeno. Itzel y Chispa podrían necesitar esa reserva para regresar a salvo. ¡Vamos por él!",
-    "exceso": "¡Es demasiado peso! Tenemos que elegir bien. Recuerda que el tanque de oxígeno es obligatorio. Para llevar {nombre}, libera {kg} kg de objetos opcionales.",
-    "obligatorio": "★ EQUIPO OBLIGATORIO",
-    "obligatorio_guardado": "★ EQUIPO OBLIGATORIO · guardado",
-    "hud_o2_si": "O2: ✓ GUARDADO",
-    "hud_o2_no": "O2: ✗ FALTA",
+    "inicial": "Before we go, there's something very important! We need to carry an extra oxygen tank to help Itzel and Chispa. We can't start the rescue without it!",
+    "oxigeno_ok": "Excellent! We have our oxygen reserve. Now we have 6 kg left for the rest of the gear.",
+    "oxigeno_fijo": "The oxygen tank is REQUIRED GEAR: it stays in the backpack. If you need room, leave an optional object.",
+    "falta_traje_nave": "Stop, astronaut! The door won't open: you don't have a suit and rocket yet. Choose them in the hangar first.",
+    "falta_oxigeno": "Wait, astronaut! We're missing the oxygen tank. Itzel and Chispa might need that reserve to get back safely. Let's go get it!",
+    "exceso": "That's too much weight! We have to choose well. Remember, the oxygen tank is required. To carry {nombre}, free up {kg} kg of optional objects.",
+    "obligatorio": "★ REQUIRED GEAR",
+    "obligatorio_guardado": "★ REQUIRED GEAR · packed",
+    "hud_o2_si": "O2: ✓ PACKED",
+    "hud_o2_no": "O2: ✗ MISSING",
     "reacciones": {
-      "linterna": "¡Buena elección! Podremos iluminar los cráteres oscuros y buscar las huellas de Chispa.",
-      "radio": "¡Excelente! Podríamos reparar la comunicación con la base.",
-      "botiquin": "Un buen explorador siempre está preparado para atender emergencias.",
-      "comida": "Las provisiones pueden ser útiles si nuestra misión se prolonga.",
-      "escudo": "Este equipo puede ayudarnos a reforzar la protección contra la radiación en un refugio."
+      "linterna": "Good choice! We'll be able to light up the dark craters and look for Chispa's tracks.",
+      "radio": "Excellent! We could fix the communication with the base.",
+      "botiquin": "A good explorer is always ready for emergencies.",
+      "comida": "Supplies can be useful if our mission takes longer.",
+      "escudo": "This gear can help us boost radiation protection in a shelter."
     },
-    "omitir": "Omitir ▸▸",
+    "omitir": "Skip ▸▸",
     "alerta": [
-      "¡Bip, bip! ¡Un momento! Estoy detectando algo extraño...",
-      "(Se escucha interferencia... y un ladrido débil)",
-      "¡Es Chispa! Su collar sigue funcionando. ¡Tenemos que localizarlo!",
-      "La radio principal de la base está averiada, pero mi receptor de emergencia de corto alcance captó la señal. ¡Vamos al Centro de Control: STELLA nos ayudará a analizarla!"
+      "Beep, beep! Wait a moment! I'm detecting something strange...",
+      "(You hear static... and a faint bark)",
+      "It's Chispa! His collar still works. We have to find him!",
+      "The base's main radio is broken, but my short-range emergency receiver picked up the signal. Let's go to the Control Center: STELLA will help us analyze it!"
     ],
-    "indicador": "NUEVA SEÑAL DETECTADA",
-    "localizada": "SEÑAL LOCALIZADA",
+    "indicador": "NEW SIGNAL DETECTED",
+    "localizada": "SIGNAL LOCATED",
     "mini": {
-      "titulo": "CENTRO DE COMUNICACIONES — IDENTIFICA LA SEÑAL",
-      "corto": "= corto",
-      "largo": "= largo",
-      "senal": "Señal {l}",
-      "explica": "El collar de Chispa transmite una señal especial: corto, corto, largo. ¿Puedes identificarla? (♪ = escuchar)",
-      "mal": "¡Buen intento! Esa señal no coincide. Observa nuevamente el patrón.",
-      "bien": "¡Lo lograste! ¡Encontraste la señal de Chispa!",
-      "ver_mapa": "Ver ubicación ▸",
-      "volver": "Volver"
+      "titulo": "COMMUNICATIONS CENTER — IDENTIFY THE SIGNAL",
+      "corto": "= short",
+      "largo": "= long",
+      "senal": "Signal {l}",
+      "explica": "Chispa's collar sends a special signal: short, short, long. Can you identify it? (♪ = listen)",
+      "mal": "Nice try! That signal doesn't match. Look at the pattern again.",
+      "bien": "You did it! You found Chispa's signal!",
+      "ver_mapa": "See location ▸",
+      "volver": "Back"
     },
     "mapa": {
-      "titulo": "MAPA DEL POLO SUR LUNAR",
-      "base": "Base lunar",
-      "polo": "Polo sur",
-      "crateres": "Cráteres en sombra",
-      "senal": "Señal de Chispa (aprox.)",
-      "ruta": "Ruta provisional",
-      "robot": "La señal viene de una zona de cráteres que casi nunca recibe luz solar. ¡Tenemos que prepararnos muy bien!",
-      "dato": "Dato NASA",
-      "volver": "Volver"
+      "titulo": "MAP OF THE LUNAR SOUTH POLE",
+      "base": "Lunar base",
+      "polo": "South pole",
+      "crateres": "Shadowed craters",
+      "senal": "Chispa's signal (approx.)",
+      "ruta": "Tentative route",
+      "robot": "The signal comes from a crater area that almost never gets sunlight. We have to prepare very well!",
+      "dato": "NASA fact",
+      "volver": "Back"
     },
     "revision": {
-      "titulo": "REVISIÓN DEL EQUIPO",
-      "objetos": "Objetos:",
-      "peso": "Peso total: {kg} kg",
-      "libre": "Disponible: {kg} kg",
-      "o2_si": "✓ Oxígeno incluido",
-      "o2_no": "✗ Falta el oxígeno",
-      "linterna_si": "Tenemos iluminación para explorar las zonas oscuras.",
-      "linterna_no": "Quizás necesitemos encontrar otra forma de iluminar el camino.",
-      "radio_si": "Podremos intentar recuperar la comunicación.",
-      "radio_no": "Tendremos que encontrar otra forma de transmitir los datos.",
-      "oxigeno_si": "¡Reserva de oxígeno confirmada! Estamos preparados para ayudar a los exploradores.",
-      "sin_oxigeno": "Falta un objeto esencial: el tanque de oxígeno. Toca «Modificar mochila» y ve por él.",
-      "exceso": "Hay más de 10 kg. Retira objetos opcionales para continuar.",
-      "modificar": "Modificar mochila",
-      "continuar": "Continuar ▸"
+      "titulo": "GEAR CHECK",
+      "objetos": "Objects:",
+      "peso": "Total weight: {kg} kg",
+      "libre": "Available: {kg} kg",
+      "o2_si": "✓ Oxygen included",
+      "o2_no": "✗ Oxygen missing",
+      "linterna_si": "We have light to explore the dark areas.",
+      "linterna_no": "We may need to find another way to light the path.",
+      "radio_si": "We can try to restore communication.",
+      "radio_no": "We'll have to find another way to send the data.",
+      "oxigeno_si": "Oxygen reserve confirmed! We're ready to help the explorers.",
+      "sin_oxigeno": "An essential object is missing: the oxygen tank. Tap «Change backpack» and go get it.",
+      "exceso": "There's more than 10 kg. Remove optional objects to continue.",
+      "modificar": "Change backpack",
+      "continuar": "Continue ▸"
     },
     "transmision": {
-      "titulo": "TRANSMISIÓN RECUPERADA — DRA. ITZEL RAMOS",
-      "mensaje": "«Si alguien escucha esto... Chispa entró en el cráter. Fui a buscarlo, pero estoy perdiendo comunicación con la base...»",
-      "ladrido": "(Se escucha un ladrido débil...)",
-      "corte": "— TRANSMISIÓN INTERRUMPIDA —",
-      "robot": "¡Todavía podemos ayudarlos! Ya tenemos nuestro oxígeno y el equipo que elegiste. ¿Estás listo para comenzar el rescate?",
-      "boton": "COMENZAR EL RESCATE"
+      "titulo": "TRANSMISSION RECOVERED — DR. ITZEL RAMOS",
+      "mensaje": "«If anyone can hear this... Chispa went into the crater. I went to look for him, but I'm losing contact with the base...»",
+      "ladrido": "(You hear a faint bark...)",
+      "corte": "— TRANSMISSION LOST —",
+      "robot": "We can still help them! We have our oxygen and the gear you chose. Are you ready to start the rescue?",
+      "boton": "START THE RESCUE"
     },
     "stella": {
       "_nota": "Textos de STELLA. Los textos con niveles {cadete (7-9), explorador (10-12), especialista (13+)} se eligen con estado.nivel; si no existe se usa nivel_defecto. ● = dato real de la NASA, ◆ = simulación del juego.",
       "nivel_defecto": "explorador",
-      "nombre": "STELLA · Asistente de misión",
-      "ticker": "STELLA DISPONIBLE — CONSULTAR ANÁLISIS",
-      "accion": "Enter o clic: consultar",
-      "tocar": "▶ TOCAR",
-      "titulo": "STELLA — SISTEMA DE ASISTENCIA LUNAR",
-      "bienvenida": "¡Hola, astronauta! Soy STELLA, tu asistente de misión. Revisemos las condiciones lunares antes de comenzar el rescate de Itzel y Chispa.",
-      "cerrar": "✕ Cerrar",
+      "nombre": "STELLA · Mission assistant",
+      "ticker": "STELLA AVAILABLE — CHECK THE ANALYSIS",
+      "accion": "Enter or click: ask",
+      "tocar": "▶ TAP",
+      "titulo": "STELLA — LUNAR ASSISTANCE SYSTEM",
+      "bienvenida": "Hello, astronaut! I'm STELLA, your mission assistant. Let's review the lunar conditions before starting the rescue of Itzel and Chispa.",
+      "cerrar": "✕ Close",
       "secciones": [
-        "Misión",
-        "Entorno",
-        "Señal",
-        "Equipo",
-        "Mochila"
+        "Mission",
+        "Environment",
+        "Signal",
+        "Gear",
+        "Backpack"
       ],
       "fuentes": {
         "moon_trek": "https://trek.nasa.gov/moon/",
@@ -182,934 +219,1007 @@
       },
       "consejos": {
         "tomar": {
-          "linterna": "¡Buena elección! En los cráteres de sombra permanente no llega el Sol: la linterna nos ayudará a buscar las huellas de Chispa.",
-          "radio": "La comunicación principal está dañada: con este kit podríamos restablecerla.",
-          "escudo": "Protección extra contra la radiación. Recuerda: ante una tormenta solar intensa, lo más seguro es un refugio.",
-          "botiquin": "Si Itzel está lesionada, podremos darle primeros auxilios.",
-          "comida": "Provisiones por si el rescate se alarga. Cada kilogramo cuenta."
+          "linterna": "Good choice! Sunlight never reaches the permanently shadowed craters: the flashlight will help us look for Chispa's tracks.",
+          "radio": "The main communication is damaged: with this kit we could restore it.",
+          "escudo": "Extra protection against radiation. Remember: in a strong solar storm, the safest place is a shelter.",
+          "botiquin": "If Itzel is hurt, we'll be able to give her first aid.",
+          "comida": "Supplies in case the rescue takes longer. Every kilogram counts."
         },
         "dejar": {
-          "linterna": "Sin linterna, explorar los cráteres oscuros será más difícil.",
-          "radio": "Sin el kit, tendremos que buscar otra forma de comunicarnos.",
-          "escudo": "Sin escudo dependeremos de encontrar un refugio si hay una alerta solar.",
-          "botiquin": "Sin botiquín, tendremos que ser muy cuidadosos.",
-          "comida": "Sin comida, el rescate deberá ser rápido."
+          "linterna": "Without a flashlight, exploring the dark craters will be harder.",
+          "radio": "Without the kit, we'll have to find another way to communicate.",
+          "escudo": "Without a shield, we'll depend on finding a shelter if there's a solar alert.",
+          "botiquin": "Without a first-aid kit, we'll have to be very careful.",
+          "comida": "Without food, the rescue will have to be quick."
         }
       },
       "mision": {
-        "titulo": "MISIÓN: RESCATE EN EL POLO SUR LUNAR",
+        "titulo": "MISSION: RESCUE AT THE LUNAR SOUTH POLE",
         "lineas": [
-          "• Objetivo: rescatar a la Dra. Itzel Ramos y Chispa.",
-          "• Ubicación: polo sur de la Luna.",
-          "• Situación: comunicación principal dañada.",
-          "• Riesgo narrativo: posible evento de radiación solar.",
-          "• Capacidad de mochila: 10 kg.",
-          "• ★ Equipo obligatorio: tanque de oxígeno de 4 kg."
+          "• Goal: rescue Dr. Itzel Ramos and Chispa.",
+          "• Location: the Moon's south pole.",
+          "• Situation: main communication damaged.",
+          "• Story risk: possible solar radiation event.",
+          "• Backpack capacity: 10 kg.",
+          "• ★ Required gear: 4 kg oxygen tank."
         ],
-        "aviso": "◆ Situación y riesgos de la misión: simulación del juego.",
-        "dialogo": "Nuestra prioridad es encontrar a Itzel y Chispa. Tendremos que administrar bien el equipo porque solamente podemos cargar 10 kilogramos.",
-        "boton": "CONSULTAR CONDICIONES LUNARES"
+        "aviso": "◆ Mission situation and risks: game simulation.",
+        "dialogo": "Our priority is to find Itzel and Chispa. We'll have to manage our gear well because we can only carry 10 kilograms.",
+        "boton": "CHECK LUNAR CONDITIONS"
       },
       "entorno": {
-        "rec": "Recomendación:",
-        "saber": "SABER MÁS",
+        "rec": "Recommendation:",
+        "saber": "LEARN MORE",
         "A": {
-          "boton": "Oscuridad",
+          "boton": "Darkness",
           "explica": {
-            "cadete": "Hay cráteres donde nunca llega el Sol. ¡Ahí está muy oscuro! La señal de Chispa viene de ahí.",
-            "explorador": "En el polo sur lunar existen cráteres donde la luz solar nunca llega directamente. La señal de Chispa proviene de una zona muy oscura.",
-            "especialista": "Cerca del polo sur el Sol siempre se ve muy bajo, así que el fondo de algunos cráteres queda en sombra permanente. La señal de Chispa viene de una de esas regiones."
+            "cadete": "There are craters where the Sun never shines. It's very dark there! Chispa's signal comes from there.",
+            "explorador": "At the lunar south pole there are craters where sunlight never reaches directly. Chispa's signal comes from a very dark area.",
+            "especialista": "Near the south pole the Sun always looks very low, so the bottom of some craters stays in permanent shadow. Chispa's signal comes from one of those regions."
           },
-          "recomendacion": "Una linterna podría ayudarnos a buscar sus huellas.",
-          "objeto": "Linterna · 2 kg",
+          "recomendacion": "A flashlight could help us look for his tracks.",
+          "objeto": "Flashlight · 2 kg",
           "icono": "px_obj_linterna",
-          "fuente": "● Dato real · NASA LRO",
+          "fuente": "● Real data · NASA LRO",
           "mas": {
-            "titulo": "Regiones de sombra permanente",
-            "texto": "El eje de la Luna está casi derecho: en los polos el Sol apenas sube sobre el horizonte. Por eso el fondo de algunos cráteres lleva miles de millones de años sin luz directa. La sonda LRO de la NASA los estudia; ahí podría haber hielo.",
-            "fuente": "● Dato real · NASA LRO — science.nasa.gov/mission/lro"
+            "titulo": "Permanently shadowed regions",
+            "texto": "The Moon's axis is almost straight up: at the poles the Sun barely rises above the horizon. That's why the bottom of some craters hasn't had direct light for billions of years. NASA's LRO probe studies them; there could be ice there.",
+            "fuente": "● Real data · NASA LRO — science.nasa.gov/mission/lro"
           }
         },
         "B": {
-          "boton": "Frío",
+          "boton": "Cold",
           "explica": {
-            "cadete": "En la sombra hace muchísimo frío. ¡Nuestro traje nos protege!",
-            "explorador": "Algunas zonas de sombra permanente tienen temperaturas extremadamente bajas. Nuestro traje debe mantenernos protegidos.",
-            "especialista": "Sin luz solar, el suelo de las zonas de sombra permanente casi no recibe calor: están entre los lugares más fríos medidos en el sistema solar. El traje debe aislarnos y conservar su energía."
+            "cadete": "It's super cold in the shadow. Our suit protects us!",
+            "explorador": "Some permanently shadowed areas have extremely low temperatures. Our suit must keep us protected.",
+            "especialista": "Without sunlight, the ground in permanently shadowed areas gets almost no heat: they're among the coldest places measured in the solar system. The suit must insulate us and save its power."
           },
-          "recomendacion": "Verifica que el sistema térmico y la energía del traje funcionen antes de salir.",
-          "objeto": "Tu traje (sistema térmico y energía)",
+          "recomendacion": "Check that the suit's thermal system and power work before going out.",
+          "objeto": "Your suit (thermal system and power)",
           "icono": "astro32_0",
-          "fuente": "● Dato real · NASA LRO (Diviner)",
+          "fuente": "● Real data · NASA LRO (Diviner)",
           "mas": {
-            "titulo": "El frío de la sombra",
-            "texto": "El instrumento Diviner de la sonda LRO midió en cráteres del polo sur temperaturas de más de 200 °C bajo cero. En el juego, la protección térmica básica ya viene en tu traje espacial.",
-            "fuente": "● Dato real · NASA LRO (Diviner) — science.nasa.gov/mission/lro"
+            "titulo": "The cold of the shadow",
+            "texto": "The Diviner instrument on the LRO probe measured temperatures colder than 200 °C below zero in south pole craters. In the game, basic thermal protection already comes with your spacesuit.",
+            "fuente": "● Real data · NASA LRO (Diviner) — science.nasa.gov/mission/lro"
           }
         },
         "C": {
-          "boton": "Radiación",
+          "boton": "Radiation",
           "explica": {
-            "cadete": "El Sol a veces lanza tormentas. Si hay una alerta, ¡vamos a un refugio!",
-            "explorador": "Las tormentas solares pueden aumentar la radiación en el espacio. Si recibimos una alerta importante, tendremos que buscar un refugio protegido.",
-            "especialista": "Las eyecciones de masa coronal y las partículas solares aumentan la radiación fuera de la Tierra. La Luna no tiene un campo magnético global ni una atmósfera gruesa: ante un evento intenso lo más seguro es un refugio blindado."
+            "cadete": "Sometimes the Sun throws storms. If there's an alert, we go to a shelter!",
+            "explorador": "Solar storms can increase radiation in space. If we get an important alert, we'll have to find a protected shelter.",
+            "especialista": "Coronal mass ejections and solar particles increase radiation outside Earth. The Moon has no global magnetic field or thick atmosphere: in a strong event the safest place is a shielded shelter."
           },
-          "recomendacion": "El módulo de protección puede ser útil, pero durante una emergencia intensa debemos alcanzar un refugio adecuado.",
-          "objeto": "Escudo de radiación · 5 kg",
+          "recomendacion": "The protection module can be useful, but during a strong emergency we must reach a proper shelter.",
+          "objeto": "Radiation shield · 5 kg",
           "icono": "px_obj_escudo",
-          "fuente": "● Dato real: tormentas solares · ◆ SIMULACIÓN: alertas del juego",
-          "simulado": "◆ simulado",
+          "fuente": "● Real data: solar storms · ◆ SIMULATION: game alerts",
+          "simulado": "◆ simulated",
           "mas": {
-            "titulo": "Tormentas solares y DONKI",
-            "texto": "La base de datos DONKI de la NASA registra eyecciones de masa coronal. Registro usado en el juego: {fecha}, a {vel} km/s. Las alertas del juego son simuladas: no son pronósticos reales de la NASA.",
+            "titulo": "Solar storms and DONKI",
+            "texto": "NASA's DONKI database records coronal mass ejections. Record used in the game: {fecha}, at {vel} km/s. The game's alerts are simulated: they are not real NASA forecasts.",
             "fuente": ""
           }
         },
         "D": {
-          "boton": "Terreno",
+          "boton": "Terrain",
           "explica": {
-            "cadete": "El suelo tiene rocas, pendientes y polvo. ¡Caminemos con cuidado!",
-            "explorador": "El terreno lunar puede ser irregular y el polvo puede dañar algunos equipos. Tendremos que explorar con cuidado.",
-            "especialista": "El regolito lunar es un polvo fino y filoso que se pega a todo y puede desgastar sellos y mecanismos. Las pendientes de los cráteres y las rocas obligan a planear la ruta con el mapa."
+            "cadete": "The ground has rocks, slopes, and dust. Let's walk carefully!",
+            "explorador": "The lunar terrain can be uneven, and dust can damage some equipment. We'll have to explore carefully.",
+            "especialista": "Lunar regolith is a fine, sharp dust that sticks to everything and can wear down seals and mechanisms. Crater slopes and rocks mean we have to plan the route with the map."
           },
-          "recomendacion": "Observa el mapa y selecciona una ruta segura.",
-          "objeto": "Mapa de la sección «Señal»",
+          "recomendacion": "Look at the map and choose a safe route.",
+          "objeto": "Map in the «Signal» section",
           "icono": "stella_px",
-          "fuente": "● Dato real · NASA Moon / Moon Trek",
+          "fuente": "● Real data · NASA Moon / Moon Trek",
           "mas": {
-            "titulo": "Polvo lunar y relieve",
-            "texto": "El polvo lunar (regolito) es muy fino y de bordes afilados porque en la Luna no hay viento ni agua que lo desgasten. En las misiones Apolo se pegaba a los trajes. NASA Moon Trek muestra mapas reales del relieve del polo sur.",
-            "fuente": "● Dato real · NASA Moon / Moon Trek — trek.nasa.gov/moon"
+            "titulo": "Lunar dust and terrain",
+            "texto": "Lunar dust (regolith) is very fine and sharp-edged because the Moon has no wind or water to wear it down. On the Apollo missions it stuck to the suits. NASA Moon Trek shows real maps of the south pole's terrain.",
+            "fuente": "● Real data · NASA Moon / Moon Trek — trek.nasa.gov/moon"
           }
         }
       },
       "senal": {
-        "titulo": "ANÁLISIS DE SEÑALES — COLLAR DE CHISPA",
-        "detecta": "¡Detecté una señal débil! Podría provenir del collar de Chispa, pero necesitamos comprobar su patrón.",
-        "activa": "¡La señal de Chispa sigue activa! Viene de una región de cráteres oscuros. Si quieres, consulta el mapa.",
-        "sin": "Estado: señal sin identificar",
-        "ok": "Estado: ✓ señal identificada · intentos: {n}",
-        "aviso": "◆ SIMULACIÓN DEL JUEGO: la señal y la ubicación de Chispa son parte de la historia.",
-        "iniciar": "INICIAR ANÁLISIS",
-        "ver_mapa": "VER MAPA (opcional)",
-        "explica": "Buscamos dos pulsos cortos y uno largo. Fíjate en el largo de cada pulso o toca ♪ para escucharlo.",
-        "mal": "¡Buen intento! Observa las señales nuevamente. Buscamos dos pulsos cortos y uno largo.",
-        "bien": "¡Excelente, astronauta! Hemos identificado la señal del collar de Chispa. Ahora sabemos que debemos prepararnos para explorar una región de cráteres oscuros.",
-        "mapa": "Esta es la región aproximada de Chispa (simulación). Aún no sabemos dónde está Itzel: ¡la búsqueda empieza aquí!"
+        "titulo": "SIGNAL ANALYSIS — CHISPA'S COLLAR",
+        "detecta": "I detected a weak signal! It could come from Chispa's collar, but we need to check its pattern.",
+        "activa": "Chispa's signal is still active! It comes from a region of dark craters. You can check the map if you want.",
+        "sin": "Status: signal not identified",
+        "ok": "Status: ✓ signal identified · tries: {n}",
+        "aviso": "◆ GAME SIMULATION: Chispa's signal and location are part of the story.",
+        "iniciar": "START ANALYSIS",
+        "ver_mapa": "SEE MAP (optional)",
+        "explica": "We're looking for two short pulses and one long one. Look at the length of each pulse or tap ♪ to hear it.",
+        "mal": "Nice try! Look at the signals again. We're looking for two short pulses and one long one.",
+        "bien": "Excellent, astronaut! We've identified the signal from Chispa's collar. Now we know we must get ready to explore a region of dark craters.",
+        "mapa": "This is Chispa's approximate area (simulation). We still don't know where Itzel is: the search starts here!"
       },
       "equipo": {
-        "titulo": "STELLA — ANÁLISIS DE EQUIPO",
-        "intro": "Toca un objeto para escuchar mi análisis. Cada kilogramo cuenta: ¿qué herramienta crees que nos ayudará?",
-        "obligatorio": "★ Obligatorio",
-        "opcional": "Opcional",
-        "leyenda": "✓ = ya está en la mochila",
+        "titulo": "STELLA — GEAR ANALYSIS",
+        "intro": "Tap an object to hear my analysis. Every kilogram counts: which tool do you think will help us?",
+        "obligatorio": "★ Required",
+        "opcional": "Optional",
+        "leyenda": "✓ = already in the backpack",
         "rec": {
-          "oxigeno": "El oxígeno adicional es indispensable para ayudar a Itzel y Chispa. Este objeto debe estar siempre en nuestra mochila.",
-          "linterna": "Los cráteres oscuros pueden dificultar la búsqueda. Una linterna podría ser muy útil.",
-          "radio": "La comunicación principal está dañada. Este equipo podría ayudarnos a repararla.",
-          "escudo": "La protección adicional puede ser útil, pero recuerda que un refugio adecuado es esencial frente a radiación solar intensa.",
-          "botiquin": "Si encontramos a Itzel lesionada, tener materiales de primeros auxilios puede ayudarnos.",
-          "comida": "Las provisiones podrían ser útiles si la misión se prolonga."
+          "oxigeno": "The extra oxygen is essential to help Itzel and Chispa. This object must always be in our backpack.",
+          "linterna": "The dark craters can make the search hard. A flashlight could be very useful.",
+          "radio": "The main communication is damaged. This gear could help us fix it.",
+          "escudo": "Extra protection can be useful, but remember that a proper shelter is essential against strong solar radiation.",
+          "botiquin": "If we find Itzel hurt, having first-aid supplies can help us.",
+          "comida": "Supplies could be useful if the mission takes longer."
         }
       },
       "mochila": {
-        "titulo": "EVALUACIÓN DE MOCHILA",
-        "vacia": "(mochila vacía)",
-        "peso": "Peso: {kg}/10 kg",
-        "libre": "Disponible: {kg} kg",
-        "o2_si": "✓ Oxígeno incluido",
-        "o2_no": "✗ Falta el oxígeno",
-        "cubre": "Nos ayuda con:",
-        "limita": "Limitaciones:",
+        "titulo": "BACKPACK CHECK",
+        "vacia": "(empty backpack)",
+        "peso": "Weight: {kg}/10 kg",
+        "libre": "Available: {kg} kg",
+        "o2_si": "✓ Oxygen included",
+        "o2_no": "✗ Oxygen missing",
+        "cubre": "Helps us with:",
+        "limita": "Limits:",
         "cubre_obj": {
-          "oxigeno": "✓ Reserva de aire",
-          "linterna": "✓ Cráteres oscuros",
-          "radio": "✓ Comunicación",
-          "escudo": "✓ Radiación (parcial)",
-          "botiquin": "✓ Primeros auxilios",
-          "comida": "✓ Misión larga"
+          "oxigeno": "✓ Air reserve",
+          "linterna": "✓ Dark craters",
+          "radio": "✓ Communication",
+          "escudo": "✓ Radiation (partial)",
+          "botiquin": "✓ First aid",
+          "comida": "✓ Long mission"
         },
         "limita_obj": {
-          "oxigeno": "✗ Sin reserva de aire",
-          "linterna": "✗ Sin iluminación",
-          "radio": "✗ Sin radio de repuesto",
-          "escudo": "✗ Solo el refugio",
-          "botiquin": "✗ Sin primeros auxilios",
-          "comida": "✗ Sin provisiones"
+          "oxigeno": "✗ No air reserve",
+          "linterna": "✗ No light",
+          "radio": "✗ No spare radio",
+          "escudo": "✗ Shelter only",
+          "botiquin": "✗ No first aid",
+          "comida": "✗ No supplies"
         },
         "eval": {
-          "falta": "No podemos comenzar el rescate sin el tanque de oxígeno obligatorio.",
-          "exceso": "¡Capacidad excedida! Debes retirar objetos opcionales hasta respetar los 10 kg.",
-          "linterna": "¡Buen análisis, astronauta! Tenemos oxígeno adicional e iluminación. Estamos mejor preparados para explorar cráteres oscuros.",
-          "radio": "Podremos ayudar con oxígeno e intentar restablecer las comunicaciones, pero debemos considerar cómo explorar zonas sin luz.",
-          "escudo": "Tenemos protección adicional, pero necesitaremos alternativas para la iluminación y la comunicación.",
-          "base": "Tenemos la reserva de oxígeno. Cada kilogramo cuenta: ¿qué herramienta crees que nos ayudará?"
+          "falta": "We can't start the rescue without the required oxygen tank.",
+          "exceso": "Capacity exceeded! Remove optional objects until you're within 10 kg.",
+          "linterna": "Good thinking, astronaut! We have extra oxygen and light. We're better prepared to explore dark craters.",
+          "radio": "We can help with oxygen and try to restore communications, but we need to think about how to explore areas without light.",
+          "escudo": "We have extra protection, but we'll need other ways to get light and communication.",
+          "base": "We have the oxygen reserve. Every kilogram counts: which tool do you think will help us?"
         },
-        "boton": "REVISAR EQUIPO Y SALIR"
+        "boton": "CHECK GEAR AND LEAVE"
       }
     }
   },
-
   "equipo": {
-    "bitacora": "Equipo: {traje} y {nave}.",
-    "centro": "CENTRO DE CONTROL",
-    "titulo": "Hangar de la\nEstación Terrestre",
-    "bienvenida": "¡Hola, soy Bit, el robot del hangar! Elige tu traje y tu nave. Camina hacia donde quieras empezar.",
-    "elegir": "Enter o clic: elegir",
-    "elegido": "✓ Elegido",
+    "bitacora": "Gear: {traje} and {nave}.",
+    "centro": "CONTROL CENTER",
+    "titulo": "Earth Station\nHangar",
+    "bienvenida": "Hi, I'm Bit, the hangar robot! Choose your suit and your ship. Walk to wherever you want to start.",
+    "elegir": "Enter or click: choose",
+    "elegido": "✓ Chosen",
     "opciones": {
-      "blindado": { "nombre": "Traje blindado", "ventaja": "+ Protege {proteccion} % de la radiación", "costo": "- Gasta {gastoO2} O2 por hora" },
-      "ligero":   { "nombre": "Traje ligero",   "ventaja": "+ Gasta solo {gastoO2} O2 por hora",       "costo": "- Protege solo {proteccion} %" },
-      "grande":   { "nombre": "Nave grande",    "ventaja": "+{oxigenoExtra} O2 y {combustible} de combustible", "costo": "- Lenta: cuesta frenar" },
-      "pequena":  { "nombre": "Nave pequeña",   "ventaja": "+ Ágil: frena fácil",                      "costo": "- Solo {combustible} de combustible" }
+      "blindado": {
+        "nombre": "Armored suit",
+        "ventaja": "+ Blocks {proteccion} % of radiation",
+        "costo": "- Uses {gastoO2} O2 per hour"
+      },
+      "ligero": {
+        "nombre": "Light suit",
+        "ventaja": "+ Uses only {gastoO2} O2 per hour",
+        "costo": "- Blocks only {proteccion} %"
+      },
+      "grande": {
+        "nombre": "Big ship",
+        "ventaja": "+{oxigenoExtra} O2 and {combustible} fuel",
+        "costo": "- Slow: hard to brake"
+      },
+      "pequena": {
+        "nombre": "Small ship",
+        "ventaja": "+ Agile: brakes easily",
+        "costo": "- Only {combustible} fuel"
+      }
     },
-    "rotulo_naves": { "grande": "GRANDE", "pequena": "PEQUEÑA" },
-    "bit_traje": "¡Te queda genial el {nombre}!",
-    "bit_nave": "¡La {nombre} está lista!",
-    "bit_listos": "¡Todo listo! Sube a tu nave por la rampa.",
-    "bit_falta": "Aún te falta elegir tu traje y tu nave.",
-    "pista": "Itzel está lejos y viene una tormenta: piensa qué necesitas más, protección o aire.",
-    "bascula": "Pesas {tierra} kg en la Tierra y {luna} kg en la Luna.",
-    "bascula_luna": "En la Luna pesas seis veces menos, pero tu traje sigue costando el mismo esfuerzo de mover.",
-    "bascula_base": "Pruébate un traje y súbete otra vez.",
-    "pantalla_tierra": "T {kg} kg",
-    "pantalla_luna": "L {kg} kg",
-    "arco_base": "Sin traje pasa toda la radiación. ¡Elige uno y vuelve!",
-    "arco_blindado": "Mira: casi ningún puntito de radiación atraviesa el blindado.",
-    "arco_ligero": "Con el ligero pasan muchos puntitos de radiación.",
-    "zona_pruebas": "PRUEBA DE TRAJE",
-    "rotulo_bascula": "BÁSCULA",
-    "rotulo_arco": "RADIACIÓN",
-    "estacion_o2": "OXÍGENO",
-    "o2_si": "¡Tu mochila trae un tanque! Te suma +20 de oxígeno.",
-    "o2_no": "Tu mochila no trae tanque de oxígeno: la estación está apagada.",
+    "rotulo_naves": {
+      "grande": "BIG",
+      "pequena": "SMALL"
+    },
+    "bit_traje": "The {nombre} looks great on you!",
+    "bit_nave": "The {nombre} is ready!",
+    "bit_listos": "All set! Board your ship up the ramp.",
+    "bit_falta": "You still need to choose your suit and your ship.",
+    "pista": "Itzel is far away and a storm is coming: think about what you need more, protection or air.",
+    "bascula": "You weigh {tierra} kg on Earth and {luna} kg on the Moon.",
+    "bascula_luna": "On the Moon everything weighs one sixth as much, but your suit still takes the same effort to move.",
+    "bascula_base": "Try on a suit and step on again.",
+    "pantalla_tierra": "E {kg} kg",
+    "pantalla_luna": "M {kg} kg",
+    "arco_base": "Without a suit all the radiation gets through. Choose one and come back!",
+    "arco_blindado": "Look: almost no radiation dots get through the armored suit.",
+    "arco_ligero": "With the light suit, lots of radiation dots get through.",
+    "zona_pruebas": "SUIT TEST",
+    "rotulo_bascula": "SCALE",
+    "rotulo_arco": "RADIATION",
+    "estacion_o2": "OXYGEN",
+    "o2_si": "Your backpack has a tank! It adds +20 oxygen.",
+    "o2_no": "Your backpack has no oxygen tank: the station is off.",
     "tecnicos": [
-      "En el polo sur de la Luna hay cráteres que llevan miles de millones de años sin ver el Sol.",
-      "En esos cráteres hay hielo de agua: podría dar agua y oxígeno a los astronautas.",
-      "La Luna casi no tiene aire: las naves solo frenan con sus propulsores.",
-      "Una tormenta solar lanza partículas a cientos de kilómetros por segundo.",
-      "Un día en la Luna dura casi un mes de la Tierra."
+      "At the Moon's south pole there are craters that haven't seen the Sun for billions of years.",
+      "Those craters hold water ice: it could give astronauts water and oxygen.",
+      "The Moon has almost no air: ships can only brake with their thrusters.",
+      "A solar storm shoots out particles at hundreds of kilometers per second.",
+      "A day on the Moon lasts almost a month on Earth."
     ],
-    "bit_tanque": "¡Tu tanque de la mochila suma +20 O2!"
+    "bit_tanque": "Your backpack tank adds +20 O2!"
   },
-
   "viaje": {
-    "titulo": "¡Alerta solar!",
-    "aviso": "La NASA detectó una nube del Sol ({fecha}, {vel} km/s). Llega a la Luna en unas {horas} h; tú aterrizas en {viaje} h.",
-    "sol": "Sol", "luna": "Luna", "tierra": "Tierra",
+    "titulo": "Solar alert!",
+    "aviso": "NASA detected a cloud from the Sun ({fecha}, {vel} km/s). It reaches the Moon in about {horas} h; you land in {viaje} h.",
+    "sol": "Sun",
+    "luna": "Moon",
+    "tierra": "Earth",
     "opciones": {
-      "escudo": { "nombre": "Cargar el escudo", "gana": "La tormenta te pegará menos.", "cuesta": "Usa energía del aire: −{o2} O2." },
-      "acelerar": { "nombre": "Acelerar la nave", "gana": "Aterrizas {h} h antes de la tormenta.", "cuesta": "Gastas combustible: el aterrizaje será más difícil." },
-      "guardar": { "nombre": "Guardar el aire", "gana": "Llegas con todo tu oxígeno.", "cuesta": "Sin protección extra en la tormenta." }
+      "escudo": {
+        "nombre": "Charge the shield",
+        "gana": "The storm will hit you less.",
+        "cuesta": "Uses power from the air supply: −{o2} O2."
+      },
+      "acelerar": {
+        "nombre": "Speed up the ship",
+        "gana": "You land {h} h before the storm.",
+        "cuesta": "You burn fuel: landing will be harder."
+      },
+      "guardar": {
+        "nombre": "Save the air",
+        "gana": "You arrive with all your oxygen.",
+        "cuesta": "No extra protection in the storm."
+      }
     },
-    "toca": "Toca una opción para ver qué gana y qué cuesta.",
-    "elegir": "Elegir",
-    "continuar": "Continuar",
+    "toca": "Tap an option to see what you gain and what it costs.",
+    "elegir": "Choose",
+    "continuar": "Continue",
     "resultado": {
-      "escudo": "Escudo cargado. La tormenta te pegará menos.",
-      "acelerar": "¡Motores a fondo! Llegarás antes, con menos combustible.",
-      "guardar": "Guardaste el aire para el rescate."
+      "escudo": "Shield charged. The storm will hit you less.",
+      "acelerar": "Full thrust! You'll arrive sooner, with less fuel.",
+      "guardar": "You saved the air for the rescue."
     },
-    "bitacora": "Viaje: {nombre}."
+    "bitacora": "Trip: {nombre}."
   },
-
   "aterrizaje": {
-    "titulo": "Aterrizaje",
-    "instruccion": "Mantén presionado (clic, ↑ o ESPACIO) para encender el propulsor",
-    "explicacion": "En la Luna casi no hay aire: los paracaídas y las alas no sirven. Solo los propulsores frenan la nave contra la gravedad lunar (1.62 m/s²).",
-    "tu_nave": "{nave}: frena {empuje} m/s² y lleva {combustible} de combustible.",
-    "elige": "Elige la dificultad:",
-    "dificultades": { "facil": "Fácil", "normal": "Normal", "dificil": "Difícil" },
-    "zona": "ZONA DE ATERRIZAJE",
-    "sin_combustible": "¡Sin combustible!",
-    "titulo_exito": "¡Aterrizaje!",
-    "titulo_fallo": "¡Ups!",
-    "exito": "Tocaste el suelo a {vel} m/s. ¡Perfecto! En la Luna no hay aire: solo los propulsores frenan.",
-    "fallo": "Aterrizaje brusco: llegaste a {vel} m/s y lo seguro era {segura} m/s. Empieza a frenar antes y en pulsos.",
-    "base": "BASE LUNAR",
-    "entrando_base": "Entrando a la base lunar...",
-    "base_titulo": "Base Lunar · Polo Sur",
-    "base_texto": "¡Bienvenido a la base! La esclusa se cerró y ya estás a salvo. Antes de buscar a Itzel, prepara tu equipo.",
-    "hud_gravedad": "g Luna 1.62 m/s²",
-    "hud_altura": "Altura {m} m",
-    "hud_vel": "Vel {v} m/s {dir}",
-    "hud_combustible": "Combustible {c}",
-    "reintentar": "Reintentar (−{o2} O2)",
-    "cambiar_dificultad": "Cambiar dificultad",
-    "bitacora": "Aterrizaste en el polo sur lunar a {vel} m/s."
+    "titulo": "Landing",
+    "instruccion": "Hold down (click, ↑ or SPACE) to fire the thruster",
+    "explicacion": "The Moon has almost no air: parachutes and wings don't work. Only thrusters can slow the ship against lunar gravity (1.62 m/s²).",
+    "tu_nave": "{nave}: brakes {empuje} m/s² and carries {combustible} fuel.",
+    "elige": "Choose the difficulty:",
+    "dificultades": {
+      "facil": "Easy",
+      "normal": "Normal",
+      "dificil": "Hard"
+    },
+    "zona": "LANDING ZONE",
+    "sin_combustible": "Out of fuel!",
+    "titulo_exito": "Touchdown!",
+    "titulo_fallo": "Oops!",
+    "exito": "You touched down at {vel} m/s. Perfect! The Moon has no air: only thrusters slow you down.",
+    "fallo": "Hard landing: you hit at {vel} m/s and the safe speed was {segura} m/s. Start braking earlier and in pulses.",
+    "base": "LUNAR BASE",
+    "entrando_base": "Entering the lunar base...",
+    "base_titulo": "Lunar Base · South Pole",
+    "base_texto": "Welcome to the base! The airlock closed and you're safe. Before looking for Itzel, get your gear ready.",
+    "hud_gravedad": "Moon g 1.62 m/s²",
+    "hud_altura": "Altitude {m} m",
+    "hud_vel": "Speed {v} m/s {dir}",
+    "hud_combustible": "Fuel {c}",
+    "reintentar": "Retry (−{o2} O2)",
+    "cambiar_dificultad": "Change difficulty",
+    "bitacora": "You landed at the lunar south pole at {vel} m/s."
   },
-
   "ruta": {
-    "titulo": "¿Cómo llegamos a Itzel?",
-    "tormenta": "La tormenta llega en {horas} h. ¿Por dónde vamos?",
+    "titulo": "How do we reach Itzel?",
+    "tormenta": "The storm arrives in {horas} h. Which way do we go?",
     "boton": "{nombre} ({km} km, {horas} h)",
-    "antes": "La tormenta tardó {hT} h y el rescate {hR} h. ¡Llegamos {dif} h antes!",
-    "expuestos": "La tormenta llegó en {hT} h y el rescate tardó {hR} h. Estuvimos {exp} h bajo la tormenta.",
-    "sin_linterna": " Sin linterna, el cráter oscuro nos hizo ir más lento.",
+    "antes": "The storm took {hT} h and the rescue {hR} h. We arrived {dif} h early!",
+    "expuestos": "The storm arrived in {hT} h and the rescue took {hR} h. We were under the storm for {exp} h.",
+    "sin_linterna": " Without a flashlight, the dark crater slowed us down.",
     "inicio": "BASE",
-    "itzel": "Última señal de Itzel",
-    "nombre_crater": "CRÁTER",
-    "nombre_cresta": "CRESTA",
-    "sol": "Sol",
-    "tiempo_acelerado": "tiempo acelerado",
-    "pasa_cursor": "Toca una ruta (o usa las flechas)",
-    "tiempo": "Tiempo: {horas} h",
-    "oxigeno": "Oxígeno: {o2}",
-    "radiacion": "Radiación: +{rad}",
-    "radiacion_no": "Radiación: 0 (llegas antes de la tormenta)",
-    "sin_linterna_corto": "Sin linterna vas más lento.",
-    "cruce_crater": "Cruzarlo: unos {o2} O2 más.",
-    "ir": "Ir por aquí",
-    "continuar": "Continuar",
-    "bitacora": "Ruta: {nombre} ({horas} h).",
+    "itzel": "Itzel's last signal",
+    "nombre_crater": "CRATER",
+    "nombre_cresta": "RIDGE",
+    "sol": "Sun",
+    "tiempo_acelerado": "sped-up time",
+    "pasa_cursor": "Tap a route (or use the arrows)",
+    "tiempo": "Time: {horas} h",
+    "oxigeno": "Oxygen: {o2}",
+    "radiacion": "Radiation: +{rad}",
+    "radiacion_no": "Radiation: 0 (you arrive before the storm)",
+    "sin_linterna_corto": "Without a flashlight you go slower.",
+    "cruce_crater": "Crossing it: about {o2} more O2.",
+    "ir": "Go this way",
+    "continuar": "Continue",
+    "bitacora": "Route: {nombre} ({horas} h).",
     "rutas": {
       "crater": {
-        "nombre": "Por el cráter",
-        "gana": "Es corta: llegas antes y gastas menos oxígeno.",
-        "cuesta": "Es oscura y empinada. Te lleva al cráter helado."
+        "nombre": "Through the crater",
+        "gana": "It's short: you arrive sooner and use less oxygen.",
+        "cuesta": "It's dark and steep. It takes you into the frozen crater."
       },
       "cresta": {
-        "nombre": "Por la cresta",
-        "gana": "Es plana y con luz. No pasa por el cráter.",
-        "cuesta": "Es larga: más horas afuera, más oxígeno y más radiación si llega la tormenta."
+        "nombre": "Along the ridge",
+        "gana": "It's flat and sunlit. It doesn't go through the crater.",
+        "cuesta": "It's long: more hours outside, more oxygen, and more radiation if the storm arrives."
       }
     }
   },
-
   "rescate": {
-    "llegada": "Llegas a la última posición conocida de Itzel… pero no ves a nadie.",
-    "ir_luz": "Ir hacia la lucecita",
-    "chispa_aparece": "¡Es Chispa! Te reconoce y te guía entre las rocas.",
-    "itzel_refugio": "Itzel se refugió bajo una saliente de roca, como haría una astronauta de verdad.",
-    "radio_titulo": "La radio está dañada. Hay que repararla para hablar con la Tierra.",
-    "radio_kit": "+ Traes el kit de radio: la arreglas rápido.",
-    "radio_sin_kit": "− No traes el kit de radio: tardas más en arreglarla.",
-    "reparar_radio": "Reparar la radio ({o2} O2)",
+    "llegada": "You reach Itzel's last known position… but you don't see anyone.",
+    "ir_luz": "Head toward the little light",
+    "chispa_aparece": "It's Chispa! He recognizes you and guides you through the rocks.",
+    "itzel_refugio": "Itzel took shelter under a rock overhang, just like a real astronaut would.",
+    "radio_titulo": "The radio is damaged. You have to fix it to talk to Earth.",
+    "radio_kit": "+ You brought the radio kit: you fix it fast.",
+    "radio_sin_kit": "− You didn't bring the radio kit: it takes longer to fix.",
+    "reparar_radio": "Fix the radio ({o2} O2)",
     "mensajes": {
-      "titulo": "Tres mensajes, energía para dos",
-      "explica": "La batería solo alcanza para 2 mensajes. ¿Cuáles mandas?",
-      "lleva": "Elegidos: {n} de 2",
-      "enviar": "Enviar a la Tierra",
+      "titulo": "Three messages, power for two",
+      "explica": "The battery only has enough for 2 messages. Which ones do you send?",
+      "lleva": "Chosen: {n} of 2",
+      "enviar": "Send to Earth",
       "tormenta": {
-        "nombre": "La tormenta viene",
-        "efecto": "La Tierra protege sus satélites a tiempo.",
-        "respuesta": "Tierra: ¡Recibido! Ponemos los satélites a salvo."
+        "nombre": "The storm is coming",
+        "efecto": "Earth protects its satellites in time.",
+        "respuesta": "Earth: Got it! We're putting the satellites in safe mode."
       },
       "ayuda": {
-        "nombre": "Estamos vivos, vengan por nosotros",
-        "efecto": "Sale una nave de apoyo: el regreso gasta menos oxígeno.",
-        "respuesta": "Tierra: ¡Qué alegría! Va una nave de apoyo."
+        "nombre": "We're alive, come get us",
+        "efecto": "A support ship launches: the trip back uses less oxygen.",
+        "respuesta": "Earth: Great news! A support ship is on its way."
       },
       "hielo": {
-        "nombre": "Encontramos hielo",
-        "efecto": "El descubrimiento de Itzel llega a la Tierra.",
-        "respuesta": "Tierra: ¡Increíble! Ese hielo ayudará a futuras bases."
+        "nombre": "We found ice",
+        "efecto": "Itzel's discovery reaches Earth.",
+        "respuesta": "Earth: Amazing! That ice will help future bases."
       },
-      "viaja": "La señal viaja a la velocidad de la luz: tarda {s} s en llegar.",
-      "ida": "→ Tierra",
-      "vuelta": "← Luna",
-      "luna": "LUNA",
-      "tierra": "TIERRA"
+      "viaja": "The signal travels at the speed of light: it takes {s} s to arrive.",
+      "ida": "→ Earth",
+      "vuelta": "← Moon",
+      "luna": "MOON",
+      "tierra": "EARTH"
     },
-    "ayuda_viene": "Viene una nave de apoyo: el regreso gasta menos oxígeno.",
-    "nota_radio": "Reparaste la radio ({o2} O2).",
-    "nota_mensajes": "Mensajes a la Tierra: {lista}.",
-    "titulo": "¡Encontraste a Itzel y a Chispa!",
-    "encuentro": "Itzel está agotada y le queda muy poco aire.",
-    "itzel_dice": "Itzel: ¡Gracias por venir! En la Estación Espacial, los astronautas pierden hueso y músculo si no hacen ejercicio. En la Luna aún se investiga.",
-    "seguir": "Continuar",
-    "aire_pregunta": "Itzel casi no tiene aire. ¿Qué hacemos?",
+    "ayuda_viene": "A support ship is coming: the trip back uses less oxygen.",
+    "nota_radio": "You fixed the radio ({o2} O2).",
+    "nota_mensajes": "Messages to Earth: {lista}.",
+    "titulo": "You found Itzel and Chispa!",
+    "encuentro": "Itzel is exhausted and has very little air left.",
+    "itzel_dice": "Itzel: Thanks for coming! On the Space Station, astronauts lose bone and muscle if they don't exercise. On the Moon, it's still being studied.",
+    "seguir": "Continue",
+    "aire_pregunta": "Itzel has almost no air. What do we do?",
     "aire": {
       "manguera": {
-        "nombre": "Compartir tu tanque",
-        "gana": "+ Los dos siguen juntos.",
-        "cuesta": "− Tu oxígeno baja bastante."
+        "nombre": "Share your tank",
+        "gana": "+ You both stay together.",
+        "cuesta": "− Your oxygen drops a lot."
       },
       "reserva": {
-        "nombre": "Dejarle tu reserva",
-        "gana": "+ Gastas menos oxígeno.",
-        "cuesta": "− Ella espera sola mientras vas por otra."
+        "nombre": "Leave her your reserve",
+        "gana": "+ You use less oxygen.",
+        "cuesta": "− She waits alone while you go get another one."
       }
     },
-    "regreso_pregunta": "¿Cómo regresamos a la base?",
+    "regreso_pregunta": "How do we get back to the base?",
     "regreso": {
       "rover": {
-        "nombre": "En el rover",
-        "gana": "+ Es más rápido.",
-        "cuesta": "− Gasta más energía (oxígeno)."
+        "nombre": "In the rover",
+        "gana": "+ It's faster.",
+        "cuesta": "− It uses more energy (oxygen)."
       },
       "caminar": {
-        "nombre": "Caminar a su paso",
-        "gana": "+ Gasta menos energía.",
-        "cuesta": "− Es lento: más horas afuera."
+        "nombre": "Walk at her pace",
+        "gana": "+ It uses less energy.",
+        "cuesta": "− It's slow: more hours outside."
       }
     },
-    "sin_rover": "No hay rover: lo dejaste en las rocas. Solo se puede caminar.",
+    "sin_rover": "There's no rover: you left it at the rocks. You can only walk.",
     "costo": "{o2} O2",
     "costo_rad": "{o2} O2 · +{rad} rad",
-    "tormenta_sigue": "La tormenta sigue: afuera hay más radiación.",
+    "tormenta_sigue": "The storm is still going: there's more radiation outside.",
     "nota_aire": {
-      "manguera": "Compartiste tu tanque con Itzel ({o2} O2).",
-      "reserva": "Le dejaste tu reserva a Itzel y fuiste por otra ({o2} O2, +{rad} de radiación)."
+      "manguera": "You shared your tank with Itzel ({o2} O2).",
+      "reserva": "You left Itzel your reserve and went for another one ({o2} O2, +{rad} radiation)."
     },
     "nota_regreso": {
-      "rover": "Regresaron en el rover ({o2} O2).",
-      "caminar": "Regresaron caminando al paso de Itzel ({o2} O2, +{rad} de radiación)."
+      "rover": "You returned in the rover ({o2} O2).",
+      "caminar": "You walked back at Itzel's pace ({o2} O2, +{rad} radiation)."
     },
-    "pregunta": "¿Reparamos la radio para avisar a la Tierra ya, o salimos de inmediato?",
-    "herida_si": "Con el botiquín, Itzel recupera fuerzas y camina mejor.",
-    "herida_no": "Sin botiquín, Itzel camina más despacio (-{costo} O2).",
-    "reparar": "Reparar radio ({costo} O2)",
-    "salir": "Salir ya",
-    "nota_reparar": "Reparaste la radio: los datos llegaron a la Tierra a tiempo.",
-    "nota_salir": "Saliste rápido; los datos llegarán al volver.",
-    "nota_herida": "Sin botiquín, Itzel caminó más despacio por el cansancio y gastamos más oxígeno.",
-    "planta_boton": "▸ La planta de Chispa",
-    "planta_titulo": "¡La planta de Chispa!",
-    "planta_texto": "Chispa cuidó esta plantita en la base. Es de verdad: en 2021, científicos sembraron esta misma planta (Arabidopsis) en suelo lunar traído por las misiones Apolo 11, 12 y 17. ¡Todas las semillas germinaron! Pero crecieron más lento y se estresaron, porque el suelo lunar es muy duro para las plantas.",
-    "planta_cerrar": "Toca para cerrar",
-    "nota_planta": "Chispa trajo su planta: crecer plantas en suelo lunar es posible, pero difícil (NASA OSDR)."
+    "pregunta": "Do we fix the radio to warn Earth now, or leave right away?",
+    "herida_si": "With the first-aid kit, Itzel gets her strength back and walks better.",
+    "herida_no": "Without a first-aid kit, Itzel walks slower (-{costo} O2).",
+    "reparar": "Fix radio ({costo} O2)",
+    "salir": "Leave now",
+    "nota_reparar": "You fixed the radio: the data reached Earth in time.",
+    "nota_salir": "You left fast; the data will arrive when you get back.",
+    "nota_herida": "Without a first-aid kit, Itzel walked slower because she was tired, and we used more oxygen.",
+    "planta_boton": "▸ Chispa's plant",
+    "planta_titulo": "Chispa's plant!",
+    "planta_texto": "Chispa took care of this little plant at the base. It's real: in 2021, scientists planted this same plant (Arabidopsis) in lunar soil brought back by the Apollo 11, 12, and 17 missions. All the seeds sprouted! But they grew slower and got stressed, because lunar soil is very tough for plants.",
+    "planta_cerrar": "Tap to close",
+    "nota_planta": "Chispa brought his plant: growing plants in lunar soil is possible, but hard (NASA OSDR)."
   },
-
   "final": {
-    "sin_nombre": "Astronauta",
-    "temas": { "cme": "Tormenta solar (CME)", "zona": "Zona de aterrizaje", "polo_sur": "Cráteres donde nunca llega el Sol", "rutas": "Rutas del rescate", "rover": "Velocidad del rover", "radiacion": "Radiación de la tormenta", "planta": "Planta de Chispa", "luz": "Luz en el polo sur", "frio": "Frío en el cráter", "polvo": "Polvo lunar en el Apolo" },
+    "sin_nombre": "Astronaut",
+    "temas": {
+      "cme": "Solar storm (CME)",
+      "zona": "Landing zone",
+      "polo_sur": "Craters the Sun never reaches",
+      "rutas": "Rescue routes",
+      "rover": "Rover speed",
+      "radiacion": "Storm radiation",
+      "planta": "Chispa's plant",
+      "luz": "Light at the south pole",
+      "frio": "Cold in the crater",
+      "polvo": "Lunar dust on Apollo"
+    },
     "finales": {
       "completa": {
-        "titulo": "¡Misión completa!",
-        "texto": "Todos están a salvo. La Tierra protegió sus satélites: en vez de apagones, hay auroras en el cielo. Y el hielo de Itzel ya es noticia.",
-        "voz": "¡Ganaste la insignia dorada!"
+        "titulo": "Mission complete!",
+        "texto": "Everyone is safe. Earth protected its satellites: instead of blackouts, there are auroras in the sky. And Itzel's ice is already in the news.",
+        "voz": "You earned the gold badge!"
       },
       "sin_aviso": {
-        "titulo": "Rescate sin aviso",
-        "texto": "Todos están a salvo, pero la alerta no llegó. Algunos satélites fallan unas horas.",
-        "voz": "Itzel: A veces hay que elegir: los salvaste a ellos o a nosotros."
+        "titulo": "Rescue without warning",
+        "texto": "Everyone is safe, but the alert didn't arrive. Some satellites fail for a few hours.",
+        "voz": "Itzel: Sometimes you have to choose: you saved them or us."
       },
       "hielo_secreto": {
-        "titulo": "El hielo queda en secreto",
-        "texto": "Todos están a salvo y la Tierra protegió sus satélites. Pero el descubrimiento de Itzel no llegó.",
-        "voz": "Itzel: ¡Volveré por mi hielo! ¿Me acompañas la próxima vez?"
+        "titulo": "The ice stays a secret",
+        "texto": "Everyone is safe and Earth protected its satellites. But Itzel's discovery didn't arrive.",
+        "voz": "Itzel: I'll come back for my ice! Will you come with me next time?"
       },
       "evacuacion": {
-        "titulo": "Evacuación",
-        "texto": "Una nave automática los recogió a todos. Nadie se quedó atrás.",
-        "voz": "Chispa: Lo que más nos costó {recurso} fue «{decision}» ({valor}). ¡La próxima vez saldrá mejor!"
+        "titulo": "Evacuation",
+        "texto": "An automatic ship picked everyone up. Nobody was left behind.",
+        "voz": "Chispa: What cost us the most {recurso} was «{decision}» ({valor}). Next time will go better!"
       }
     },
-    "recurso_oxigeno": "oxígeno",
-    "recurso_radiacion": "radiación",
-    "b_bitacora": "Bitácora",
-    "b_ysi": "¿Y si…?",
-    "b_planta": "La planta",
-    "titulo_cadena": "Tu misión, decisión por decisión",
-    "cadena_vacia": "Juega la misión completa para ver aquí cada decisión.",
-    "c_mochila": "Mochila: {objetos}",
-    "c_linterna_si": "Hubo luz en el cráter oscuro",
-    "c_linterna_no": "Sin linterna: lo oscuro fue más difícil",
+    "recurso_oxigeno": "oxygen",
+    "recurso_radiacion": "radiation",
+    "b_bitacora": "Mission log",
+    "b_ysi": "What if…?",
+    "b_planta": "The plant",
+    "titulo_cadena": "Your mission, decision by decision",
+    "cadena_vacia": "Play the whole mission to see each decision here.",
+    "c_mochila": "Backpack: {objetos}",
+    "c_linterna_si": "There was light in the dark crater",
+    "c_linterna_no": "No flashlight: the dark was harder",
     "c_equipo": "{traje} · {nave}",
-    "c_equipo_efecto": "El traje y el escudo detienen {n} de cada 10",
-    "c_efectos": "{o2} O2 · +{rad} radiación",
+    "c_equipo_efecto": "The suit and shield block {n} out of 10",
+    "c_efectos": "{o2} O2 · +{rad} radiation",
     "c_solo_o2": "{o2} O2",
-    "c_crater": "Cruzaste el cráter helado",
-    "c_crater_efecto": "{o2} O2 · {choques} choques",
-    "c_mensaje": "Mensaje: {nombre}",
-    "titulo_ysi": "¿Y si…?",
-    "ysi_explica": "El juego vuelve a jugar el final con la otra opción:",
-    "ysi_real": "Elegiste «{opcion}»: O2 {o2} · radiación {rad} → {final}",
-    "ysi_otra": "¿Y si «{opcion}»? O2 {o2} · radiación {rad} → {final}",
-    "ysi_igual": "Con esa decisión el final habría sido el mismo.",
-    "ysi_cambia": "¡Con esa decisión el final habría cambiado!",
-    "ysi_vacio": "Juega el rescate completo para ver qué habría pasado.",
-    "ysi_aire": "Aire",
-    "ysi_regreso": "Regreso",
-    "ysi_mensajes": "Mensajes",
-    "ysi_real_m": "Mandaste «{a}» y «{b}»: O2 {o2} · radiación {rad} → {final}",
-    "ysi_otra_m": "¿Y si mandabas «{nuevo}» en vez de «{viejo}»? O2 {o2} · radiación {rad} → {final}",
-    "titulo_planta": "La planta de Chispa",
-    "planta_itzel": "Itzel: Esta planta creció en la base. Te la dejo a ti: cuídala mucho.",
-    "titulo_exito": "¡Misión cumplida!",
-    "titulo_fallo": "La misión regresó",
-    "sol_vivo": "☀ Tu tormenta es real: el Sol la lanzó el {fecha} a {vel} km/s. ¡Es el Sol de estos días! ↗",
-    "sol_famosa": "☀ Tu tormenta es real: {nombre} ({fecha}, {vel} km/s). ↗",
-    "sol_real": "☀ Tu tormenta es real: el Sol la lanzó el {fecha} a {vel} km/s. ↗",
-    "resumen_fuentes": "Ciencia de la NASA en este juego: {reales} datos reales y {ejemplo} de ejemplo (todavía no verificados).",
-    "fuentes_titulo": "¡Ciencia de verdad!",
-    "fuentes_sub": "Cosas reales que la NASA descubrió y que usamos en la misión.",
+    "c_crater": "You crossed the frozen crater",
+    "c_crater_efecto": "{o2} O2 · {choques} bumps",
+    "c_mensaje": "Message: {nombre}",
+    "titulo_ysi": "What if…?",
+    "ysi_explica": "The game replays the ending with the other option:",
+    "ysi_real": "You chose «{opcion}»: O2 {o2} · radiation {rad} → {final}",
+    "ysi_otra": "What if «{opcion}»? O2 {o2} · radiation {rad} → {final}",
+    "ysi_igual": "With that decision the ending would have been the same.",
+    "ysi_cambia": "With that decision the ending would have changed!",
+    "ysi_vacio": "Play the whole rescue to see what would have happened.",
+    "ysi_aire": "Air",
+    "ysi_regreso": "Trip back",
+    "ysi_mensajes": "Messages",
+    "ysi_real_m": "You sent «{a}» and «{b}»: O2 {o2} · radiation {rad} → {final}",
+    "ysi_otra_m": "What if you sent «{nuevo}» instead of «{viejo}»? O2 {o2} · radiation {rad} → {final}",
+    "titulo_planta": "Chispa's plant",
+    "planta_itzel": "Itzel: This plant grew at the base. I'm leaving it with you: take good care of it.",
+    "titulo_exito": "Mission accomplished!",
+    "titulo_fallo": "The mission came back",
+    "sol_vivo": "☀ Your storm is real: the Sun launched it on {fecha} at {vel} km/s. It's today's Sun! ↗",
+    "sol_famosa": "☀ Your storm is real: {nombre} ({fecha}, {vel} km/s). ↗",
+    "sol_real": "☀ Your storm is real: the Sun launched it on {fecha} at {vel} km/s. ↗",
+    "resumen_fuentes": "NASA science in this game: {reales} real facts and {ejemplo} examples (not verified yet).",
+    "fuentes_titulo": "Real science!",
+    "fuentes_sub": "Real things NASA discovered that we used in the mission.",
     "fuentes_real": "✓ Real",
-    "fuentes_ejemplo": "⚠ Ejemplo",
-    "fuentes_pagina": "{n} de {total}",
+    "fuentes_ejemplo": "⚠ Example",
+    "fuentes_pagina": "{n} of {total}",
     "fuentes_cortos": {
-      "Cráteres donde nunca llega el Sol": "Cráteres oscuros",
-      "Radiación de la tormenta": "Radiación",
-      "Hueso y músculo en la Estación Espacial": "Huesos en el espacio",
-      "Plantas que crecen en el espacio": "Plantas en el espacio",
-      "Las huellas del Apolo siguen en la Luna (fotos de LRO)": "Huellas del Apolo",
-      "Gravedad de la Luna (1.62 m/s²)": "Gravedad lunar",
-      "Polvo lunar en el Apolo": "Polvo lunar",
-      "Tormenta solar (CME)": "Tormenta solar"
+      "Craters the Sun never reaches": "Dark craters",
+      "Storm radiation": "Radiation",
+      "Bone and muscle on the Space Station": "Bones in space",
+      "Plants that grow in space": "Plants in space",
+      "The Apollo footprints are still on the Moon (LRO photos)": "Apollo footprints",
+      "Moon's gravity (1.62 m/s²)": "Lunar gravity",
+      "Lunar dust on Apollo": "Lunar dust",
+      "Solar storm (CME)": "Solar storm"
     },
     "fuentes_ideas": {
-      "Tormenta solar (CME)": "El Sol a veces lanza al espacio una nube gigante de partículas.",
-      "Zona de aterrizaje": "Aterrizamos junto al cráter Shackleton, en el polo sur de la Luna.",
-      "Cráteres donde nunca llega el Sol": "Hay cráteres tan hondos que el Sol nunca entra. ¡Y guardan hielo!",
-      "Rutas del rescate": "La NASA tiene mapas de la Luna para planear por dónde ir.",
-      "Velocidad del rover": "Un rover del polo sur va más despacio que tú cuando caminas.",
-      "Radiación de la tormenta": "Lejos de la Tierra, el traje y el escudo nos cuidan de la radiación.",
-      "Planta de Chispa": "Unas plantitas crecieron en tierra traída de la Luna. ¡Pero les costó!",
-      "Luz en el polo sur": "Allí el Sol va pegado al horizonte y las sombras son larguísimas.",
-      "Frío en el cráter": "En los cráteres oscuros hace más de 200 grados bajo cero.",
-      "Polvo lunar en el Apolo": "El polvo de la Luna es finito y se pega a todo, ¡hasta a los trajes!",
-      "Hueso y músculo en la Estación Espacial": "Sin gravedad, huesos y músculos se debilitan. Por eso hay que hacer ejercicio.",
-      "Plantas que crecen en el espacio": "Unas semillas germinaron en la Estación Espacial, ¡sin gravedad!",
-      "Las huellas del Apolo siguen en la Luna (fotos de LRO)": "En la Luna no hay viento: las huellas del Apolo siguen ahí.",
-      "Gravedad de la Luna (1.62 m/s²)": "En la Luna todo pesa la sexta parte que en la Tierra."
+      "Solar storm (CME)": "Sometimes the Sun throws a giant cloud of particles into space.",
+      "Landing zone": "We landed next to Shackleton crater, at the Moon's south pole.",
+      "Craters the Sun never reaches": "Some craters are so deep that the Sun never gets in. And they hold ice!",
+      "Rescue routes": "NASA has maps of the Moon to plan where to go.",
+      "Rover speed": "A south pole rover moves slower than you walk.",
+      "Storm radiation": "Far from Earth, the suit and shield protect us from radiation.",
+      "Chispa's plant": "Some little plants grew in soil brought from the Moon. But it was hard for them!",
+      "Light at the south pole": "There the Sun stays right on the horizon and shadows are super long.",
+      "Cold in the crater": "In the dark craters it's colder than 200 degrees below zero.",
+      "Lunar dust on Apollo": "Moon dust is super fine and sticks to everything, even the suits!",
+      "Bone and muscle on the Space Station": "Without gravity, bones and muscles get weaker. That's why you have to exercise.",
+      "Plants that grow in space": "Some seeds sprouted on the Space Station, with no gravity!",
+      "The Apollo footprints are still on the Moon (LRO photos)": "The Moon has no wind: the Apollo footprints are still there.",
+      "Moon's gravity (1.62 m/s²)": "On the Moon everything weighs one sixth as much as on Earth."
     },
-    "ver_fuentes": "Fuentes NASA",
-    "otra_vez": "Jugar otra vez",
-    "titulo_fuentes": "Fuentes NASA",
-    "leyenda_fuentes": "✓ Dato real: medido por la NASA, con su página.  ⚠ DATO DE EJEMPLO: un número de prueba que aún no verificamos. «No en vivo»: la NASA no respondió y usamos un registro guardado. Toca una fila para abrir su fuente.",
-    "titulo_bitacora": "Bitácora de la misión",
-    "bitacora_mas": "… y {n} decisiones más (toca para ver todo)",
-    "cerrar": "Cerrar",
-    "mi_insignia": "Mi insignia",
-    "titulo_insignia": "Diseña tu insignia de misión",
-    "insignia_mision": "Rescate en el Polo Sur Lunar",
-    "forma": "Forma",
+    "ver_fuentes": "NASA sources",
+    "otra_vez": "Play again",
+    "titulo_fuentes": "NASA sources",
+    "leyenda_fuentes": "✓ Real data: measured by NASA, with its page.  ⚠ EXAMPLE DATA: a test number we haven't verified yet. «Not live»: NASA didn't answer and we used a saved record. Tap a row to open its source.",
+    "titulo_bitacora": "Mission log",
+    "bitacora_mas": "… and {n} more decisions (tap to see them all)",
+    "cerrar": "Close",
+    "mi_insignia": "My badge",
+    "titulo_insignia": "Design your mission badge",
+    "insignia_mision": "Rescue at the Lunar South Pole",
+    "forma": "Shape",
     "color": "Color",
-    "simbolo": "Símbolo",
-    "lista": "¡Lista!",
-    "descargar": "⬇ Descargar PNG",
-    "descargado": "¡Guardada! Revisa tus descargas.",
-    "exito": "Salvaste a Itzel y a Chispa. Los satélites de la Tierra están protegidos!",
-    "fallo": "Esta vez no alcanzó. Los astronautas reales también practican muchas veces.",
-    "causa_oxigeno": "Chispa: ¡Nos quedamos sin oxígeno (quedó en {oxigeno})! El aire se gasta con cada hora de camino y con cada subida. La próxima vez prueba una ruta más corta, un traje que gaste menos aire o llevar el tanque extra.",
-    "causa_radiacion": "Chispa: La tormenta solar nos alcanzó y la radiación llegó a {radiacion} (el límite es 100). La próxima vez carga el escudo, usa un traje que proteja más o refúgiate antes de que llegue la tormenta."
+    "simbolo": "Symbol",
+    "lista": "Done!",
+    "descargar": "⬇ Download PNG",
+    "descargado": "Saved! Check your downloads.",
+    "exito": "You saved Itzel and Chispa. Earth's satellites are protected!",
+    "fallo": "It wasn't enough this time. Real astronauts practice many times too.",
+    "causa_oxigeno": "Chispa: We ran out of oxygen (it reached {oxigeno})! Air is used up with every hour of travel and every climb. Next time try a shorter route, a suit that uses less air, or bring the extra tank.",
+    "causa_radiacion": "Chispa: The solar storm caught us and radiation reached {radiacion} (the limit is 100). Next time charge the shield, use a suit that protects more, or take shelter before the storm arrives."
   },
   "exterior": {
-    "letrero_base": "BASE POLO SUR",
-    "letrero_vehiculos": "ZONA DE VEHÍCULOS",
-    "bienvenida": "¡Bienvenido a la superficie lunar, astronauta! Nuestro vehículo de exploración nos espera cerca de la estación. Vamos a buscarlo.",
-    "objetivo": "OBJETIVO: camina a la zona de vehículos y aborda el rover",
-    "abordar": "Camina hasta el rover (o tócalo) para subir",
-    "revisar": "Presiona E para revisar",
-    "activado": "¡Vehículo de exploración activado! Sigue las balizas para llegar a la zona de búsqueda.",
-    "balizas": "Sigue las balizas de navegación.",
-    "crater": "¡Cuidado! Hay un cráter cerca.",
-    "rugoso": "Reduce la velocidad en las zonas irregulares.",
-    "sombra": "La iluminación es limitada. Activaré los sistemas de navegación y los faros.",
-    "cerca": "Estamos acercándonos a la región donde se detectó la señal de Chispa.",
-    "choque": "¡Choque leve! Retrocede con S y rodea el obstáculo.",
-    "borde": "La zona de búsqueda está muy lejos para ir a pie. Usa el rover.",
-    "bajar_detente": "Primero detén el rover por completo.",
-    "bajar_zona": "Solo puedes bajar en una zona segura: la plataforma de estacionamiento.",
-    "llegada": "¡Hemos llegado! La señal de Chispa proviene de esta región. Tendremos que continuar con cuidado.",
-    "punto": "PUNTO DE EXPLORACIÓN ALCANZADO",
-    "continuar": "Presiona E o toca la pantalla para continuar ▶",
-    "bitacora": "Condujiste el rover hasta el punto de exploración ({choques} choques).",
+    "letrero_base": "SOUTH POLE BASE",
+    "letrero_vehiculos": "VEHICLE AREA",
+    "bienvenida": "Welcome to the lunar surface, astronaut! Our exploration vehicle is waiting near the station. Let's go find it.",
+    "objetivo": "GOAL: walk to the vehicle area and board the rover",
+    "abordar": "Walk up to the rover (or tap it) to get in",
+    "revisar": "Press E to check",
+    "activado": "Exploration vehicle activated! Follow the beacons to reach the search area.",
+    "balizas": "Follow the navigation beacons.",
+    "crater": "Careful! There's a crater nearby.",
+    "rugoso": "Slow down on rough ground.",
+    "sombra": "Lighting is limited. I'll turn on the navigation systems and the headlights.",
+    "cerca": "We're getting close to the area where Chispa's signal was detected.",
+    "choque": "Small bump! Back up with S and go around the obstacle.",
+    "borde": "The search area is too far to walk. Use the rover.",
+    "bajar_detente": "First stop the rover completely.",
+    "bajar_zona": "You can only get out in a safe area: the parking platform.",
+    "llegada": "We made it! Chispa's signal comes from this area. We'll have to keep going carefully.",
+    "punto": "EXPLORATION POINT REACHED",
+    "continuar": "Press E or tap the screen to continue ▶",
+    "bitacora": "You drove the rover to the exploration point ({choques} bumps).",
     "hud": {
-      "velocidad": "VELOCIDAD",
-      "energia": "ENERGÍA",
-      "baliza": "BALIZA {n}/{total}",
-      "faltan": "FALTAN {d}",
-      "senal": "SEÑAL DE CHISPA"
+      "velocidad": "SPEED",
+      "energia": "POWER",
+      "baliza": "BEACON {n}/{total}",
+      "faltan": "{d} TO GO",
+      "senal": "CHISPA'S SIGNAL"
     },
     "info": {
-      "esclusa": "Esclusa de la base: la cerramos para no perder aire. La misión está afuera.",
-      "paneles": "Paneles solares: en el polo sur el Sol queda muy bajo, por eso se colocan casi de pie.",
-      "ciencia": "Vehículo científico: hoy toma muestras de suelo. No es para el rescate.",
-      "carga": "Robot de carga: lleva cajas entre los módulos. Es muy lento para la misión."
+      "esclusa": "Base airlock: we close it so we don't lose air. The mission is outside.",
+      "paneles": "Solar panels: at the south pole the Sun stays very low, so they stand almost upright.",
+      "ciencia": "Science vehicle: today it's collecting soil samples. It's not for the rescue.",
+      "carga": "Cargo robot: it carries boxes between modules. It's too slow for the mission."
     },
-    "pendiente": "Reduce la velocidad. El terreno presenta una inclinación considerable.",
-    "rocas": "Obstáculo detectado. Busca un espacio seguro para pasar.",
-    "traccion_aviso": "Las ruedas pierden tracción. Disminuye la potencia.",
-    "bateria": "Estamos consumiendo demasiada energía. Planifica el resto del recorrido.",
-    "ruta_recuperada": "¡Excelente! Volvemos a estar en la ruta hacia Chispa.",
-    "crater_peligro": "¡Cuidado! Detecto una inclinación considerable. Reduce la velocidad o busca otra ruta.",
-    "crater_leve": "El borde del cráter está muy inclinado. Retrocedimos un poco: rodéalo por terreno plano.",
-    "suelta": "¡Suelta el acelerador! Acelerar hunde más las ruedas.",
+    "pendiente": "Slow down. The ground has a steep slope.",
+    "rocas": "Obstacle detected. Find a safe space to pass.",
+    "traccion_aviso": "The wheels are losing traction. Reduce power.",
+    "bateria": "We're using too much power. Plan the rest of the trip.",
+    "ruta_recuperada": "Excellent! We're back on the route to Chispa.",
+    "crater_peligro": "Careful! I detect a steep slope. Slow down or find another route.",
+    "crater_leve": "The crater edge is very steep. We slid back a little: go around it on flat ground.",
+    "suelta": "Let go of the throttle! Speeding up sinks the wheels deeper.",
     "tutorial": {
-      "titulo": "CONTROLES DEL ROVER",
-      "stella": "¡Bienvenido al rover lunar! Soy STELLA, tu copiloto. Utiliza los controles para conducir y sigue las balizas de navegación. ¡Ten cuidado con los cráteres!",
+      "titulo": "ROVER CONTROLS",
+      "stella": "Welcome to the lunar rover! I'm STELLA, your co-pilot. Use the controls to drive and follow the navigation beacons. Watch out for craters!",
       "filas": [
-        [["←", "→"], "Ir a la izquierda o derecha"],
-        [["↑", "↓"], "Ir hacia arriba o abajo"],
-        [["◉"], "Clic sostenido: ir ahí"],
-        [["E"], "Bajar (rover detenido)"],
-        [["H"], "Consultar ayuda"]
+        [
+          [
+            "←",
+            "→"
+          ],
+          "Go left or right"
+        ],
+        [
+          [
+            "↑",
+            "↓"
+          ],
+          "Go up or down"
+        ],
+        [
+          [
+            "◉"
+          ],
+          "Hold click: go there"
+        ],
+        [
+          [
+            "E"
+          ],
+          "Get out (rover stopped)"
+        ],
+        [
+          [
+            "H"
+          ],
+          "Get help"
+        ]
       ],
-      "arrancar": "Flechas o clic para avanzar",
-      "boton": "? AYUDA"
+      "arrancar": "Arrows or click to move",
+      "boton": "? HELP"
     },
     "em": {
-      "inclinacion": "INCLINACIÓN",
-      "seguro": "SEGURO",
-      "precaucion": "PRECAUCIÓN",
-      "peligro": "PELIGRO",
-      "traccion_titulo": "PÉRDIDA DE TRACCIÓN",
-      "traccion": "TRACCIÓN",
+      "inclinacion": "SLOPE",
+      "seguro": "SAFE",
+      "precaucion": "CAUTION",
+      "peligro": "DANGER",
+      "traccion_titulo": "TRACTION LOSS",
+      "traccion": "TRACTION",
       "traccion_pasos": [
-        "Detener el rover",
-        "Reducir la potencia",
-        "Retroceder despacio (flecha contraria)"
+        "Stop the rover",
+        "Reduce power",
+        "Back up slowly (opposite arrow)"
       ],
-      "traccion_stella": "¡Atención, astronauta! Las ruedas están patinando sobre el regolito lunar. Si seguimos acelerando, podríamos quedar atrapados.",
-      "traccion_exito": "¡Excelente maniobra! Recuperamos la tracción. Ahora busca una ruta más segura.",
-      "traccion_consejo": "Consejo: en el regolito suelto avanza despacio. Acelerar fuerte solo hace girar las ruedas.",
-      "atasco_titulo": "ALERTA — MOVILIDAD COMPROMETIDA",
-      "atasco_stella": "Nuestro vehículo está atascado. Podemos intentar liberar las ruedas mediante una maniobra especial.",
+      "traccion_stella": "Attention, astronaut! The wheels are slipping on the lunar regolith. If we keep speeding up, we could get stuck.",
+      "traccion_exito": "Excellent move! We got our traction back. Now look for a safer route.",
+      "traccion_consejo": "Tip: on loose regolith, go slowly. Speeding up hard only spins the wheels.",
+      "atasco_titulo": "ALERT — MOBILITY COMPROMISED",
+      "atasco_stella": "Our vehicle is stuck. We can try to free the wheels with a special maneuver.",
       "atasco_pasos": [
-        "Detener los motores",
-        "Activar modo recuperación",
-        "Elegir maniobra de tracción",
-        "Mover ruedas coordinadas",
-        "Retroceder a zona estable"
+        "Stop the motors",
+        "Turn on recovery mode",
+        "Choose a traction maneuver",
+        "Move the wheels together",
+        "Back up to stable ground"
       ],
-      "ruedas_hundidas": "Traseras hundidas",
-      "ruedas_ok": "Ruedas libres",
-      "motores": "Motores detenidos. Así las ruedas dejan de hundirse.",
-      "modo_rec": "Modo de recuperación activado: ahora cada rueda puede moverse por separado.",
-      "maniobra_pregunta": "¿Qué maniobra de tracción usamos?",
+      "ruedas_hundidas": "Rear wheels sunk",
+      "ruedas_ok": "Wheels free",
+      "motores": "Motors stopped. This way the wheels stop sinking.",
+      "modo_rec": "Recovery mode on: now each wheel can move on its own.",
+      "maniobra_pregunta": "Which traction maneuver do we use?",
       "maniobras": [
         [
-          "Gateo de ruedas",
+          "Wheel walking",
           true,
-          "¡Bien! En el gateo, unas ruedas avanzan mientras las otras sostienen al rover, como un gusanito."
+          "Good! In wheel walking, some wheels move forward while the others hold the rover, like a little inchworm."
         ],
         [
-          "Acelerar al máximo",
+          "Full throttle",
           false,
-          "Acelerar fuerte solo hace girar las ruedas y las hunde más en el regolito."
+          "Speeding up hard only spins the wheels and sinks them deeper into the regolith."
         ],
         [
-          "Girar sin parar",
+          "Spin nonstop",
           false,
-          "Girar sin control remueve el suelo bajo las ruedas. Necesitamos un movimiento coordinado."
+          "Spinning out of control digs up the ground under the wheels. We need a coordinated move."
         ]
       ],
-      "impulsos": "Pulsa ESPACIO o IMPULSAR cuando la marca amarilla pase sobre la zona ▼. Impulsos: {n}/3",
-      "impulsar": "IMPULSAR",
-      "impulso_mal": "Casi. Espera a que la marca esté sobre la zona ▼ y vuelve a intentarlo.",
-      "impulsos_ok": "¡Las ruedas se movieron juntas! Ahora retrocedamos hacia terreno firme.",
-      "liberado": "¡ROVER LIBERADO!",
-      "atasco_exito": "¡Lo logramos! Utilizaste una maniobra de recuperación inspirada en la robótica espacial.",
-      "atasco_consejo": "Estas maniobras ayudan, pero no funcionan en cualquier terreno. Lo más seguro es rodear el suelo muy blando o entrar despacio.",
-      "ver_dato": "★ VER DATO NASA (opcional)",
-      "continuar": "CONTINUAR ▶",
-      "volver": "VOLVER",
-      "dato_titulo": "DATO NASA",
-      "dato_viper": "El rover VIPER fue diseñado con ruedas capaces de girar y ajustar su posición de forma independiente para mejorar su movilidad en terrenos difíciles.",
-      "dato_sim": "Simulación educativa: nuestro rover R-1 es inventado y tiene sus propios límites. VIPER se diseñó para pendientes de unos 15°.",
-      "crater_titulo": "ROVER ATRAPADO EN EL BORDE",
-      "crater_stella": "Nuestro rover ha quedado atrapado. Primero debemos comprobar su estabilidad antes de intentar moverlo.",
-      "comprobar": "1. COMPROBAR ESTABILIDAD",
-      "st_incl": "Inclinación: {g}",
-      "st_limite": "Salir retrocediendo: hasta {g}°",
-      "st_estab": "Estabilidad {e} · Energía {n}",
-      "analisis": "Inclinación de {g}° y estabilidad de {e}%. Analiza las opciones y elige la más segura.",
-      "opA": "A. Retroceder lentamente",
-      "opB": "B. Recuperación asistida",
-      "opC": "C. Asistencia robótica",
-      "no_disp": "(no disponible)",
-      "noA": "La pendiente es de {g}°: con más de {lim}° no es seguro salir retrocediendo.",
-      "noB": "No hay suficiente estabilidad o energía para usar los sistemas de movilidad sin riesgo.",
-      "noC": "Primero usemos los sistemas del rover. La asistencia es para cuando no son seguros o fallan.",
-      "A_proceso": "La pendiente permite salir. Retrocedemos muy despacio...",
-      "B_proceso": "Activo el gateo de ruedas para subir el borde poco a poco...",
-      "B_falla": "La maniobra no fue suficiente: las ruedas no encuentran apoyo. Ahora podemos pedir asistencia robótica.",
-      "estabilizado": "¡ROVER A SALVO!",
-      "crater_exito": "¡Rover estabilizado! Salimos del borde del cráter sin riesgos.",
-      "crater_consejo": "Observar la ruta y frenar a tiempo evita la mayoría de los accidentes. ¡Rodea los cráteres por terreno plano!",
-      "asist_titulo": "ASISTENCIA ROBÓTICA",
-      "asist_stella": "La recuperación no es segura. Solicitaré asistencia robótica desde la estación lunar.",
-      "asist_enlace": "Enlace con la estación lunar... (tecnología ficticia de CoderWolf, no de NASA)",
-      "asist_enviar": "ENVIAR SOLICITUD",
-      "asist_camino": "El robot auxiliar va en camino. Tú te quedas a salvo dentro del rover.",
-      "robot_llego": "El robot auxiliar llegó. Primero analicemos la posición del rover.",
-      "asist_analizar": "ANALIZAR POSICIÓN DEL ROVER",
-      "asist_resultado": "Inclinación {g}°, una rueda sin apoyo.",
-      "asist_apoyo_p": "¿Dónde se apoya el robot?",
+      "impulsos": "Press SPACE or PUSH when the yellow mark passes over the ▼ zone. Pushes: {n}/3",
+      "impulsar": "PUSH",
+      "impulso_mal": "Almost. Wait until the mark is over the ▼ zone and try again.",
+      "impulsos_ok": "The wheels moved together! Now let's back up to firm ground.",
+      "liberado": "ROVER FREED!",
+      "atasco_exito": "We did it! You used a recovery maneuver inspired by space robotics.",
+      "atasco_consejo": "These maneuvers help, but they don't work on every terrain. The safest thing is to go around very soft ground or drive in slowly.",
+      "ver_dato": "★ SEE NASA FACT (optional)",
+      "continuar": "CONTINUE ▶",
+      "volver": "BACK",
+      "dato_titulo": "NASA FACT",
+      "dato_viper": "The VIPER rover was designed with wheels that can turn and adjust their position independently to move better on difficult terrain.",
+      "dato_sim": "Educational simulation: our R-1 rover is made up and has its own limits. VIPER was designed for slopes of about 15°.",
+      "crater_titulo": "ROVER STUCK ON THE EDGE",
+      "crater_stella": "Our rover is stuck. First we must check its stability before trying to move it.",
+      "comprobar": "1. CHECK STABILITY",
+      "st_incl": "Slope: {g}",
+      "st_limite": "Back out: up to {g}°",
+      "st_estab": "Stability {e} · Power {n}",
+      "analisis": "Slope of {g}° and stability of {e}%. Look at the options and choose the safest one.",
+      "opA": "A. Back up slowly",
+      "opB": "B. Assisted recovery",
+      "opC": "C. Robotic assistance",
+      "no_disp": "(not available)",
+      "noA": "The slope is {g}°: above {lim}° it's not safe to back out.",
+      "noB": "There isn't enough stability or power to use the mobility systems safely.",
+      "noC": "Let's use the rover's systems first. Assistance is for when they aren't safe or they fail.",
+      "A_proceso": "The slope lets us get out. Backing up very slowly...",
+      "B_proceso": "I'm turning on wheel walking to climb the edge little by little...",
+      "B_falla": "The maneuver wasn't enough: the wheels can't find grip. Now we can ask for robotic assistance.",
+      "estabilizado": "ROVER SAFE!",
+      "crater_exito": "Rover stabilized! We got off the crater edge safely.",
+      "crater_consejo": "Watching the route and braking in time prevents most accidents. Go around craters on flat ground!",
+      "asist_titulo": "ROBOTIC ASSISTANCE",
+      "asist_stella": "Recovery isn't safe. I'll request robotic assistance from the lunar station.",
+      "asist_enlace": "Linking with the lunar station... (made-up CoderWolf technology, not NASA's)",
+      "asist_enviar": "SEND REQUEST",
+      "asist_camino": "The helper robot is on its way. You stay safe inside the rover.",
+      "robot_llego": "The helper robot arrived. First let's analyze the rover's position.",
+      "asist_analizar": "ANALYZE ROVER POSITION",
+      "asist_resultado": "Slope {g}°, one wheel without support.",
+      "asist_apoyo_p": "Where does the robot anchor itself?",
       "apoyos": [
         [
-          "Una roca suelta del borde",
+          "A loose rock on the edge",
           false,
-          "Una roca suelta podría moverse con el tirón. Busquemos algo más firme."
+          "A loose rock could move when pulled. Let's find something firmer."
         ],
         [
-          "Suelo firme fuera del cráter",
+          "Firm ground outside the crater",
           true,
-          "¡Correcto! El suelo firme y plano da el mejor apoyo."
+          "Correct! Firm, flat ground gives the best support."
         ],
         [
-          "Dentro del cráter",
+          "Inside the crater",
           false,
-          "Dentro del cráter hay más pendiente: el robot también podría resbalar."
+          "Inside the crater the slope is steeper: the robot could slip too."
         ]
       ],
-      "asist_remolque_p": "¿Cómo activamos el remolque?",
+      "asist_remolque_p": "How do we start the tow?",
       "remolques": [
         [
-          "Un tirón rápido y fuerte",
+          "A quick, strong pull",
           false,
-          "Un tirón brusco podría voltear el rover. Mejor despacio."
+          "A sudden pull could flip the rover. Better go slow."
         ],
         [
-          "Remolque lento y constante",
+          "Slow, steady tow",
           true,
-          "¡Bien pensado! Un remolque lento mantiene el rover estable."
+          "Good thinking! A slow tow keeps the rover stable."
         ]
       ],
-      "asist_remolcando": "Remolcando despacio hacia terreno firme...",
-      "robot_exito": "¡Rescate completado! El robot auxiliar nos llevó a terreno firme y vuelve a la estación.",
-      "reinicio": "↺ Rescate: volver a la última baliza",
-      "reinicio_stella": "Un equipo de rescate nos llevó a la última baliza segura. Tu progreso se conserva: ¡sigamos!"
+      "asist_remolcando": "Slowly towing to firm ground...",
+      "robot_exito": "Rescue complete! The helper robot took us to firm ground and is going back to the station.",
+      "reinicio": "↺ Rescue: go back to the last beacon",
+      "reinicio_stella": "A rescue team took us to the last safe beacon. Your progress is saved: let's keep going!"
     }
   },
-
   "crater_helado": {
     "_nota": "Escena CraterHelado (Rol 5). El traje aísla: el frío afecta al rover, no al astronauta.",
-    "intro": "STELLA: Entramos a un cráter donde nunca llega el Sol. Mantén → (o el clic) para avanzar.",
-    "intro_linterna": "STELLA: Tu linterna ilumina lejos. Así veremos las rocas a tiempo.",
-    "intro_sin_linterna": "STELLA: No trajimos linterna. Solo vemos un poquito y vamos más despacio.",
-    "calef_si": "Calefacción: SÍ",
-    "calef_no": "Calefacción: NO",
-    "dice_calef_si": "STELLA: Calefacción encendida. El rover va bien, pero usa energía y eso nos cuesta oxígeno.",
-    "dice_calef_no": "STELLA: Calefacción apagada. Ahorramos oxígeno, pero el frío irá frenando al rover.",
-    "aviso_frio": "STELLA: ¡El rover se enfría y va más lento! Tu traje te protege, pero las ruedas y la batería sienten el frío.",
-    "limpiar": "Limpiar polvo",
-    "limpiando": "Limpiando…",
-    "aviso_polvo": "STELLA: El polvo tapa los faros y la cámara del rover. Se ve menos y podemos chocar.",
-    "polvo_apolo": "STELLA: El polvo lunar es afilado y se pega a todo. En las misiones Apolo rayó visores y dañó equipo.",
-    "choque": "¡Roca! No la vimos a tiempo (−{o2} O2).",
-    "avanzar": "Mantén → o el clic para avanzar",
+    "intro": "STELLA: We're entering a crater the Sun never reaches. Hold → (or click) to move forward.",
+    "intro_linterna": "STELLA: Your flashlight shines far. That way we'll see the rocks in time.",
+    "intro_sin_linterna": "STELLA: We didn't bring a flashlight. We can only see a little and we go slower.",
+    "calef_si": "Heater: ON",
+    "calef_no": "Heater: OFF",
+    "dice_calef_si": "STELLA: Heater on. The rover runs well, but it uses power and that costs us oxygen.",
+    "dice_calef_no": "STELLA: Heater off. We save oxygen, but the cold will slow the rover down.",
+    "aviso_frio": "STELLA: The rover is getting cold and slower! Your suit protects you, but the wheels and battery feel the cold.",
+    "limpiar": "Clean dust",
+    "limpiando": "Cleaning…",
+    "aviso_polvo": "STELLA: Dust is covering the rover's headlights and camera. We see less and could crash.",
+    "polvo_apolo": "STELLA: Lunar dust is sharp and sticks to everything. On the Apollo missions it scratched visors and damaged equipment.",
+    "choque": "Rock! We didn't see it in time (−{o2} O2).",
+    "avanzar": "Hold → or click to move forward",
     "velocidad": "{kmh} km/h",
-    "afuera": "Afuera: −238 °C",
-    "progreso": "Cruce",
-    "fin_titulo": "¡Salimos del cráter!",
-    "fin_lineas": "Oxígeno gastado: {o2}\nRocas esquivadas: {esquivas} · choques: {choques}\nLimpiezas: {limpiezas} · calefacción encendida {calef} % del tiempo",
-    "consejo_choques": "Consejo: con el polvo limpio y buena luz, las rocas se ven a tiempo.",
-    "consejo_frio": "Consejo: con la calefacción apagada mucho rato, el rover se arrastra y el viaje dura más.",
-    "consejo_bien": "¡Muy bien! Equilibraste luz, calor y tiempo.",
-    "continuar": "Continuar",
-    "bitacora": "Cruzaste el cráter helado: gastaste {o2} de oxígeno, chocaste con {choques} rocas y limpiaste el polvo {limpiezas} veces."
+    "afuera": "Outside: −238 °C",
+    "progreso": "Crossing",
+    "fin_titulo": "We got out of the crater!",
+    "fin_lineas": "Oxygen used: {o2}\nRocks dodged: {esquivas} · bumps: {choques}\nCleanings: {limpiezas} · heater on {calef} % of the time",
+    "consejo_choques": "Tip: with clean dust and good light, you see the rocks in time.",
+    "consejo_frio": "Tip: with the heater off for a long time, the rover crawls and the trip takes longer.",
+    "consejo_bien": "Great job! You balanced light, heat, and time.",
+    "continuar": "Continue",
+    "bitacora": "You crossed the frozen crater: you used {o2} oxygen, hit {choques} rocks, and cleaned the dust {limpiezas} times."
   },
   "huellas": {
-    "intro": "Mira: hay dos rastros de ruedas. Uno es del rover de Itzel. El otro es de un rover de carga de la base.",
-    "ficha": "El rover de Itzel es ligero y de ruedas delgadas. El de carga es pesado y de ruedas anchas. Acerca la lupa a los círculos ? (con el ratón, las flechas o arrastrando el dedo).",
-    "decidir": "Cada pista nueva gasta {n} de oxígeno. Si eliges bien, seguimos sin gastar más. Si fallas, perdemos oxígeno al regresar.",
+    "intro": "Look: there are two sets of wheel tracks. One is from Itzel's rover. The other is from a base cargo rover.",
+    "ficha": "Itzel's rover is light with thin wheels. The cargo rover is heavy with wide wheels. Move the magnifying glass over the ? circles (with the mouse, the arrows, or by dragging your finger).",
+    "decidir": "Each new clue costs {n} oxygen. If you choose right, we keep going without spending more. If you're wrong, we lose oxygen going back.",
     "botones": [
-      "1 ← Izquierda",
-      "2 Derecha →"
+      "1 ← Left",
+      "2 Right →"
     ],
     "lados": [
-      "izquierdo",
-      "derecho"
+      "left",
+      "right"
     ],
     "lupa": {
-      "ancho_itzel": "delgada",
-      "ancho_carga": "ancha",
-      "prof_itzel": "poco honda",
-      "prof_carga": "muy honda",
-      "obj_itzel": "¡un guante!",
-      "obj_carga": "nada"
+      "ancho_itzel": "thin",
+      "ancho_carga": "wide",
+      "prof_itzel": "shallow",
+      "prof_carga": "very deep",
+      "obj_itzel": "a glove!",
+      "obj_carga": "nothing"
     },
     "pistas": {
-      "ancho_itzel": "Esta rueda es delgada: mide 2 cuadritos.",
-      "ancho_carga": "Esta rueda es ancha: mide 4 cuadritos.",
-      "prof_itzel": "La marca es poco honda. El vehículo pesa poco.",
-      "prof_carga": "La marca es muy honda. El vehículo pesa mucho y se hunde.",
-      "obj_itzel": "¡Un guante morado junto al rastro! Tiene una I blanca.",
-      "obj_carga": "Aquí solo hay polvo y piedritas."
+      "ancho_itzel": "This wheel is thin: it's 2 squares wide.",
+      "ancho_carga": "This wheel is wide: it's 4 squares wide.",
+      "prof_itzel": "The track is shallow. The vehicle is light.",
+      "prof_carga": "The track is very deep. The vehicle is heavy and sinks in.",
+      "obj_itzel": "A purple glove next to the track! It has a white I.",
+      "obj_carga": "There's only dust and pebbles here."
     },
     "ayuda": [
-      "¿Ves los círculos con ? Acerca la lupa a uno y espera un momento.",
-      "Recuerda: lo pesado se hunde más. ¿Cuál marca es menos honda?",
-      "Mira bien cerca del rastro {lado}. ¡Algo brilla ahí!"
+      "See the circles with ? Move the magnifying glass over one and wait a moment.",
+      "Remember: heavy things sink more. Which track is shallower?",
+      "Look closely near the {lado} track. Something is shining there!"
     ],
     "menos_o2": "−{n} O2",
-    "error": "¡Es el rover de carga de la base! Itzel no está aquí. Regresar nos cuesta {o2} de oxígeno.",
-    "volver": "Ya volvimos a la bifurcación. Ahora sigamos el otro rastro.",
-    "bien": "¡Este es el rastro de Itzel! Bien pensado. ¡Sigámoslo!",
-    "dato_titulo": "¿Sabías que...?",
-    "continuar": "Continuar",
-    "bitacora_bien": "Huellas: seguiste el rastro de Itzel a la primera ({pistas} pistas revisadas).",
-    "bitacora_mal": "Huellas: primero seguiste el rastro del rover de carga y perdiste {o2} de oxígeno ({pistas} pistas revisadas)."
+    "error": "It's the base cargo rover! Itzel isn't here. Going back costs us {o2} oxygen.",
+    "volver": "We're back at the fork. Now let's follow the other track.",
+    "bien": "This is Itzel's track! Good thinking. Let's follow it!",
+    "dato_titulo": "Did you know...?",
+    "continuar": "Continue",
+    "bitacora_bien": "Tracks: you followed Itzel's track on the first try ({pistas} clues checked).",
+    "bitacora_mal": "Tracks: you first followed the cargo rover's track and lost {o2} oxygen ({pistas} clues checked)."
   },
-
   "rocas": {
-    "titulo": "Un campo de rocas",
-    "intro": "Rocas enormes bloquean el camino. El rover no puede pasar por encima.",
+    "titulo": "A field of rocks",
+    "intro": "Huge rocks block the way. The rover can't drive over them.",
     "opciones": {
-      "rodear": { "nombre": "Rodear con el rover", "gana": "Sigues con el rover: refugio y regreso fácil.", "cuesta": "El camino es largo: gastas más oxígeno." },
-      "pie": { "nombre": "Cruzar a pie", "gana": "Corto: gastas menos si cargas poco.", "cuesta": "El rover se queda: sin refugio en la tormenta." }
-    },
-    "toca": "Toca una opción para ver cuánto oxígeno cuesta.",
-    "detalle": "Oxígeno {o2}",
-    "blindado": "Con traje blindado gastas más.",
-    "carga": "Cargas {kg} kg. En la Luna todo pesa la sexta parte: se sienten como {luna} kg.",
-    "soltar": "Toca abajo un objeto para dejarlo.",
-    "soltado": "Lo dejas aquí",
-    "elegir": "Elegir",
-    "continuar": "Continuar",
-    "resultado_rodear": "Rodeaste las rocas con el rover. Gastaste {o2} de oxígeno.",
-    "resultado_pie": "Cruzaste a saltitos. Gastaste {o2} de oxígeno. El rover se queda aquí.",
-    "bitacora_rodear": "Rocas: rodeaste con el rover ({o2} O2).",
-    "bitacora_pie": "Rocas: cruzaste a pie con {kg} kg ({o2} O2) y dejaste el rover.",
-    "bitacora_soltar": "Dejaste en las rocas: {lista}."
-  },
-
-  "tormenta": {
-    "titulo": "¡Llegó la tormenta solar!",
-    "info": "Nube del Sol del {fecha} a {vel} km/s. Dura unas {horas} h.",
-    "toca": "Toca una opción para ver cuántas partículas detiene.",
-    "ya_paso": "En el camino ya pasó el {pct} %.",
-    "opciones": {
-      "saliente": {
-        "nombre": "Saliente de roca",
-        "gana": "Protege mucho, pero no todo.",
-        "cuesta": "Hay que desviarse y esperar."
+      "rodear": {
+        "nombre": "Go around in the rover",
+        "gana": "You keep the rover: shelter and an easy trip back.",
+        "cuesta": "The way is long: you use more oxygen."
       },
-      "rover": {
-        "nombre": "Debajo del rover",
-        "gana": "Protege un poco. No hay desvío.",
-        "cuesta": "Hay que esperar ahí."
-      },
-      "seguir": {
-        "nombre": "Seguir hacia Itzel",
-        "gana": "Llegamos antes con Itzel.",
-        "cuesta": "Solo protegen el traje y el escudo."
+      "pie": {
+        "nombre": "Cross on foot",
+        "gana": "Short: you use less if you carry little.",
+        "cuesta": "The rover stays here: no shelter in the storm."
       }
     },
-    "sin_rover": "No hay rover: lo dejaste en las rocas.",
-    "detalle": "Detiene {n} de cada 10\nOxígeno {o2} · Radiación +{rad}",
-    "sin_comida": "Sin comida, esperar cansa más ({o2} O2).",
-    "contador": "Detenidas: {det}   Pasan: {pasan}",
-    "personal": "Tu traje y escudo detienen {n} de cada 10.",
-    "elegir": "Elegir",
-    "stella": "STELLA: ¡Llegó la tormenta! Son partículas muy rápidas que vienen del Sol.",
-    "resultado": "Recibimos +{rad} de radiación y gastamos {o2} de oxígeno.",
-    "resultado_seguir": "Seguimos caminando. Llegaremos antes con Itzel, pero la tormenta sigue.",
-    "resultado_refugio": "La tormenta ya pasó lo más fuerte. Itzel esperó {horas} h más.",
-    "continuar": "Continuar",
-    "bitacora": "Tormenta: {nombre}. Recibimos +{rad} de radiación y gastamos {o2} de oxígeno.",
-    "nota_simplificacion": "Simplificamos: en la realidad las partículas más rápidas pueden llegar antes que la nube."
+    "toca": "Tap an option to see how much oxygen it costs.",
+    "detalle": "Oxygen {o2}",
+    "blindado": "With the armored suit you use more.",
+    "carga": "You carry {kg} kg. On the Moon everything weighs one sixth as much: it feels like {luna} kg.",
+    "soltar": "Tap an object below to leave it.",
+    "soltado": "You leave it here",
+    "elegir": "Choose",
+    "continuar": "Continue",
+    "resultado_rodear": "You went around the rocks in the rover. You used {o2} oxygen.",
+    "resultado_pie": "You crossed in little hops. You used {o2} oxygen. The rover stays here.",
+    "bitacora_rodear": "Rocks: you went around in the rover ({o2} O2).",
+    "bitacora_pie": "Rocks: you crossed on foot with {kg} kg ({o2} O2) and left the rover.",
+    "bitacora_soltar": "You left at the rocks: {lista}."
   },
-
+  "tormenta": {
+    "titulo": "The solar storm is here!",
+    "info": "Sun cloud from {fecha} at {vel} km/s. It lasts about {horas} h.",
+    "toca": "Tap an option to see how many particles it stops.",
+    "ya_paso": "{pct} % already passed on the way.",
+    "opciones": {
+      "saliente": {
+        "nombre": "Rock overhang",
+        "gana": "Protects a lot, but not everything.",
+        "cuesta": "You have to detour and wait."
+      },
+      "rover": {
+        "nombre": "Under the rover",
+        "gana": "Protects a little. No detour.",
+        "cuesta": "You have to wait there."
+      },
+      "seguir": {
+        "nombre": "Keep going to Itzel",
+        "gana": "We reach Itzel sooner.",
+        "cuesta": "Only the suit and shield protect you."
+      }
+    },
+    "sin_rover": "There's no rover: you left it at the rocks.",
+    "detalle": "Stops {n} out of 10\nOxygen {o2} · Radiation +{rad}",
+    "sin_comida": "Without food, waiting is more tiring ({o2} O2).",
+    "contador": "Stopped: {det}   Getting through: {pasan}",
+    "personal": "Your suit and shield stop {n} out of 10.",
+    "elegir": "Choose",
+    "stella": "STELLA: The storm is here! These are very fast particles coming from the Sun.",
+    "resultado": "We got +{rad} radiation and used {o2} oxygen.",
+    "resultado_seguir": "We keep walking. We'll reach Itzel sooner, but the storm is still going.",
+    "resultado_refugio": "The worst of the storm has passed. Itzel waited {horas} h more.",
+    "continuar": "Continue",
+    "bitacora": "Storm: {nombre}. We got +{rad} radiation and used {o2} oxygen.",
+    "nota_simplificacion": "Simplified: in reality the fastest particles can arrive before the cloud."
+  },
   "diario": {
     "_nota": "Diario de misión (escena Diario). Frases en primera persona, cortas, para 7 a 12 años.",
-    "titulo": "Diario de misión",
-    "de": "de {nombre}",
-    "portada_final": "Final: {final}",
-    "portada_pasa": "Pasa la página ▸",
-    "pagina": "página {n} de {total}",
-    "volver": "◂ Volver",
-    "otra_vez": "Jugar otra vez",
-    "costo_nada": "No me costó aire.",
-    "ysi": "¿Y si…?",
-    "ysi_simulado": "Con la decisión de {decision}, habría terminado con {o2} de aire y {rad} de radiación.",
+    "titulo": "Mission journal",
+    "de": "by {nombre}",
+    "portada_final": "Ending: {final}",
+    "portada_pasa": "Turn the page ▸",
+    "pagina": "page {n} of {total}",
+    "volver": "◂ Back",
+    "otra_vez": "Play again",
+    "costo_nada": "It didn't cost me any air.",
+    "ysi": "What if…?",
+    "ysi_simulado": "If I had chosen to {decision}, I would have ended with {o2} air and {rad} radiation.",
     "decisiones": {
-      "manguera": "compartir mi tanque",
-      "reserva": "dejarle mi reserva a Itzel",
-      "rover": "seguir en el rover",
-      "caminar": "volver caminando"
+      "manguera": "share my tank",
+      "reserva": "leave my reserve with Itzel",
+      "rover": "stay in the rover",
+      "caminar": "walk back"
     },
-    "ysi_evacuacion": "¡Y habrían tenido que evacuarnos!",
+    "ysi_evacuacion": "And they would have had to evacuate us!",
     "sellos": {
-      "bien": "¡Bien pensado!",
-      "arriesgado": "Arriesgado",
-      "poco": "Por poco"
+      "bien": "Good thinking!",
+      "arriesgado": "Risky",
+      "poco": "Close call"
     },
     "paginas": {
       "mochila": {
-        "titulo": "La mochila",
-        "texto": "Llené mi mochila con: {objetos}. Pesaba {kg} kg.",
-        "linterna_si": "Llevé la linterna para ver en lo oscuro.",
-        "linterna_no": "No llevé linterna. Lo oscuro iba a ser difícil.",
-        "ysi_linterna": "Con la linterna, el camino oscuro habría sido más fácil.",
-        "ysi_escudo": "Con el escudo, la tormenta me habría hecho menos daño."
+        "titulo": "The backpack",
+        "texto": "I filled my backpack with: {objetos}. It weighed {kg} kg.",
+        "linterna_si": "I took the flashlight to see in the dark.",
+        "linterna_no": "I didn't take a flashlight. The dark was going to be hard.",
+        "ysi_linterna": "With the flashlight, the dark path would have been easier.",
+        "ysi_escudo": "With the shield, the storm would have hurt me less."
       },
       "equipo": {
-        "titulo": "Traje y nave",
-        "texto": "Me puse el {traje} y volé en la {nave}.",
-        "efecto": "Mi equipo me cuidaba de la radiación: {n} de cada 10 partes.",
+        "titulo": "Suit and ship",
+        "texto": "I wore the {traje} and flew in the {nave}.",
+        "efecto": "My gear protected me from radiation: {n} out of 10 parts.",
         "ysi": {
-          "blindado": "Con el traje ligero habría gastado menos aire, pero estaría menos protegido.",
-          "ligero": "Con el traje blindado estaría más protegido, pero gastaría más aire."
+          "blindado": "With the light suit I would have used less air, but I'd be less protected.",
+          "ligero": "With the armored suit I'd be more protected, but I'd use more air."
         }
       },
       "ruta": {
-        "titulo": "El camino",
-        "crater": "Fui por el cráter. Era corto, pero oscuro y empinado.",
-        "cresta": "Fui por la cresta. Era larga, pero plana y con luz.",
-        "horas": "Tardé {horas} horas.",
+        "titulo": "The way",
+        "crater": "I went through the crater. It was short, but dark and steep.",
+        "cresta": "I went along the ridge. It was long, but flat and sunlit.",
+        "horas": "It took me {horas} hours.",
         "ysi": {
-          "crater": "Por la cresta habría ido con luz, pero más lento y con más radiación.",
-          "cresta": "Por el cráter habría llegado antes, pero a oscuras y con frío."
+          "crater": "Along the ridge I would have had light, but been slower and gotten more radiation.",
+          "cresta": "Through the crater I would have arrived sooner, but in the dark and cold."
         }
       },
       "crater": {
-        "titulo": "El cráter helado",
-        "texto": "Crucé el cráter helado con el rover.",
-        "choques_0": "¡No choqué ni una vez!",
-        "choques": "Choqué {choques} veces con las rocas.",
-        "ysi": "Si iba más despacio, habría chocado menos y gastado menos aire."
+        "titulo": "The frozen crater",
+        "texto": "I crossed the frozen crater in the rover.",
+        "choques_0": "I didn't crash even once!",
+        "choques": "I hit the rocks {choques} times.",
+        "ysi": "If I had gone slower, I would have crashed less and used less air."
       },
       "huellas": {
-        "titulo": "Las huellas",
-        "bien": "Encontré las huellas de Itzel a la primera.",
-        "mal": "Primero seguí las huellas del rover de carga. Me equivoqué y perdí aire.",
-        "ysi_mal": "Si revisaba más pistas antes de elegir, habría ahorrado aire."
+        "titulo": "The tracks",
+        "bien": "I found Itzel's tracks on the first try.",
+        "mal": "First I followed the cargo rover's tracks. I was wrong and lost air.",
+        "ysi_mal": "If I had checked more clues before choosing, I would have saved air."
       },
       "rocas": {
-        "titulo": "Las rocas",
-        "pie": "Dejé el rover y crucé las rocas a pie.",
-        "rodear": "Rodeé las rocas con el rover.",
+        "titulo": "The rocks",
+        "pie": "I left the rover and crossed the rocks on foot.",
+        "rodear": "I went around the rocks in the rover.",
         "ysi": {
-          "pie": "Con el rover tendría dónde refugiarme, pero el camino era largo.",
-          "rodear": "A pie habría llegado antes, pero sin refugio."
+          "pie": "With the rover I'd have had a shelter, but the way was long.",
+          "rodear": "On foot I would have arrived sooner, but with no shelter."
         }
       },
       "tormenta": {
-        "titulo": "La tormenta",
-        "saliente": "Me escondí bajo un saliente de roca. Protegía mucho, pero me desvié.",
-        "rover": "Me refugié debajo del rover. Me protegió un poco.",
-        "seguir": "Seguí hacia Itzel en plena tormenta.",
+        "titulo": "The storm",
+        "saliente": "I hid under a rock overhang. It protected a lot, but I had to detour.",
+        "rover": "I took shelter under the rover. It protected me a little.",
+        "seguir": "I kept going to Itzel in the middle of the storm.",
         "ysi": {
-          "saliente": "Si seguía de largo, llegaba antes, pero con mucha más radiación.",
-          "rover": "Bajo el saliente de roca habría estado más protegido.",
-          "seguir": "Bajo el saliente de roca me habría protegido mucho más."
+          "saliente": "If I had kept going, I'd have arrived sooner, but with much more radiation.",
+          "rover": "Under the rock overhang I would have been better protected.",
+          "seguir": "Under the rock overhang I would have been much better protected."
         }
       },
       "aire": {
-        "titulo": "El aire de Itzel",
-        "manguera": "Compartí mi tanque con Itzel. Seguimos juntos.",
-        "reserva": "Le dejé mi reserva a Itzel y fui por otra.",
+        "titulo": "Itzel's air",
+        "manguera": "I shared my tank with Itzel. We stayed together.",
+        "reserva": "I left Itzel my reserve and went for another one.",
         "ysi": {
-          "manguera": "Con la reserva habría gastado menos aire, pero Itzel esperaría sola.",
-          "reserva": "Compartiendo el tanque seguiríamos juntos, pero gastaría más aire."
+          "manguera": "With the reserve I would have used less air, but Itzel would have waited alone.",
+          "reserva": "Sharing the tank, we'd stay together, but I'd use more air."
         }
       },
       "mensajes": {
-        "titulo": "Los mensajes",
-        "radio": "Reparé la radio.",
-        "texto": "Mandé a la Tierra los mensajes: {lista}.",
-        "ysi": "Si mandaba «{falta}»: {efecto}"
+        "titulo": "The messages",
+        "radio": "I fixed the radio.",
+        "texto": "I sent these messages to Earth: {lista}.",
+        "ysi": "If I had sent «{falta}»: {efecto}"
       },
       "regreso": {
-        "titulo": "El regreso",
-        "rover": "Volvimos en el rover. Fue rápido.",
-        "caminar": "Volvimos caminando al paso de Itzel.",
-        "sin_rover": "Sin rover, caminar era la única forma de volver."
+        "titulo": "The trip back",
+        "rover": "We came back in the rover. It was fast.",
+        "caminar": "We walked back at Itzel's pace.",
+        "sin_rover": "Without the rover, walking was the only way back."
       }
     },
     "tierra": {
-      "titulo": "Llegó a la Tierra",
-      "vacio": "Esta vez no llegó ningún mensaje."
+      "titulo": "It reached Earth",
+      "vacio": "No message arrived this time."
     },
     "planta": {
-      "titulo": "Un recuerdo",
-      "texto": "Chispa me regaló una hojita de su planta. La pegué aquí.",
-      "curiosidad_titulo": "Curiosidad",
-      "curiosidad": "En 2015 unas semillitas viajaron a la Estación Espacial. ¡Allá arriba germinaron sin gravedad!"
+      "titulo": "A keepsake",
+      "texto": "Chispa gave me a little leaf from his plant. I stuck it here.",
+      "curiosidad_titulo": "Fun fact",
+      "curiosidad": "In 2015 some tiny seeds traveled to the Space Station. Up there they sprouted without gravity!"
     }
   }
 }

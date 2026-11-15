@@ -53,7 +53,7 @@ export class Intro extends Phaser.Scene {
     this.tweens.killAll(); this.time.removeAllEvents(); this.children.removeAll(true);
     this.cameras.main.fadeIn(300);
     this.dibujar(this.paso);
-    this.dialogo(typeof p === "string" ? { titulo: "Control de Misión", texto: p } : p);
+    this.dialogo(typeof p === "string" ? { titulo: "Mission Control", texto: p } : p);
   }
 
   // Una escena hija puede cambiar estas tres (páginas, dibujo y qué pasa al terminar)
@@ -281,7 +281,7 @@ export class Intro extends Phaser.Scene {
   }
 
   // 4. Se busca rescatista: el Control de Misión (misma pared que la Misión 3)
-  control(anuncio = "SE BUSCA\nRESCATISTA", color = COLOR.titulo) {
+  control(anuncio = estado.textos.intro_letrero, color = COLOR.titulo) {
     const g = this.add.graphics();
     const r = (c, x, y, w, h) => g.fillStyle(c).fillRect(x, y, w, h);
     r(0x2a3a7a, 0, 0, ANCHO, 100);

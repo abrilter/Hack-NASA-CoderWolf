@@ -13,7 +13,7 @@ export class Carga extends Phaser.Scene {
   constructor() { super("Carga"); }
 
   preload() {
-    texto(this, ANCHO / 2, ALTO / 2, "Cargando…");
+    texto(this, ANCHO / 2, ALTO / 2, "Loading…");
     // Si un PNG no existe todavía, no pasa nada: se crea un cuadro de color.
     this.load.on("loaderror", archivo => console.info("[assets] falta", archivo.src, "→ se usa cuadro provisional"));
     ASSETS.forEach(a => this.load.image(a.clave, "assets/" + a.archivo));
@@ -44,7 +44,7 @@ export class Carga extends Phaser.Scene {
     if (!this.scene.manager.keys[escena] || escena === "Carga") {
       const lista = Object.keys(this.scene.manager.keys).filter(k => k !== "Carga").join(", ");
       console.warn(`[prueba] no existe la escena "${escena}". Escenas: ${lista}`);
-      texto(this, ANCHO / 2, ALTO / 2 + 14, `No existe la escena "${escena}"`, { tam: 7, color: "#ff8a5c" });
+      texto(this, ANCHO / 2, ALTO / 2 + 14, `Scene not found: "${escena}"`, { tam: 7, color: "#ff8a5c" });
       this.time.delayedCall(2500, () => this.scene.start(ORDEN[0]));
       return;
     }
