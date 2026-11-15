@@ -45,10 +45,14 @@ export function opcionesDeRuta(datos, estado) {
     const { horas: hR, oscuro } = tramo(r, datos, estado);
     // solo cuenta el tiempo bajo la tormenta, y la tormenta dura D horas
     const expuesto = Math.min(D, Math.max(0, hR - hT));
+    // parte_escena: la parte del camino que se juega en otra escena (el cráter
+    // helado). Esa parte la cobra la escena; aquí solo se cobra el resto del
+    // oxígeno. La radiación usa el tiempo completo: las horas afuera son reales.
+    const parteEscena = r.parte_escena || 0;
     return {
-      id: r.id, nombre: r.nombre, km: r.km, hR, hT, expuesto, oscuro,
+      id: r.id, nombre: r.nombre, km: r.km, hR, hT, expuesto, oscuro, parteEscena,
       efectos: {
-        oxigeno: -Math.round(hR * gastoO2 + r.subida_m / 100),
+        oxigeno: -Math.round((hR * gastoO2 + r.subida_m / 100) * (1 - parteEscena)),
         radiacion: Math.round(expuesto * dosisHora)
       }
     };
@@ -73,6 +77,18 @@ export function opcionesDeRuta(datos, estado) {
 
 // Costos del Rescate: reparar la radio (más caro sin el kit) y, sin botiquín,
 // Itzel está herida y el regreso es más lento.
+// Cuánto oxígeno cuesta más o menos cruzar el cráter helado (para avisarlo en
+// la Ruta). Usa los mismos números que la escena CraterHelado: tiempo de cruce
+// según la linterna × (gasto del traje + calefacción), más un poco por limpiar.
+export function estimarCruceCrater(datos, estado) {
+  const J = datos.crater_helado?.juego;
+  if (!J) return 0;
+  const vel = estado.lleva("linterna") ? J.vel_linterna : J.vel_sin_linterna;
+  const segundos = J.largo_px / vel;
+  const porSegundo = (estado.traje?.gastoO2 ?? 1.6) * J.o2_por_segundo_traje + J.o2_calefaccion;
+  return Math.round(segundos * porSegundo * 1.15);
+}
+
 export function costosRescate(datos, estado, repararRadio) {
   const M = datos.modelo;
   let oxigeno = 0;

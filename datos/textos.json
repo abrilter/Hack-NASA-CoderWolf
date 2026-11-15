@@ -414,6 +414,7 @@
     "radiacion": "Radiación: +{rad}",
     "radiacion_no": "Radiación: 0 (llegas antes de la tormenta)",
     "sin_linterna_corto": "Sin linterna vas más lento.",
+    "cruce_crater": "Cruzarlo: unos {o2} O2 más.",
     "ir": "Ir por aquí",
     "continuar": "Continuar",
     "bitacora": "Ruta: {nombre} ({horas} h).",

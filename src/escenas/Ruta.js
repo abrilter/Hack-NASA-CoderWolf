@@ -13,7 +13,7 @@
 import { ANCHO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { titulo, texto, boton, barras, datoReal } from "../ui.js";
-import { opcionesDeRuta, aplicar, explicar } from "../modelo/simulacion.js";
+import { opcionesDeRuta, aplicar, explicar, estimarCruceCrater } from "../modelo/simulacion.js";
 import { crearTextura, crearTexturasEquipo } from "../pixelart.js";
 
 const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
@@ -252,7 +252,9 @@ export class Ruta extends Phaser.Scene {
       rad > 0 ? llenar(this.t.radiacion, { rad }) : this.t.radiacion_no
     ].join("\n")).setY(PANEL.y + 16);
     this.pGana.setText("+ " + info.gana).setColor("#5cff8a");
-    this.pCuesta.setText("− " + info.cuesta + (op.oscuro ? " " + this.t.sin_linterna_corto : ""));
+    // el cráter se cruza jugando: se avisa cuánto oxígeno más cuesta (según la luz)
+    const cruce = op.parteEscena ? " " + llenar(this.t.cruce_crater, { o2: estimarCruceCrater(estado.datos, estado) }) : "";
+    this.pCuesta.setText("− " + info.cuesta + (op.oscuro ? " " + this.t.sin_linterna_corto : "") + cruce);
   }
 
   // ---------------------------------------------------------------- elegir

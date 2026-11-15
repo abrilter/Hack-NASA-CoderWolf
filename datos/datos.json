@@ -34,7 +34,7 @@
   "rover": { "kmh": 0.5, "fuente": "COMPLETAR", "ejemplo": true },
 
   "rutas": [
-    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 400, "oscura": true,  "ejemplo": true },
+    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 400, "oscura": true, "parte_escena": 0.5,  "ejemplo": true },
     { "id": "cresta", "nombre": "Rodear por la cresta", "km": 16, "subida_m": 100,  "oscura": false, "ejemplo": true }
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
