@@ -31,13 +31,12 @@ export const COLOR = {
 // en main.js y ponerla aquí. Las escenas nuevas usan siguienteEscena(this.scene.key)
 // en lugar de escribir el nombre de la siguiente escena a mano.
 export const ORDEN = [
-  "Titulo", "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior",
+  "Titulo", "Intro", "Carta", "Equipo", "Viaje", "Aterrizaje", "CentroControl", "Exterior",
   "Ruta", "CraterHelado", "Huellas", "Rocas", "Tormenta", "Rescate", "Final"
 ];
 // CraterHelado se salta sola si en la Ruta se eligió la cresta.
 // Rocas decide si el rover sigue (lo leen Tormenta y Rescate).
-// Senal y Viaje siguen registradas en main.js (se pueden abrir
-// con ?escena=...) pero por ahora no forman parte del recorrido.
+// Viaje (alerta solar en pleno vuelo) fija la tormenta de la partida.
 // Una escena que no está en ORDEN va al Final (antes volvía a la Intro).
 export const siguienteEscena = clave => (ORDEN.includes(clave) ? ORDEN[ORDEN.indexOf(clave) + 1] : null) ?? "Final";
 

@@ -47,7 +47,7 @@
     "prefijo_stella": "STELLA: ",
     "sombra": "sombra",
     "bitacora": "Mochila: {lista} ({kg} kg).",
-    "titulo": "Misión 2 · La mochila",
+    "titulo": "La mochila",
     "letrero": "CENTRO DE CONTROL",
     "bienvenida": "Explora la zona de la mochila: junto a la puerta está STELLA, el monitor que analiza la misión. Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
     "mochila": "MOCHILA",
@@ -394,12 +394,27 @@
   },
 
   "viaje": {
-    "titulo": "Alerta solar!",
-    "aviso": "Chispa: el Sol lanzó una nube a {velocidad} km/s. Llega en unas {horas} horas!"
+    "titulo": "¡Alerta solar!",
+    "aviso": "La NASA detectó una nube del Sol ({fecha}, {vel} km/s). Llega a la Luna en unas {horas} h; tú aterrizas en {viaje} h.",
+    "sol": "Sol", "luna": "Luna", "tierra": "Tierra",
+    "opciones": {
+      "escudo": { "nombre": "Cargar el escudo", "gana": "La tormenta te pegará menos.", "cuesta": "Usa energía del aire: −{o2} O2." },
+      "acelerar": { "nombre": "Acelerar la nave", "gana": "Aterrizas {h} h antes de la tormenta.", "cuesta": "Gastas combustible: el aterrizaje será más difícil." },
+      "guardar": { "nombre": "Guardar el aire", "gana": "Llegas con todo tu oxígeno.", "cuesta": "Sin protección extra en la tormenta." }
+    },
+    "toca": "Toca una opción para ver qué gana y qué cuesta.",
+    "elegir": "Elegir",
+    "continuar": "Continuar",
+    "resultado": {
+      "escudo": "Escudo cargado. La tormenta te pegará menos.",
+      "acelerar": "¡Motores a fondo! Llegarás antes, con menos combustible.",
+      "guardar": "Guardaste el aire para el rescate."
+    },
+    "bitacora": "Viaje: {nombre}."
   },
 
   "aterrizaje": {
-    "titulo": "Misión 1 · Aterrizaje",
+    "titulo": "Aterrizaje",
     "instruccion": "Mantén presionado (clic, ↑ o ESPACIO) para encender el propulsor",
     "explicacion": "En la Luna casi no hay aire: los paracaídas y las alas no sirven. Solo los propulsores frenan la nave contra la gravedad lunar (1.62 m/s²).",
     "tu_nave": "{nave}: frena {empuje} m/s² y lleva {combustible} de combustible.",

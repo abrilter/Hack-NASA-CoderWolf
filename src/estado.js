@@ -48,7 +48,7 @@ export const estado = {
 
   nombreClave: "",
   insignia: null,     // { forma, color, simbolo } diseñada en el Final; se conserva entre partidas
-  // Registro de la Misión 1c (Senal). No se borra en nuevaPartida porque
+  // Registro de una versión vieja (la escena Senal se quitó). Se deja porque
   // CentroControl lo lee justo después de empezar la partida.
   mision1: null,
 

@@ -175,17 +175,6 @@ export class Final extends Phaser.Scene {
       .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(c.link, "_blank", "noopener"); });
   }
 
-  lineaSol(y) {
-    const t = this.t, c = estado.datos.cme;
-    if (!c?.fecha) return;
-    const plantilla = c.en_vivo ? t.sol_vivo : c.nombre ? t.sol_famosa : t.sol_real;
-    // columna derecha, debajo de lo que dice Chispa (a la izquierda está la ilustración)
-    const linea = texto(this, 126, Math.min(y, 112), llenar(plantilla, { fecha: fechaLarga(c.fecha), vel: c.velocidad_kms, nombre: c.nombre }),
-      { tam: 5, ancho: 186, origenX: 0, align: "left", color: "#ff8a5c" });
-    if (c.link) linea.setInteractive({ useHandCursor: true })
-      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(c.link, "_blank", "noopener"); });
-  }
-
   miniInsignia() {
     this.mini?.destroy();
     this.mini = dibujarInsignia(this, 124, 145, 6.5, estado.insignia || INSIGNIA_INICIAL, this.exito).setDepth(10);
@@ -265,6 +254,7 @@ export class Final extends Phaser.Scene {
       nave: tx.equipo?.opciones?.[estado.nave.id]?.nombre || estado.nave.id
     }), llenar(t.c_equipo_efecto, { n: Math.round(proteccion(estado) * 10) }));
     // la barra de pruebas puede dejar una ruta sin números: entonces solo se nombra
+    if (m.viaje) add(tx.viaje.opciones[m.viaje.eleccion].nombre, m.viaje.oxigeno ? efectos(m.viaje.oxigeno, 0) : "", m.viaje.oxigeno || 0);
     if (m.ruta) add(tx.ruta?.rutas?.[m.ruta.id]?.nombre || m.ruta.id,
       m.ruta.oxigeno === undefined ? "" : efectos(m.ruta.oxigeno, m.ruta.radiacion), m.ruta.oxigeno || 0, m.ruta.radiacion || 0);
     if (m.crater) add(t.c_crater, llenar(t.c_crater_efecto, { o2: m.crater.oxigeno, choques: m.crater.choques }), m.crater.oxigeno);

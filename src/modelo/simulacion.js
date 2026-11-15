@@ -22,7 +22,18 @@ export function horasDeLlegada(velocidadKms) {
 // (la velocidad real de DONKI, limitada a un rango jugable: velocidadDeJuego)
 // CME se le restan las horas de vuelo de la nave (la grande es más lenta).
 export function horasTormentaAlAterrizar(datos, estado) {
-  return horasDeLlegada(velocidadDeJuego(datos)) - (estado.nave?.horasViaje ?? 0);
+  // si en el Viaje se aceleró, se aterriza unas horas antes
+  return horasDeLlegada(velocidadDeJuego(datos)) - (estado.nave?.horasViaje ?? 0) + (estado.misiones?.viaje?.horasGanadas ?? 0);
+}
+
+// Opciones de la escena Viaje (alerta solar en pleno vuelo)
+export function opcionesViaje(datos) {
+  const V = datos.viaje;
+  return {
+    escudo: { efectos: { escudo: V.escudo.escudo, oxigeno: V.escudo.oxigeno } },
+    acelerar: { efectos: {}, horasGanadas: V.acelerar.horas_ganadas, combustibleFactor: V.acelerar.combustible_factor },
+    guardar: { efectos: {} }
+  };
 }
 
 // Qué parte de la radiación se bloquea (0 = nada, 0.9 = casi todo)

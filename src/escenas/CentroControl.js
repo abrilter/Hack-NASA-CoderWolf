@@ -6,7 +6,7 @@
 //  - La mochila nunca pasa de CAPACIDAD_MOCHILA.
 //  - El tanque de oxígeno es OBLIGATORIO: sin él no se sale y, una vez
 //    guardado, no se puede quitar.
-// Historia: la señal de Chispa ya se identificó en la Misión 1 (Senal.js);
+// Historia: el niño identifica la señal de Chispa con el minijuego de STELLA;
 // el monitor muestra el mapa del polo sur. Revisión del equipo y
 // última transmisión de Itzel → puerta → Exterior. Va después de Equipo y
 // Aterrizaje: la puerta no abre si falta el traje o la nave.
@@ -98,7 +98,7 @@ export class CentroControl extends Phaser.Scene {
     this.btnOmitir = [om.caja.setDepth(1500), om.etiqueta.setDepth(1501)];
     this.btnOmitir.forEach(o => o.setVisible(false));
     this.actualizarHud();
-    // La señal y el mapa se resolvieron en la Misión 1 (escena Senal): aquí el monitor solo muestra el mapa
+    // estado.mision1 queda de una versión vieja (la escena Senal se quitó): la señal se identifica aquí, con STELLA
     Object.assign(this.reg, estado.mision1 || { alertaVista: true });
     if (this.reg.senalIdentificada) this.marcarLocalizada();
 
@@ -566,7 +566,7 @@ export class CentroControl extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- minijuego de respaldo (STELLA)
-  // Normalmente la señal se identifica en la Misión 1 (Senal.js). Si llega
+  // La señal se identifica aquí (antes había una escena Senal aparte). Si llega
   // sin identificar, STELLA ofrece este análisis para no dejar al jugador atorado.
   abrirMinijuego() {
     const s = this.t.stella.senal;
