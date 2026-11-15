@@ -3,6 +3,7 @@ import { ANCHO, ALTO, COLOR, ZOOM } from "./config.js";
 import { Carga } from "./escenas/Carga.js";
 import { Intro } from "./escenas/Intro.js";
 import { Carta } from "./escenas/Carta.js";
+import { Senal } from "./escenas/Senal.js";
 import { CentroControl } from "./escenas/CentroControl.js";
 import { Equipo } from "./escenas/Equipo.js";
 import { Viaje } from "./escenas/Viaje.js";
@@ -33,5 +34,5 @@ new Phaser.Game({
   physics: { default: "arcade" },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-  scene: [Carga, Intro, Carta, CentroControl, Equipo, Viaje, Aterrizaje, Ruta, Rescate, Final]
+  scene: [Carga, Intro, Carta, Senal, CentroControl, Equipo, Viaje, Aterrizaje, Ruta, Rescate, Final]
 });

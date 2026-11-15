@@ -408,3 +408,130 @@ export function crearTexturasEquipo(escena) {
   crearTextura(escena, "planta", PLANTA, PALETA_DECORADO);
   crearTextura(escena, "dron", DRON, PALETA_DECORADO);
 }
+// ----------------------------------------------------------------- Misión 2
+// Objetos de la mochila (16×16) y astronauta 32×32 (mismo chibi, centrado).
+const OBJ_MAPAS = {
+  obj_oxigeno: [
+    "......kkkk......",
+    ".....kMMMMk.....",
+    "......kNNk......",
+    ".....kkkkkk.....",
+    "....kBBBBBBk....",
+    "...kBcBBBBBbk...",
+    "...kBcBBBBBbk...",
+    "...kWWWWWWWWk...",
+    "...kWkWkWWWWk...",
+    "...kWWWWWWWWk...",
+    "...kBcBBBBBbk...",
+    "...kBcBBBBBbk...",
+    "...kBcBBBBBbk...",
+    "...kBBBBBBBbk...",
+    "....kbbbbbbk....",
+    ".....kkkkkk....."
+  ],
+  obj_escudo: [
+    "..kkkkkkkkkkkk..",
+    ".kPPPPPPPPPPPPk.",
+    ".kPHHPPPPPPPPQk.",
+    ".kPHPPPPYPPPPQk.",
+    ".kPHPPPYYYPPPQk.",
+    ".kPHPPYYYYYPPQk.",
+    ".kPHPPPYYYPPPQk.",
+    ".kPPPPPPYPPPPQk.",
+    "..kPPPPPPPPPQk..",
+    "..kPPPPPPPPPQk..",
+    "...kPPPPPPPQk...",
+    "....kPPPPPQk....",
+    ".....kPPPQk.....",
+    "......kPQk......",
+    ".......kk.......",
+    "................"
+  ],
+  obj_radio: [
+    "...........ky...",
+    "...........k....",
+    "...........k....",
+    "...........k....",
+    "..kkkkkkkkkkkk..",
+    ".kGllllllllllgk.",
+    ".kGkkkkkGGGGGgk.",
+    ".kGkVVVkGkkGGgk.",
+    ".kGkVVVkGkkGGgk.",
+    ".kGkkkkkGGGGGgk.",
+    ".kGGGGGGGrGyGgk.",
+    ".kGkkkkkkkkkGgk.",
+    ".kGkWkWkWkWkGgk.",
+    ".kGkkkkkkkkkGgk.",
+    ".kggggggggggggk.",
+    "..kkkkkkkkkkkk.."
+  ],
+  obj_botiquin: [
+    "................",
+    "......kkkk......",
+    ".....kk..kk.....",
+    "..kkkkkkkkkkkk..",
+    ".kWWWWWWWWWWWWk.",
+    ".kWHHHHHHHHHHMk.",
+    ".kWWWWWrrWWWWMk.",
+    ".kWWWWWrrWWWWMk.",
+    ".kWWWrrrrrrWWMk.",
+    ".kWWWrrrrrrWWMk.",
+    ".kWWWWWrrWWWWMk.",
+    ".kWWWWWrrWWWWMk.",
+    ".kWWWWWWWWWWWMk.",
+    ".kMMMMMMMMMMMMk.",
+    "..kkkkkkkkkkkk..",
+    "................"
+  ],
+  obj_comida: [
+    "................",
+    "....kkkkkkkk....",
+    "....kMkMkMkk....",
+    "...kkkkkkkkkk...",
+    "...kWWWWWWWMk...",
+    "...kWHWWWWWMk...",
+    "...kOOOOOOOOk...",
+    "...kOYYOOYYOk...",
+    "...kOYYOOYYOk...",
+    "...kOOOOOOOOk...",
+    "...kWWWWWWWMk...",
+    "...kWkkkkkWMk...",
+    "...kWWWWWWWMk...",
+    "...kMMMMMMMMk...",
+    "....kkkkkkkk....",
+    "................"
+  ],
+  obj_linterna: [
+    "................",
+    "................",
+    "................",
+    "................",
+    "..........kkkk..",
+    ".kkkkkkkkkkYYLk.",
+    "kNNNNNNNNkYYYLk.",
+    "kNHHHHrHNkYYYLk.",
+    "kNNNNNNNNkYYYLk.",
+    "kDDDDDDDDkYYYLk.",
+    ".kkkkkkkkkkYYLk.",
+    "..........kkkk..",
+    "................",
+    "................",
+    "................",
+    "................"
+  ]
+};
+const PALETA_OBJ = {
+  k: K, W: 0xf4f4f4, H: 0xffffff, M: 0x94b0c2, N: 0x566c86, D: 0x333c57,
+  B: 0x29adff, c: 0x7ee6ff, b: 0x3b5dc9, P: 0xb18cff, Q: 0x7a5cc9, Y: 0xffcd75,
+  G: 0x38b764, g: 0x257179, l: 0x5cff8a, V: 0x29adff, r: 0xff5c5c, y: 0xfff27a,
+  O: 0xffa300, L: 0xfff27a
+};
+
+export function crearTexturasMochila(escena) {
+  crearTexturasEquipo(escena);                       // Chispa y decorado
+  Object.entries(OBJ_MAPAS).forEach(([clave, mapa]) => crearTextura(escena, "px_" + clave, mapa, PALETA_OBJ));
+  const vacia = ".".repeat(32);
+  ASTRO_PIERNAS.forEach((piernas, f) => crearTextura(escena, `astro32_${f}`,
+    [...Array(8).fill(vacia), ...[...ASTRO_CUERPO, ...piernas].map(fila => "........" + fila + "........")],
+    paletaAstro(COLORES_TRAJE.base)));
+}
