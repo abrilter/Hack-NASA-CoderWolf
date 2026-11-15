@@ -10,6 +10,7 @@ import { Aterrizaje } from "./escenas/Aterrizaje.js";
 import { Ruta } from "./escenas/Ruta.js";
 import { Rescate } from "./escenas/Rescate.js";
 import { Final } from "./escenas/Final.js";
+import { Viaje } from "./escenas/Viaje.js";
 
 import { estado } from "./estado.js";
 import { ORDEN } from "./config.js";
