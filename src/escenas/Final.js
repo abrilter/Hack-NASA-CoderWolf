@@ -13,6 +13,10 @@ import { titulo, texto, boton, etiquetaDato, navegarConTeclado, llenar } from ".
 import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
 import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
 import { fechaLarga } from "../nasa/sol.js";
+import { titulo, texto, boton, navegarConTeclado, llenar } from "../ui.js";
+import { crearTexturasMochila, crearTextura } from "../pixelart.js";
+import { crearTexturasExterior } from "../arteExterior.js";
+import { finalDeMision, proteccion } from "../modelo/simulacion.js";
 
 
 // ---------------------------------------------------------------- insignia (A-10)
@@ -34,6 +38,29 @@ const LUNA = [
   "..kMMMMMk..",
   "...kkkkk..."
 ];
+
+// Iconos de las tarjetas de fuentes (mapas de letras, como pixelart.js)
+const ICONOS = {
+  ico_sol: ["....y..y....", "..y......y..", "....YYYY....", "y..YYYYYY..y", "...YYYYYY...", "...YYYYYY...", "y..YYYYYY..y", "....YYYY....", "..y......y..", "....y..y...."],
+  ico_frio: [".....c.....", "..c..c..c..", "...c.c.c...", "....ccc....", "ccccccccccc", "....ccc....", "...c.c.c...", "..c..c..c..", ".....c....."],
+  ico_huella: ["..kkkk..", ".kMMMMk.", ".kMMMMk.", ".kMMMMk.", "..kMMk..", "..kkkk..", ".kMMMMk.", ".kMMMMk.", "..kkkk.."],
+  ico_rad: ["...kkkkk...", "..kyyyyyk..", ".kyykkkyyk.", "kyyk...kyyk", "kyy.kkk.yyk", "kyy.kYk.yyk", "kkkk.k.kkkk", "..kyyyyyk..", "...kkkkk..."]
+};
+const PALETA_ICONOS = { k: CONTORNO, y: 0xef7d57, Y: 0xffcd75, c: 0xbff3ff, M: 0x94b0c2 };
+// qué dibujo lleva cada tema (por palabras del tema)
+function iconoFuente(tema = "") {
+  const t = tema.toLowerCase();
+  if (/radiaci/.test(t)) return "ico_rad";
+  if (/planta/.test(t)) return "planta";
+  if (/rover|velocidad/.test(t)) return "rover_cuerpo";
+  if (/huella/.test(t)) return "ico_huella";
+  if (/polvo/.test(t)) return "roca_1";
+  if (/luz/.test(t)) return "px_obj_linterna";
+  if (/fr[ií]o|hielo|cr[aá]ter|sombra/.test(t)) return "ico_frio";
+  if (/hueso|m[uú]sculo|estaci/.test(t)) return "astro32_0";
+  if (/tormenta|cme|sol/.test(t)) return "ico_sol";
+  return "luna_px";
+}
 
 // Puntos del contorno de cada forma (null = círculo)
 function puntosForma(forma, cx, cy, r) {
@@ -104,7 +131,9 @@ export class Final extends Phaser.Scene {
 
   create() {
     navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
-    crearTexturasEquipo(this);                    // chispa_px, planta y naves (por si se abre en modo prueba)
+    crearTexturasMochila(this);                   // chispa_px, planta, naves y objetos (por si se abre en modo prueba)
+    crearTexturasExterior(this);                  // rover y rocas (iconos de las fuentes)
+    Object.entries(ICONOS).forEach(([clave, mapa]) => crearTextura(this, clave, mapa, PALETA_ICONOS));
     crearTextura(this, "luna_px", LUNA, { k: CONTORNO, M: 0xc2c3c7, N: 0x566c86 });
     this.t = estado.textos.final;
     this.capaInsignia = null;          // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
@@ -129,14 +158,23 @@ export class Final extends Phaser.Scene {
     texto(this, ANCHO / 2, 129, llenar(t.resumen_fuentes, { reales, ejemplo: fuentes.length - reales }),
       { tam: 5, color: COLOR.tenue, ancho: 300 });
 
-    // Bitácora · ¿Y si…? · La planta / Fuentes · Mi insignia · Otra vez
-    boton(this, 56, 145, t.b_bitacora, () => this.panelCadena(), 98);
-    boton(this, 160, 145, t.b_ysi, () => this.panelYSi(), 98);
-    boton(this, 264, 145, t.b_planta, () => this.panelPlanta(), 98);
-    boton(this, 56, 167, "   " + t.mi_insignia, () => this.abrirInsignia(), 98);
+    // Bitácora (el diario de misión: decisiones, "¿Y si…?" y la planta) · Mi insignia · Fuentes / Otra vez
+    boton(this, 56, 145, t.b_bitacora, () => this.scene.start("Diario"), 98);
+    boton(this, 160, 145, "   " + t.mi_insignia, () => this.abrirInsignia(), 98);
     this.miniInsignia();
-    boton(this, 160, 167, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
-    boton(this, 264, 167, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
+    boton(this, 264, 145, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
+    boton(this, 160, 167, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
+  }
+
+  lineaSol(y) {
+    const t = this.t, c = estado.datos.cme;
+    if (!c?.fecha) return;
+    const plantilla = c.en_vivo ? t.sol_vivo : c.nombre ? t.sol_famosa : t.sol_real;
+    // columna derecha, debajo de lo que dice Chispa (a la izquierda está la ilustración)
+    const linea = texto(this, 126, Math.min(y, 112), llenar(plantilla, { fecha: fechaLarga(c.fecha), vel: c.velocidad_kms, nombre: c.nombre }),
+      { tam: 5, ancho: 186, origenX: 0, align: "left", color: "#ff8a5c" });
+    if (c.link) linea.setInteractive({ useHandCursor: true })
+      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(c.link, "_blank", "noopener"); });
   }
 
   lineaSol(y) {
@@ -152,7 +190,7 @@ export class Final extends Phaser.Scene {
 
   miniInsignia() {
     this.mini?.destroy();
-    this.mini = dibujarInsignia(this, 20, 167, 6.5, estado.insignia || INSIGNIA_INICIAL, this.exito).setDepth(10);
+    this.mini = dibujarInsignia(this, 124, 145, 6.5, estado.insignia || INSIGNIA_INICIAL, this.exito).setDepth(10);
   }
 
   // ---------------------------------------------------------------- ilustración de cada final
@@ -244,57 +282,6 @@ export class Final extends Phaser.Scene {
     return pasos;
   }
 
-  panelCadena() {
-    const pasos = this.cadena();
-    this.panel(this.t.titulo_cadena, pasos.length
-      ? pasos.map(p => ({ texto: "▸ " + p.decision + (p.consecuencia ? "  →  " + p.consecuencia : ""), color: p.radiacion > 0 || p.oxigeno < -15 ? "#ffcd75" : COLOR.texto }))
-      : [{ texto: this.t.cadena_vacia, color: COLOR.tenue }]);
-  }
-
-  // ---------------------------------------------------------------- ¿Y si…?
-  // Vuelve a jugar el cierre (aire → radio → mensajes → regreso) cambiando una
-  // decisión clave por la contraria: un mensaje, el aire o el regreso. Se muestra
-  // la primera que cambia el final; si ninguna lo cambia, la del aire.
-  panelYSi() {
-    const t = this.t, r = estado.misiones?.rescate, tx = estado.textos.rescate;
-    if (!r?.inicio || !r.aire || !r.regreso || r.mensajes?.length !== 2) return this.panel(t.titulo_ysi, [{ texto: t.ysi_vacio, color: COLOR.tenue }]);
-    const base = { ...estado, ...r.inicio, mochila: estado.mochila, misiones: estado.misiones };
-    const real = { aire: r.aire, mensajes: r.mensajes, regreso: r.regreso };
-    const jugar = c => { const e = simularCierre(estado.datos, base, c); return { e, final: finalDeMision(e, c.mensajes) }; };
-    const nombreFinal = id => t.finales[id].titulo, nm = id => tx.mensajes[id].nombre;
-    const fila = (plantilla, campos, x) => llenar(plantilla, { ...campos, o2: Math.round(x.e.oxigeno), rad: Math.round(x.e.radiacion), final: nombreFinal(x.final) });
-    const yo = jugar(real);
-    const otroAire = r.aire === "manguera" ? "reserva" : "manguera", otroRegreso = r.regreso === "rover" ? "caminar" : "rover";
-    const falta = ["tormenta", "ayuda", "hielo"].find(id => !r.mensajes.includes(id));
-    const otras = [
-      ...r.mensajes.map(viejo => ({ c: { ...real, mensajes: r.mensajes.map(id => (id === viejo ? falta : id)) },
-        real: fila(t.ysi_real_m, { a: nm(r.mensajes[0]), b: nm(r.mensajes[1]) }, yo), otra: x => fila(t.ysi_otra_m, { nuevo: nm(falta), viejo: nm(viejo) }, x) })),
-      { c: { ...real, aire: otroAire },
-        real: fila(t.ysi_real, { opcion: tx.aire[r.aire].nombre }, yo), otra: x => fila(t.ysi_otra, { opcion: tx.aire[otroAire].nombre }, x) },
-      ...(estado.misiones?.rocas?.dejoRover === true ? [] : [{ c: { ...real, regreso: otroRegreso },
-        real: fila(t.ysi_real, { opcion: tx.regreso[r.regreso].nombre }, yo), otra: x => fila(t.ysi_otra, { opcion: tx.regreso[otroRegreso].nombre }, x) }])
-    ].map(o => ({ ...o, ...jugar(o.c) }));
-    const clave = otras.find(o => o.final !== yo.final) || otras.find(o => o.c.aire !== real.aire);
-    const cambia = clave.final !== yo.final;
-    this.panel(t.titulo_ysi, [
-      { texto: t.ysi_explica, color: COLOR.tenue },
-      { texto: clave.real },
-      { texto: clave.otra(clave), color: "#7ee6ff" },
-      { texto: cambia ? t.ysi_cambia : t.ysi_igual, color: cambia ? "#ffcd75" : COLOR.tenue }
-    ]);
-  }
-
-  // ---------------------------------------------------------------- la planta
-  panelPlanta() {
-    const t = this.t, p = estado.datos.planta_espacio;
-    const capa = this.panel(t.titulo_planta, [
-      { texto: t.planta_itzel, color: "#ffcd75" },
-      { texto: p.texto },
-      { texto: `${p.ejemplo ? "⚠ " : "✓ "}${etiquetaDato(p)} · ${p.fuente} · ${p.fecha} ↗`, color: "#5cff8a", link: p.link }
-    ]);
-    capa.add([this.add.image(ANCHO / 2 - 10, 140, "planta").setScale(3).setOrigin(0.5, 1), this.add.image(ANCHO / 2 + 22, 136, "chispa_px")]);
-  }
-
   // ---------------------------------------------------------------- diseñador de insignia
   abrirInsignia() {
     this.disenando = { ...(estado.insignia || INSIGNIA_INICIAL) };
@@ -372,17 +359,64 @@ export class Final extends Phaser.Scene {
     this.time.delayedCall(2500, () => aviso.destroy());
   }
 
-  panelFuentes(fuentes) {
-    const filas = fuentes.map(f => ({
-      texto: `${f.ejemplo ? "⚠ " : "✓ "}${etiquetaDato(f)} · ${f.tema}: ${f.fuente}` +
-             `${f.fecha ? " · " + f.fecha : ""}${f.link ? " ↗" : ""}`,
-      color: f.ejemplo ? "#ffcd75" : "#5cff8a",
-      link: f.link
-    }));
-    // nota honesta sobre la tormenta, justo debajo de la fuente de la CME
+  // Fuentes NASA como tarjetas con dibujo (6 por página): cada una con una idea
+  // sencilla. Los enlaces siguen en datos.json para el equipo.
+  panelFuentes(fuentes, pagina = 0) {
+    this.capaFuentes?.destroy();
+    const t = this.t, POR_PAGINA = 6, total = Math.ceil(fuentes.length / POR_PAGINA);
+    const capa = this.capaFuentes = this.add.container(0, 0).setDepth(1000);
+    capa.add([
+      this.add.rectangle(0, 0, ANCHO, ALTO, 0x0b1026, 0.85).setOrigin(0).setInteractive(),
+      this.add.rectangle(8, 6, ANCHO - 16, ALTO - 12, COLOR.panel).setOrigin(0).setStrokeStyle(1, COLOR.borde),
+      texto(this, ANCHO / 2, 9, t.fuentes_titulo, { tam: 8, color: COLOR.titulo }),
+      texto(this, ANCHO / 2, 20, t.fuentes_sub, { tam: 5, color: COLOR.tenue, ancho: 290 })
+    ]);
+    fuentes.slice(pagina * POR_PAGINA, (pagina + 1) * POR_PAGINA).forEach((f, i) =>
+      capa.add(this.tarjetaFuente(f, 16 + (i % 3) * 98, 31 + Math.floor(i / 3) * 60)));
+
+    // la tormenta está simplificada: se avisa junto a su tarjeta (primera página)
     const nota = estado.textos.tormenta?.nota_simplificacion;
-    if (nota) filas.splice(1, 0, { texto: "   " + nota, color: COLOR.tenue });
-    this.panel(this.t.titulo_fuentes, filas, this.t.leyenda_fuentes);
+    if (nota && pagina === 0) capa.add(texto(this, ANCHO / 2, 149, "* " + nota, { tam: 5, color: COLOR.tenue, ancho: 290 }));
+
+    const b = [];
+    if (pagina > 0) b.push(this.botonChico(36, ALTO - 15, "◂", () => this.panelFuentes(fuentes, pagina - 1), 20));
+    if (pagina < total - 1) b.push(this.botonChico(ANCHO - 36, ALTO - 15, "▸", () => this.panelFuentes(fuentes, pagina + 1), 20));
+    b.push(this.botonChico(ANCHO / 2, ALTO - 15, this.t.cerrar, () => { capa.destroy(); this.capaFuentes = null; }, 48));
+    capa.add(b.flatMap(x => [x.caja, x.etiqueta]));
+    capa.add(texto(this, ANCHO - 72, ALTO - 18, llenar(t.fuentes_pagina, { n: pagina + 1, total }), { tam: 5, color: COLOR.tenue }));
+    return capa;
+  }
+
+  // Tarjeta para niños: un dibujo grande y una idea sencilla (sin abrir páginas).
+  // La idea sale de textos.json → final.fuentes_ideas (por tema); si un tema no
+  // tiene idea escrita, se usa el nombre del tema.
+  // botón más bajito que el de ui.js (12 px de alto, letra 6) para el panel de fuentes
+  botonChico(x, y, contenido, alPresionar, ancho) {
+    const caja = this.add.rectangle(x, y, ancho, 12, COLOR.panel).setStrokeStyle(1, COLOR.borde).setInteractive({ useHandCursor: true });
+    const etiqueta = texto(this, x, y, contenido, { tam: 6, ancho: ancho - 4, origenY: 0.5 });
+    caja.on("pointerover", () => caja.setFillStyle(0x2c3770));
+    caja.on("pointerout", () => caja.setFillStyle(COLOR.panel));
+    caja.on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); alPresionar(); });
+    return { caja, etiqueta };
+  }
+
+  tarjetaFuente(f, x, y) {
+    const t = this.t, W = 92, H = 56, c = this.add.container(x, y);
+    c.add(this.add.rectangle(0, 0, W, H, 0x0b1026).setOrigin(0).setStrokeStyle(1, f.ejemplo ? 0xef7d57 : 0x38b764));
+    // dibujo según el tema, al doble de tamaño
+    const clave = iconoFuente(f.tema);
+    const img = this.textures.get(clave).getSourceImage();
+    const v = Math.min(26 / img.width, 20 / img.height);
+    c.add(this.add.image(16, 13, clave).setScale(v >= 1 ? Math.floor(v) : v));
+    // tema y sello (real o de ejemplo) al lado del dibujo
+    const tema = texto(this, 32, 3, t.fuentes_cortos?.[f.tema] || f.tema, { tam: 5, ancho: W - 35, origenX: 0, align: "left", color: COLOR.titulo });
+    const sello = texto(this, 32, tema.y + tema.height + 1, f.ejemplo ? t.fuentes_ejemplo : t.fuentes_real,
+      { tam: 5, origenX: 0, color: f.ejemplo ? "#ef7d57" : "#5cff8a" });
+    // la idea, en palabras de niño
+    const idea = texto(this, 4, 27, t.fuentes_ideas?.[f.tema] || f.tema, { tam: 6, ancho: W - 8, origenX: 0, align: "left" });
+    if (idea.height > H - 29) idea.setFontSize("5px");
+    c.add([tema, sello, idea]);
+    return c;
   }
 
   // Panel encima de todo con una lista; las filas con link se pueden tocar

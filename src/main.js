@@ -18,6 +18,7 @@ import { Aterrizaje } from "./escenas/Aterrizaje.js";
 import { Ruta } from "./escenas/Ruta.js";
 import { Rescate } from "./escenas/Rescate.js";
 import { Final } from "./escenas/Final.js";
+import { Diario } from "./escenas/Diario.js";
 
 import { estado } from "./estado.js";
 import { ORDEN } from "./config.js";

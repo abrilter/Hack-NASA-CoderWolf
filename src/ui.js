@@ -12,8 +12,12 @@ const ALTO_BOTON = 18;
 // Si falta un valor no escribe "undefined": deja el hueco vacío y avisa en la consola
 export const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k] ?? (console.warn(`[textos] falta {${k}} en: ${s}`), ""));
 
+// "O2" se escribe con el 2 chiquito abajo (O₂) en todo el juego, también
+// cuando una escena cambia el texto después con setText.
+export const conO2 = s => (typeof s === "string" ? s.replace(/O2(?!\d)/g, "O₂") : s);
+
 export function texto(escena, x, y, contenido, opciones = {}) {
-  return escena.add.text(x, y, contenido, {
+  const t = escena.add.text(x, y, conO2(contenido), {
     fontFamily: FUENTE,
     fontSize: (opciones.tam || 8) + "px",
     color: opciones.color || COLOR.texto,
@@ -21,6 +25,9 @@ export function texto(escena, x, y, contenido, opciones = {}) {
     wordWrap: { width: opciones.ancho || ANCHO - 20 },
     lineSpacing: 2
   }).setOrigin(opciones.origenX ?? 0.5, opciones.origenY ?? 0).setResolution(ZOOM);
+  const poner = t.setText;
+  t.setText = v => poner.call(t, Array.isArray(v) ? v.map(conO2) : conO2(v));
+  return t;
 }
 
 export function titulo(escena, contenido, y = 12) {

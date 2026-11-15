@@ -618,6 +618,37 @@
     "sol_famosa": "☀ Tu tormenta es real: {nombre} ({fecha}, {vel} km/s). ↗",
     "sol_real": "☀ Tu tormenta es real: el Sol la lanzó el {fecha} a {vel} km/s. ↗",
     "resumen_fuentes": "Ciencia de la NASA en este juego: {reales} datos reales y {ejemplo} de ejemplo (todavía no verificados).",
+    "fuentes_titulo": "¡Ciencia de verdad!",
+    "fuentes_sub": "Cosas reales que la NASA descubrió y que usamos en la misión.",
+    "fuentes_real": "✓ Real",
+    "fuentes_ejemplo": "⚠ Ejemplo",
+    "fuentes_pagina": "{n} de {total}",
+    "fuentes_cortos": {
+      "Cráteres donde nunca llega el Sol": "Cráteres oscuros",
+      "Radiación de la tormenta": "Radiación",
+      "Hueso y músculo en la Estación Espacial": "Huesos en el espacio",
+      "Plantas que crecen en el espacio": "Plantas en el espacio",
+      "Las huellas del Apolo siguen en la Luna (fotos de LRO)": "Huellas del Apolo",
+      "Gravedad de la Luna (1.62 m/s²)": "Gravedad lunar",
+      "Polvo lunar en el Apolo": "Polvo lunar",
+      "Tormenta solar (CME)": "Tormenta solar"
+    },
+    "fuentes_ideas": {
+      "Tormenta solar (CME)": "El Sol a veces lanza al espacio una nube gigante de partículas.",
+      "Zona de aterrizaje": "Aterrizamos junto al cráter Shackleton, en el polo sur de la Luna.",
+      "Cráteres donde nunca llega el Sol": "Hay cráteres tan hondos que el Sol nunca entra. ¡Y guardan hielo!",
+      "Rutas del rescate": "La NASA tiene mapas de la Luna para planear por dónde ir.",
+      "Velocidad del rover": "Un rover del polo sur va más despacio que tú cuando caminas.",
+      "Radiación de la tormenta": "Lejos de la Tierra, el traje y el escudo nos cuidan de la radiación.",
+      "Planta de Chispa": "Unas plantitas crecieron en tierra traída de la Luna. ¡Pero les costó!",
+      "Luz en el polo sur": "Allí el Sol va pegado al horizonte y las sombras son larguísimas.",
+      "Frío en el cráter": "En los cráteres oscuros hace más de 200 grados bajo cero.",
+      "Polvo lunar en el Apolo": "El polvo de la Luna es finito y se pega a todo, ¡hasta a los trajes!",
+      "Hueso y músculo en la Estación Espacial": "Sin gravedad, huesos y músculos se debilitan. Por eso hay que hacer ejercicio.",
+      "Plantas que crecen en el espacio": "Unas semillas germinaron en la Estación Espacial, ¡sin gravedad!",
+      "Las huellas del Apolo siguen en la Luna (fotos de LRO)": "En la Luna no hay viento: las huellas del Apolo siguen ahí.",
+      "Gravedad de la Luna (1.62 m/s²)": "En la Luna todo pesa la sexta parte que en la Tierra."
+    },
     "ver_fuentes": "Fuentes NASA",
     "otra_vez": "Jugar otra vez",
     "titulo_fuentes": "Fuentes NASA",
@@ -946,5 +977,124 @@
     "continuar": "Continuar",
     "bitacora": "Tormenta: {nombre}. Recibimos +{rad} de radiación y gastamos {o2} de oxígeno.",
     "nota_simplificacion": "Simplificamos: en la realidad las partículas más rápidas pueden llegar antes que la nube."
+  },
+
+  "diario": {
+    "_nota": "Diario de misión (escena Diario). Frases en primera persona, cortas, para 7 a 12 años.",
+    "titulo": "Diario de misión",
+    "de": "de {nombre}",
+    "portada_final": "Final: {final}",
+    "portada_pasa": "Pasa la página ▸",
+    "pagina": "página {n} de {total}",
+    "volver": "◂ Volver",
+    "otra_vez": "Jugar otra vez",
+    "costo_nada": "No me costó aire.",
+    "ysi": "¿Y si…?",
+    "ysi_simulado": "Con la decisión de {decision}, habría terminado con {o2} de aire y {rad} de radiación.",
+    "decisiones": {
+      "manguera": "compartir mi tanque",
+      "reserva": "dejarle mi reserva a Itzel",
+      "rover": "seguir en el rover",
+      "caminar": "volver caminando"
+    },
+    "ysi_evacuacion": "¡Y habrían tenido que evacuarnos!",
+    "sellos": {
+      "bien": "¡Bien pensado!",
+      "arriesgado": "Arriesgado",
+      "poco": "Por poco"
+    },
+    "paginas": {
+      "mochila": {
+        "titulo": "La mochila",
+        "texto": "Llené mi mochila con: {objetos}. Pesaba {kg} kg.",
+        "linterna_si": "Llevé la linterna para ver en lo oscuro.",
+        "linterna_no": "No llevé linterna. Lo oscuro iba a ser difícil.",
+        "ysi_linterna": "Con la linterna, el camino oscuro habría sido más fácil.",
+        "ysi_escudo": "Con el escudo, la tormenta me habría hecho menos daño."
+      },
+      "equipo": {
+        "titulo": "Traje y nave",
+        "texto": "Me puse el {traje} y volé en la {nave}.",
+        "efecto": "Mi equipo me cuidaba de la radiación: {n} de cada 10 partes.",
+        "ysi": {
+          "blindado": "Con el traje ligero habría gastado menos aire, pero estaría menos protegido.",
+          "ligero": "Con el traje blindado estaría más protegido, pero gastaría más aire."
+        }
+      },
+      "ruta": {
+        "titulo": "El camino",
+        "crater": "Fui por el cráter. Era corto, pero oscuro y empinado.",
+        "cresta": "Fui por la cresta. Era larga, pero plana y con luz.",
+        "horas": "Tardé {horas} horas.",
+        "ysi": {
+          "crater": "Por la cresta habría ido con luz, pero más lento y con más radiación.",
+          "cresta": "Por el cráter habría llegado antes, pero a oscuras y con frío."
+        }
+      },
+      "crater": {
+        "titulo": "El cráter helado",
+        "texto": "Crucé el cráter helado con el rover.",
+        "choques_0": "¡No choqué ni una vez!",
+        "choques": "Choqué {choques} veces con las rocas.",
+        "ysi": "Si iba más despacio, habría chocado menos y gastado menos aire."
+      },
+      "huellas": {
+        "titulo": "Las huellas",
+        "bien": "Encontré las huellas de Itzel a la primera.",
+        "mal": "Primero seguí las huellas del rover de carga. Me equivoqué y perdí aire.",
+        "ysi_mal": "Si revisaba más pistas antes de elegir, habría ahorrado aire."
+      },
+      "rocas": {
+        "titulo": "Las rocas",
+        "pie": "Dejé el rover y crucé las rocas a pie.",
+        "rodear": "Rodeé las rocas con el rover.",
+        "ysi": {
+          "pie": "Con el rover tendría dónde refugiarme, pero el camino era largo.",
+          "rodear": "A pie habría llegado antes, pero sin refugio."
+        }
+      },
+      "tormenta": {
+        "titulo": "La tormenta",
+        "saliente": "Me escondí bajo un saliente de roca. Protegía mucho, pero me desvié.",
+        "rover": "Me refugié debajo del rover. Me protegió un poco.",
+        "seguir": "Seguí hacia Itzel en plena tormenta.",
+        "ysi": {
+          "saliente": "Si seguía de largo, llegaba antes, pero con mucha más radiación.",
+          "rover": "Bajo el saliente de roca habría estado más protegido.",
+          "seguir": "Bajo el saliente de roca me habría protegido mucho más."
+        }
+      },
+      "aire": {
+        "titulo": "El aire de Itzel",
+        "manguera": "Compartí mi tanque con Itzel. Seguimos juntos.",
+        "reserva": "Le dejé mi reserva a Itzel y fui por otra.",
+        "ysi": {
+          "manguera": "Con la reserva habría gastado menos aire, pero Itzel esperaría sola.",
+          "reserva": "Compartiendo el tanque seguiríamos juntos, pero gastaría más aire."
+        }
+      },
+      "mensajes": {
+        "titulo": "Los mensajes",
+        "radio": "Reparé la radio.",
+        "texto": "Mandé a la Tierra los mensajes: {lista}.",
+        "ysi": "Si mandaba «{falta}»: {efecto}"
+      },
+      "regreso": {
+        "titulo": "El regreso",
+        "rover": "Volvimos en el rover. Fue rápido.",
+        "caminar": "Volvimos caminando al paso de Itzel.",
+        "sin_rover": "Sin rover, caminar era la única forma de volver."
+      }
+    },
+    "tierra": {
+      "titulo": "Llegó a la Tierra",
+      "vacio": "Esta vez no llegó ningún mensaje."
+    },
+    "planta": {
+      "titulo": "Un recuerdo",
+      "texto": "Chispa me regaló una hojita de su planta. La pegué aquí.",
+      "curiosidad_titulo": "Curiosidad",
+      "curiosidad": "En 2015 unas semillitas viajaron a la Estación Espacial. ¡Allá arriba germinaron sin gravedad!"
+    }
   }
 }
