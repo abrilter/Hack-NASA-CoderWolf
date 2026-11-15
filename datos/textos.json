@@ -52,6 +52,7 @@
       "texto": "All the astronauts are on another mission. Mission Control is looking for someone brave. There's no age limit!"
     }
   ],
+  "intro_letrero": "RESCUER\nWANTED",
   "carta": {
     "responde": "Mission Control replies",
     "ir": "Go to the hangar",

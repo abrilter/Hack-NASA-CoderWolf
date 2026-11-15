@@ -119,7 +119,7 @@ export function fuentesNASA(d) {
   // Una fuente sin nombre todavía ("COMPLETAR") siempre cuenta como ejemplo
   return lista.map(f => {
     const pendiente = !f.fuente || /COMPLETAR/i.test(f.fuente);
-    return { ...f, fuente: pendiente ? "fuente por completar" : f.fuente, ejemplo: f.ejemplo || pendiente };
+    return { ...f, fuente: pendiente ? "source pending" : f.fuente, ejemplo: f.ejemplo || pendiente };
   });
 }
 
