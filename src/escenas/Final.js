@@ -326,7 +326,29 @@ export class Final extends Phaser.Scene {
       this.capaInsignia = null;
       this.miniInsignia();
     }, 100);
-    c.add([listo.caja, listo.etiqueta]);
+    const bajar = boton(this, 78, 162, t.descargar, () => this.descargarInsignia(), 100);
+    c.add([listo.caja, listo.etiqueta, bajar.caja, bajar.etiqueta]);
+  }
+
+  // Guarda la insignia (con la cinta del nombre clave) como PNG en el dispositivo.
+  // Toma una foto de esa parte de la pantalla: el juego se dibuja ZOOM veces más
+  // grande por dentro, así que la imagen sale nítida.
+  descargarInsignia() {
+    estado.insignia = { ...this.disenando };
+    const z = this.cameras.main.zoom, area = { x: 18, y: 32, w: 120, h: 120 };   // insignia, estrellas y cinta
+    this.game.renderer.snapshotArea(area.x * z, area.y * z, area.w * z, area.h * z, img => {
+      const nombre = (estado.nombreClave || "astronauta").normalize("NFD").replace(/[^\w]+/g, "-").toLowerCase();
+      const a = document.createElement("a");
+      a.href = img.src;
+      a.download = `insignia-${nombre}.png`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+    });
+    // aviso corto dentro del diseñador
+    const aviso = texto(this, 78, 172, this.t.descargado, { tam: 5, color: "#5cff8a" }).setDepth(1001);
+    this.capaInsignia?.add(aviso);
+    this.time.delayedCall(2500, () => aviso.destroy());
   }
 
   panelFuentes(fuentes) {

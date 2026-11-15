@@ -600,6 +600,8 @@
     "color": "Color",
     "simbolo": "Símbolo",
     "lista": "¡Lista!",
+    "descargar": "⬇ Descargar PNG",
+    "descargado": "¡Guardada! Revisa tus descargas.",
     "exito": "Salvaste a Itzel y a Chispa. Los satélites de la Tierra están protegidos!",
     "fallo": "Esta vez no alcanzó. Los astronautas reales también practican muchas veces.",
     "causa_oxigeno": "Chispa: ¡Nos quedamos sin oxígeno (quedó en {oxigeno})! El aire se gasta con cada hora de camino y con cada subida. La próxima vez prueba una ruta más corta, un traje que gaste menos aire o llevar el tanque extra.",
