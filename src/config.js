@@ -44,7 +44,7 @@ export const siguienteEscena = clave => (ORDEN.includes(clave) ? ORDEN[ORDEN.ind
 // Archivo de datos y textos propio de cada misión nueva: datos/misiones/<archivo>.json
 // Ejemplo: { Crater: "crater" }. Se carga como "m_crater" y su bloque "prueba"
 // se usa en el modo prueba.
-export const MISIONES_JSON = {};
+export const MISIONES_JSON = { Diario: "diario" };   // diario.json: solo trae la bitácora de ejemplo (bloque "prueba")
 
 // ---------------------------------------------------------------------------
 // MODO PRUEBA: index.html?escena=Ruta abre esa escena directo con este estado.

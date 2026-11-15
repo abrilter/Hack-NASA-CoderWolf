@@ -1,0 +1,60 @@
+{
+  "_nota": "Bitácora de ejemplo para abrir el Diario solo: index.html?escena=Diario. Valores parecidos a una partida real (traje ligero, ruta por el cráter, saliente en la tormenta).",
+  "prueba": {
+    "nombreClave": "Cometa",
+    "traje": "ligero",
+    "nave": "pequena",
+    "mochila": [
+      "oxigeno",
+      "linterna",
+      "radio"
+    ],
+    "oxigeno": 47,
+    "radiacion": 18,
+    "misiones": {
+      "ruta": {
+        "id": "crater",
+        "horas": 6,
+        "oxigeno": -14,
+        "radiacion": 0
+      },
+      "crater": {
+        "oxigeno": -7,
+        "choques": 2,
+        "limpiezas": 1
+      },
+      "tormenta": {
+        "eleccion": "saliente",
+        "horasPerdidas": 3,
+        "tormentaPendiente": false,
+        "oxigeno": -9,
+        "radiacion": 12
+      },
+      "rescate": {
+        "mensajes": [
+          "tormenta",
+          "hielo"
+        ],
+        "inicio": {
+          "oxigeno": 78,
+          "radiacion": 14
+        },
+        "aire": "manguera",
+        "aireEfectos": {
+          "oxigeno": -16,
+          "radiacion": 0
+        },
+        "radio": -5,
+        "regreso": "rover",
+        "regresoEfectos": {
+          "oxigeno": -10,
+          "radiacion": 4
+        }
+      }
+    },
+    "bitacora": [
+      "Mochila lista: Tanque de oxígeno, Linterna, Kit de radio (9 kg).",
+      "Huellas: primero seguiste el rastro del rover de carga y perdiste 8 de oxígeno (5 pistas revisadas)."
+    ]
+  }
+}

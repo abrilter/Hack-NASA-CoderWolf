@@ -17,6 +17,7 @@ import { Aterrizaje } from "./escenas/Aterrizaje.js";
 import { Ruta } from "./escenas/Ruta.js";
 import { Rescate } from "./escenas/Rescate.js";
 import { Final } from "./escenas/Final.js";
+import { Diario } from "./escenas/Diario.js";
 
 import { estado } from "./estado.js";
 import { ORDEN } from "./config.js";
@@ -56,7 +57,7 @@ const juego = new Phaser.Game({
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-  scene: [Carga, Titulo, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Tormenta, Senal, Viaje, Ruta, Rescate, Final]
+  scene: [Carga, Titulo, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Tormenta, Senal, Viaje, Ruta, Rescate, Final, Diario]
 });
 
 // Barra para saltar escenas al probar (solo con ?dev=1 o ?escena=...)
