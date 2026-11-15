@@ -127,5 +127,62 @@
     "fuente": "NASA LRO · sitio de aterrizaje del Apolo 17",
     "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/",
     "ejemplo": false
+  },
+
+  "tormenta": {
+    "_nota": "Escena Tormenta (Rol 5). Valores de juego. proteccion = parte de las partículas que detiene el refugio (nunca todas). La fuerza sale de radiacion.dosis_juego_por_hora y la velocidad de la CME de DONKI.",
+    "vel_referencia_kms": 1500,
+    "parte_minima": 0.35,
+    "factor_min": 0.6,
+    "factor_max": 1.6,
+    "opciones": {
+      "saliente": {
+        "proteccion": 0.7,
+        "desvio_h": 1,
+        "espera_h": 6,
+        "o2_factor": 1.0,
+        "horas_perdidas": 7,
+        "tormenta_pendiente": false
+      },
+      "rover": {
+        "proteccion": 0.35,
+        "desvio_h": 0,
+        "espera_h": 6,
+        "o2_factor": 0.6,
+        "horas_perdidas": 6,
+        "tormenta_pendiente": false
+      },
+      "seguir": {
+        "proteccion": 0,
+        "desvio_h": 0,
+        "espera_h": 6,
+        "o2_factor": 0.4,
+        "horas_perdidas": 0,
+        "tormenta_pendiente": true
+      }
+    }
+  },
+
+  "rescate_aire": {
+    "_nota": "Escena Rescate (Rol 5): decisiones del aire y del regreso. Valores de juego.",
+    "manguera_fraccion": 0.3,
+    "manguera_min": 10,
+    "itzel_por_hora_espera": 1,
+    "reserva_o2": 12,
+    "reserva_horas": 3,
+    "tormenta_residual": 0.2,
+    "rover_o2": 12,
+    "rover_horas": 1,
+    "caminar_horas": 4,
+    "caminar_dos": 1.2
+  },
+
+  "itzel_estacion": {
+    "_nota": "Contexto en la voz de Itzel. Es lo que pasa en la Estación Espacial, NO en la Luna.",
+    "tema": "Hueso y músculo en la Estación Espacial",
+    "texto": "En la Estación Espacial, los astronautas pierden hueso y músculo si no hacen ejercicio. En la Luna aún se investiga.",
+    "fuente": "NASA OSDR (estudios en la Estación Espacial)",
+    "link": "https://osdr.nasa.gov/bio/",
+    "ejemplo": false
   }
 }

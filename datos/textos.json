@@ -433,15 +433,56 @@
   },
 
   "rescate": {
-    "titulo": "Encontraste a Itzel y Chispa!",
+    "titulo": "¡Encontraste a Itzel y a Chispa!",
+    "encuentro": "Itzel está agotada y le queda muy poco aire.",
+    "itzel_dice": "Itzel: ¡Gracias por venir! En la Estación Espacial, los astronautas pierden hueso y músculo si no hacen ejercicio. En la Luna aún se investiga.",
+    "seguir": "Continuar",
+    "aire_pregunta": "Itzel casi no tiene aire. ¿Qué hacemos?",
+    "aire": {
+      "manguera": {
+        "nombre": "Compartir tu tanque",
+        "gana": "+ Los dos siguen juntos.",
+        "cuesta": "− Tu oxígeno baja bastante."
+      },
+      "reserva": {
+        "nombre": "Dejarle tu reserva",
+        "gana": "+ Gastas menos oxígeno.",
+        "cuesta": "− Ella espera sola mientras vas por otra."
+      }
+    },
+    "regreso_pregunta": "¿Cómo regresamos a la base?",
+    "regreso": {
+      "rover": {
+        "nombre": "En el rover",
+        "gana": "+ Es más rápido.",
+        "cuesta": "− Gasta más energía (oxígeno)."
+      },
+      "caminar": {
+        "nombre": "Caminar a su paso",
+        "gana": "+ Gasta menos energía.",
+        "cuesta": "− Es lento: más horas afuera."
+      }
+    },
+    "sin_rover": "No hay rover: lo dejaste en las rocas. Solo se puede caminar.",
+    "costo": "{o2} O2",
+    "costo_rad": "{o2} O2 · +{rad} rad",
+    "tormenta_sigue": "La tormenta sigue: afuera hay más radiación.",
+    "nota_aire": {
+      "manguera": "Compartiste tu tanque con Itzel ({o2} O2).",
+      "reserva": "Le dejaste tu reserva a Itzel y fuiste por otra ({o2} O2, +{rad} de radiación)."
+    },
+    "nota_regreso": {
+      "rover": "Regresaron en el rover ({o2} O2).",
+      "caminar": "Regresaron caminando al paso de Itzel ({o2} O2, +{rad} de radiación)."
+    },
     "pregunta": "¿Reparamos la radio para avisar a la Tierra ya, o salimos de inmediato?",
-    "herida_si": "Itzel se lastimó el tobillo. ¡Con el botiquín la curaste y puede caminar bien!",
-    "herida_no": "Itzel se lastimó el tobillo y no hay botiquín: el regreso será más lento (-{costo} O2).",
+    "herida_si": "Con el botiquín, Itzel recupera fuerzas y camina mejor.",
+    "herida_no": "Sin botiquín, Itzel camina más despacio (-{costo} O2).",
     "reparar": "Reparar radio ({costo} O2)",
     "salir": "Salir ya",
     "nota_reparar": "Reparaste la radio: los datos llegaron a la Tierra a tiempo.",
     "nota_salir": "Saliste rápido; los datos llegarán al volver.",
-    "nota_herida": "Sin botiquín, Itzel caminó más despacio y gastamos más oxígeno.",
+    "nota_herida": "Sin botiquín, Itzel caminó más despacio por el cansancio y gastamos más oxígeno.",
     "planta_boton": "▸ La planta de Chispa",
     "planta_titulo": "¡La planta de Chispa!",
     "planta_texto": "Chispa cuidó esta plantita en la base. Es de verdad: en 2021, científicos sembraron esta misma planta (Arabidopsis) en suelo lunar traído por las misiones Apolo 11, 12 y 17. ¡Todas las semillas germinaron! Pero crecieron más lento y se estresaron, porque el suelo lunar es muy duro para las plantas.",
@@ -720,5 +761,41 @@
     "continuar": "Continuar",
     "bitacora_bien": "Huellas: seguiste el rastro de Itzel a la primera ({pistas} pistas revisadas).",
     "bitacora_mal": "Huellas: primero seguiste el rastro del rover de carga y perdiste {o2} de oxígeno ({pistas} pistas revisadas)."
+  },
+
+  "tormenta": {
+    "titulo": "¡Llegó la tormenta solar!",
+    "info": "Nube del Sol a {vel} km/s. Lo más fuerte dura unas {horas} h.",
+    "toca": "Toca una opción para ver cuántas partículas detiene.",
+    "ya_paso": "En el camino ya pasó el {pct} %.",
+    "opciones": {
+      "saliente": {
+        "nombre": "Saliente de roca",
+        "gana": "Protege mucho, pero no todo.",
+        "cuesta": "Hay que desviarse y esperar."
+      },
+      "rover": {
+        "nombre": "Debajo del rover",
+        "gana": "Protege un poco. No hay desvío.",
+        "cuesta": "Hay que esperar ahí."
+      },
+      "seguir": {
+        "nombre": "Seguir hacia Itzel",
+        "gana": "Llegamos antes con Itzel.",
+        "cuesta": "Solo protegen el traje y el escudo."
+      }
+    },
+    "sin_rover": "No hay rover: lo dejaste en las rocas.",
+    "detalle": "Detiene {n} de cada 10\nOxígeno {o2} · Radiación +{rad}",
+    "contador": "Detenidas: {det}   Pasan: {pasan}",
+    "personal": "Tu traje y escudo detienen {n} de cada 10.",
+    "elegir": "Elegir",
+    "stella": "STELLA: ¡Llegó la tormenta! Son partículas muy rápidas que vienen del Sol.",
+    "resultado": "Recibimos +{rad} de radiación y gastamos {o2} de oxígeno.",
+    "resultado_seguir": "Seguimos caminando. Llegaremos antes con Itzel, pero la tormenta sigue.",
+    "resultado_refugio": "La tormenta ya pasó lo más fuerte. Itzel esperó {horas} h más.",
+    "continuar": "Continuar",
+    "bitacora": "Tormenta: {nombre}. Recibimos +{rad} de radiación y gastamos {o2} de oxígeno.",
+    "nota_simplificacion": "Simplificamos: en la realidad las partículas más rápidas pueden llegar antes que la nube."
   }
 }

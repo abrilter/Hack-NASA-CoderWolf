@@ -79,6 +79,9 @@ export function fuentesNASA(d) {
     { tema: "Velocidad del rover", ...d.rover },
     { tema: "Radiación de la tormenta", ...d.radiacion },
     { tema: "Planta de Chispa", ...d.planta },
+    d.luz_polo_sur && { tema: "Luz en el polo sur", ...d.luz_polo_sur },
+    d.crater_helado && { tema: "Frío en el cráter", ...d.crater_helado.temperatura },
+    d.itzel_estacion && { tema: d.itzel_estacion.tema, ...d.itzel_estacion },
     ...(d.fuentes_extra || []).filter(f => f.tema)
   ].filter(Boolean);
   // Una fuente sin nombre todavía ("COMPLETAR") siempre cuenta como ejemplo
@@ -208,12 +211,16 @@ export class Final extends Phaser.Scene {
   }
 
   panelFuentes(fuentes) {
-    this.panel(this.t.titulo_fuentes, fuentes.map(f => ({
+    const filas = fuentes.map(f => ({
       texto: `${f.ejemplo ? "⚠ " + this.t.etiqueta_ejemplo : "✓ " + this.t.etiqueta_real} · ${f.tema}: ${f.fuente}` +
              `${f.fecha ? " · " + f.fecha : ""}${f.link ? " ↗" : ""}`,
       color: f.ejemplo ? "#ffcd75" : "#5cff8a",
       link: f.link
-    })), this.t.leyenda_fuentes);
+    }));
+    // nota honesta sobre la tormenta, justo debajo de la fuente de la CME
+    const nota = estado.textos.tormenta?.nota_simplificacion;
+    if (nota) filas.splice(1, 0, { texto: "   " + nota, color: COLOR.tenue });
+    this.panel(this.t.titulo_fuentes, filas, this.t.leyenda_fuentes);
   }
 
   // Panel encima de todo con una lista; las filas con link se pueden tocar
@@ -230,15 +237,17 @@ export class Final extends Phaser.Scene {
       capa.add(n);
       y += n.height + 4;
     }
+    // con muchas filas, letra un poco más chica para que quepan todas
+    const tam = filas.length > 9 ? 5 : 6, espacio = tam === 5 ? 1 : 3;
     for (const f of filas) {
-      if (y > ALTO - 34) break;
-      const fila = texto(this, 16, y, f.texto, { tam: 6, ancho: 288, origenX: 0, align: "left", color: f.color || COLOR.texto });
+      if (y > ALTO - 32) break;
+      const fila = texto(this, 16, y, f.texto, { tam, ancho: 288, origenX: 0, align: "left", color: f.color || COLOR.texto });
       if (f.link) {
         fila.setInteractive({ useHandCursor: true })
           .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(f.link, "_blank", "noopener"); });
       }
       capa.add(fila);
-      y += fila.height + 3;
+      y += fila.height + espacio;
     }
     const cerrar = boton(this, ANCHO / 2, ALTO - 18, this.t.cerrar, () => capa.destroy(), 90);
     capa.add([cerrar.caja, cerrar.etiqueta]);

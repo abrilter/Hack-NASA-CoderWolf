@@ -9,6 +9,7 @@ import { Exterior } from "./escenas/Exterior.js";
 import { Huellas } from "./escenas/Huellas.js";
 import { Viaje } from "./escenas/Viaje.js";
 import { CraterHelado } from "./escenas/CraterHelado.js";
+import { Tormenta } from "./escenas/Tormenta.js";
 import { Equipo } from "./escenas/Equipo.js";
 import { Aterrizaje } from "./escenas/Aterrizaje.js";
 import { Ruta } from "./escenas/Ruta.js";
@@ -55,7 +56,7 @@ const juego = new Phaser.Game({
   physics: { default: "arcade" },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Senal, Viaje, Ruta, Rescate, Final]
+  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Tormenta, Senal, Viaje, Ruta, Rescate, Final]
 });
 
 // Barra para saltar escenas al probar (solo con ?dev=1 o ?escena=...)

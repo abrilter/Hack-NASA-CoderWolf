@@ -31,10 +31,11 @@ export const COLOR = {
 // en lugar de escribir el nombre de la siguiente escena a mano.
 export const ORDEN = [
   "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior",
-  "Ruta", "CraterHelado", "Huellas", "Final"
+  "Ruta", "CraterHelado", "Huellas", "Tormenta", "Rescate", "Final"
 ];
 // CraterHelado se salta sola si en la Ruta se eligió la cresta.
-// Senal, Viaje y Rescate siguen registradas en main.js (se pueden abrir
+// Cuando exista Rocas (Shadia), va entre Huellas y Tormenta.
+// Senal y Viaje siguen registradas en main.js (se pueden abrir
 // con ?escena=...) pero por ahora no forman parte del recorrido.
 // Una escena que no está en ORDEN va al Final (antes volvía a la Intro).
 export const siguienteEscena = clave => (ORDEN.includes(clave) ? ORDEN[ORDEN.indexOf(clave) + 1] : null) ?? "Final";

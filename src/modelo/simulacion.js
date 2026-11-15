@@ -77,6 +77,76 @@ export function opcionesDeRuta(datos, estado) {
 
 // Costos del Rescate: reparar la radio (más caro sin el kit) y, sin botiquín,
 // Itzel está herida y el regreso es más lento.
+// ---------------------------------------------------------------- tormenta
+// Fuerza de la tormenta (puntos de radiación por hora sin protección): la dosis
+// de juego, más fuerte si la nube (CME) de DONKI viene más rápida.
+export function fuerzaTormenta(datos) {
+  const T = datos.tormenta, v = datos.cme?.velocidad_kms || T.vel_referencia_kms;
+  return datos.radiacion.dosis_juego_por_hora * Math.min(T.factor_max, Math.max(T.factor_min, v / T.vel_referencia_kms));
+}
+
+// ¿Sigue el rover? Lo deja la escena Rocas si el niño cruza a pie
+// (estado.misiones.rocas.dejoRover). Si esa escena no se jugó, el rover sigue.
+export const tieneRover = estado => estado.misiones?.rocas?.dejoRover !== true;
+
+// Opciones de la escena Tormenta. Radiación = fuerza × horas × (1 − protección),
+// donde la protección junta el refugio con el traje y el escudo.
+export function opcionesTormenta(datos, estado) {
+  const T = datos.tormenta, pP = proteccion(estado);
+  const gasto = estado.traje?.gastoO2 || 2;
+  // La Ruta ya cobró las horas que el niño pasó afuera bajo la tormenta: aquí
+  // solo cuenta la parte de la tormenta que queda (para no cobrarla dos veces).
+  const queda = parteRestanteTormenta(datos, estado);
+  const f = fuerzaTormenta(datos) * queda;
+  return Object.entries(T.opciones).map(([id, o]) => {
+    const pTotal = 1 - (1 - o.proteccion) * (1 - pP);
+    return {
+      queda,
+      id, disponible: id !== "rover" || tieneRover(estado),
+      pRefugio: o.proteccion, pPersonal: pP, pTotal,
+      horasPerdidas: o.horas_perdidas, tormentaPendiente: !!o.tormenta_pendiente,
+      efectos: {
+        oxigeno: -Math.round((o.desvio_h + o.espera_h) * gasto * o.o2_factor),
+        // durante el desvío no hay refugio; durante la espera, sí
+        radiacion: Math.round(f * (o.desvio_h * (1 - pP) + o.espera_h * (1 - pTotal)))
+      }
+    };
+  });
+}
+
+// Qué parte de la tormenta falta por vivir después de la Ruta (1 = toda).
+// Horas que la ruta pasó bajo la tormenta = horas de la ruta − horas hasta que llegó,
+// entre 0 y la duración de la tormenta. Nunca baja de un mínimo (el pico llega igual).
+export function parteRestanteTormenta(datos, estado) {
+  const r = estado.misiones?.ruta;
+  if (!r?.horas) return 1;
+  const D = datos.modelo.duracion_tormenta_h;
+  const expuesto = Math.min(D, Math.max(0, r.horas - horasTormentaAlAterrizar(datos, estado)));
+  return Math.max(datos.tormenta.parte_minima, 1 - expuesto / D);
+}
+
+// ---------------------------------------------------------------- rescate
+// Decisiones del Rescate: el aire de Itzel y el regreso. Dependen de lo que
+// queda de oxígeno y de cómo terminó la tormenta (estado.misiones.tormenta).
+export function opcionesRescate(datos, estado) {
+  const R = datos.rescate_aire, f = fuerzaTormenta(datos), pP = proteccion(estado), g = estado.traje?.gastoO2 || 2;
+  const tor = estado.misiones?.tormenta || { horasPerdidas: 0, tormentaPendiente: false };
+  const resto = tor.tormentaPendiente ? 1 : R.tormenta_residual;      // si la tormenta sigue, afuera hay más radiación
+  const rad = h => Math.round(f * h * (1 - pP) * resto);
+  return {
+    aire: {
+      // compartir el tanque: baja una parte de TU oxígeno, más si Itzel esperó mucho
+      manguera: { efectos: { oxigeno: -Math.max(R.manguera_min, Math.round(estado.oxigeno * R.manguera_fraccion) + tor.horasPerdidas * R.itzel_por_hora_espera), radiacion: 0 } },
+      // dejarle tu reserva y volver por otra: menos oxígeno, pero horas afuera
+      reserva: { efectos: { oxigeno: -Math.round(R.reserva_o2 + R.reserva_horas * g), radiacion: rad(R.reserva_horas) } }
+    },
+    regreso: {
+      rover: { disponible: tieneRover(estado), efectos: { oxigeno: -R.rover_o2, radiacion: rad(R.rover_horas) } },
+      caminar: { efectos: { oxigeno: -Math.round(R.caminar_horas * g * R.caminar_dos), radiacion: rad(R.caminar_horas) } }
+    }
+  };
+}
+
 // Cuánto oxígeno cuesta más o menos cruzar el cráter helado (para avisarlo en
 // la Ruta). Usa los mismos números que la escena CraterHelado: tiempo de cruce
 // según la linterna × (gasto del traje + calefacción), más un poco por limpiar.
