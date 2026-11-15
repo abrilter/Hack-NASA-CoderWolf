@@ -602,7 +602,9 @@ export class Equipo extends Phaser.Scene {
     this.burbuja.add([this.fondoBurbuja, this.bNombre, this.bVentaja, this.bCosto, this.bAccion]);
 
     // dato real del radar (polo sur lunar) con su fuente NASA
-    const dato = estado.datos.polo_sur;
+    // si datos.json no trae el dato (o no cargó), la escena sigue funcionando
+    const dato = estado.datos?.polo_sur || { texto: this.t.tecnicos[0], fuente: "NASA", ejemplo: true };
+    if (!estado.datos?.polo_sur) console.warn("[Equipo] falta datos.polo_sur en datos/datos.json: se usa un dato de ejemplo");
     // a la izquierda del radar, para no tapar el radar ni el indicador
     this.burbujaDato = this.add.container(78, 26).setDepth(1002).setVisible(false);
     const etiqueta = texto(this, 0, 3, dato.ejemplo ? this.t.dato_ejemplo : this.t.dato_real, { tam: TAM, color: "#ffcd75" });
