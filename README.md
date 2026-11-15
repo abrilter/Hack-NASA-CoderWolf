@@ -5,7 +5,7 @@ NASA Space Apps Challenge 2026 · Challenge: *Build a Junior Astronaut Mission T
 
 ▶ **Play online:** https://abrilter.github.io/Hack-NASA-CoderWolf/
 
-If the game does not open, try switching to a different network (such as mobile data) to solve the problem, because the school network sometimes blocks it.
+If the game does not open, try switching to a different network (such as mobile data) to solve the problem.
 
 📦 **Repository:** https://github.com/abrilter/Hack-NASA-CoderWolf
 
