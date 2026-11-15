@@ -8,11 +8,15 @@
 // Historia: la señal de Chispa ya se identificó en la Misión 1 (Senal.js);
 // el monitor muestra el mapa del polo sur. Revisión del equipo y
 // última transmisión de Itzel → puerta → Misión 3 (Equipo).
-// Las decisiones se guardan en estado.mochila y estado.mision2.
+// STELLA: monitor-asistente junto a la puerta con 5 apartados (misión, entorno,
+// señal, equipo y evaluación de mochila). Orienta, nunca elige por el jugador.
+// Las decisiones se guardan en estado.mochila (inventario único, se usa en
+// vivo) y estado.mision2.
 import { ANCHO, ALTO, COLOR, OBJETOS, CAPACIDAD_MOCHILA } from "../config.js";
 import { estado } from "../estado.js";
 import { texto, boton } from "../ui.js";
 import { crearTexturasMochila, crearTextura } from "../pixelart.js";
+import { Stella } from "../stella.js";
 
 const PARED = 88;            // donde termina la pared y empieza el piso
 const HUD = 162;             // barra de la mochila (abajo)
@@ -25,18 +29,35 @@ const ORDEN = ["oxigeno", "escudo", "radio", "botiquin", "comida", "linterna"];
 const OBLIGATORIO = "oxigeno";
 const PUERTA = { x: 280, y: 104 };
 const MONITOR = { x: 10, y: 24, w: 36, h: 30 };
+// Minijuego de respaldo de STELLA: cada pulso es [duración, silencio] en unidades
+const SENALES = {
+  A: Array(8).fill([2, 2]),
+  B: [[1, 1], [1, 1], [3, 3], [1, 1], [1, 1], [3, 3], [1, 1], [1, 1], [3, 3]],
+  C: [[3, 1], [1, 3], [2, 1], [1, 1], [3, 2], [1, 1], [2, 3], [1, 1]]
+};
+const CORRECTA = "B";
+const UNIDAD = 5;
 
 
 
+const STELLA = { x: 238, y: 41 };       // avatar holográfico (monitor junto a la puerta)
+const STELLA_PX = [
+  "....cccc....", "..cCCCCCCc..", ".cCCCCCCCCc.", ".cCwwwwwwCc.", ".cCwdwwdwCc.", ".cCwwwwwwCc.",
+  ".cCwwddwwCc.", "..cCwwwwCc..", "...cCCCCc...", "....cCCc....", "..cCCCCCCc..", ".cCCCwwCCCc.",
+  ".cCCCCCCCCc.", "............"
+];
 const ESTRELLA = ["...k...", "..kYk..", "kkkYkkk", "kYYYYYk", ".kYYYk.", ".kYkYk.", ".kk.kk."];
 
 export class CentroControl extends Phaser.Scene {
   constructor() { super("CentroControl"); }
 
+  // La mochila ES el estado compartido: no hay copia aparte
+  get mochila() { return estado.mochila; }
+  set mochila(v) { estado.mochila = v; }
+
   create() {
     estado.nuevaPartida();
     this.t = estado.textos.centro_control;
-    this.mochila = [];
     this.activa = null;
     this.saliendo = false;
     this.entro = false;
@@ -44,11 +65,15 @@ export class CentroControl extends Phaser.Scene {
     this.cola = null;
     this.pulsos = null;
     this.eventosPanel = [];
+    this.eventosSeccion = [];
+    this.contenido = null;
+    this.sub = null;
     // Registro para el mapa de consecuencias (se completa al salir)
     this.reg = estado.mision2 = {
       objetos: [], pesoTotal: 0, oxigenoIncluido: false,
       alertaVista: false, senalIdentificada: false, intentosMinijuego: 0,
-      mapaConsultado: false, revisiones: 0, revisionFinal: false
+      mapaConsultado: false, revisiones: 0, revisionFinal: false, salidaConfirmada: false,
+      stella: { consultada: false, secciones: [], entorno: [], saberMas: [], recomendaciones: [], evaluaciones: 0 }
     };
 
     crearTexturasMochila(this);
@@ -56,6 +81,7 @@ export class CentroControl extends Phaser.Scene {
     this.dibujarSala();
     this.crearMonitor();
     this.crearObjetos();
+    this.crearStella();
     this.crearPersonajes();
     this.crearBurbuja();
     this.crearHud();
@@ -66,9 +92,7 @@ export class CentroControl extends Phaser.Scene {
     this.actualizarHud();
     // La señal y el mapa se resolvieron en la Misión 1 (escena Senal): aquí el monitor solo muestra el mapa
     Object.assign(this.reg, estado.mision1 || { alertaVista: true });
-    this.indicador.setVisible(true);
-    this.marcarLocalizada();
-    this.zonaMonitor.setInteractive({ useHandCursor: true });
+    if (this.reg.senalIdentificada) this.marcarLocalizada();
 
     // Entrada: camina desde abajo; luego el robot explica el oxígeno
     this.actualizarControl();
@@ -76,6 +100,7 @@ export class CentroControl extends Phaser.Scene {
       targets: this.astro, y: 140, duration: 900,
       onComplete: () => {
         this.entro = true;
+        this.stellaDetecta();
         this.hablar([this.t.inicial, this.t.bienvenida]);
       }
     });
@@ -103,6 +128,7 @@ export class CentroControl extends Phaser.Scene {
       this.cola = null;
       this.pulsos = null;
       this.modal = null;
+      this.contenido = this.sub = null;
     });
   }
 
@@ -211,13 +237,13 @@ export class CentroControl extends Phaser.Scene {
       ev.stopPropagation();
       if (this.cola) return this.avanzar();
       if (!this.controlActivo) return;
-      this.abrirMapa();
+      this.abrirStella(3, true);   // la señal se analiza con STELLA
     });
   }
 
   // Se activa al examinar el primer objeto o tras explorar un rato. Una sola vez.
   intentarAlerta() {
-    if (this.reg.alertaVista || this.saliendo) return;
+    if (this.reg.alertaVista || this.reg.senalIdentificada || this.saliendo) return;
     if (!this.controlActivo) return void this.time.delayedCall(1500, () => this.intentarAlerta());
     this.reg.alertaVista = true;
     const a = this.t.alerta;
@@ -249,7 +275,8 @@ export class CentroControl extends Phaser.Scene {
     this.parpadeoIndicador?.remove();
     this.alertaMonitor.setVisible(false);
     this.signoMonitor.setVisible(false);
-    this.indicador.setText(this.t.localizada).setBackgroundColor("#257179").setColor("#eef1ff").setAlpha(1);
+    this.stellaDetecta();
+    this.indicador.setText(this.t.localizada).setBackgroundColor("#257179").setColor("#eef1ff").setAlpha(1).setVisible(true);
   }
 
   // ---------------------------------------------------------------- objetos
@@ -360,6 +387,13 @@ export class CentroControl extends Phaser.Scene {
   }
 
   mostrarBurbuja(zona) {
+    if (zona.tipo === "stella") {
+      const st = this.t.stella;
+      this.bNombre.setText(st.nombre);
+      this.bDesc.setText(st.ticker);
+      this.bAccion.setText(st.accion).setColor(COLOR.tenue);
+      return this.burbuja.setPosition(Phaser.Math.Clamp(zona.x, 62, ANCHO - 62), 110).setVisible(true);
+    }
     const o = zona.o;
     this.bNombre.setText(`${this.t.nombres[o.id]} · ${o.peso} kg`);
     this.bDesc.setText(this.t.objetos[o.id]);
@@ -403,22 +437,24 @@ export class CentroControl extends Phaser.Scene {
     const nombre = this.t.nombres[o.id];
     if (this.lleva(o.id)) {
       // el tanque obligatorio no se puede quitar
-      if (o.id === OBLIGATORIO) return this.decir(this.t.oxigeno_fijo);
+      if (o.id === OBLIGATORIO) { this.stellaSala.reaccionar("alerta"); return this.decir(this.t.oxigeno_fijo); }
       this.mochila = this.mochila.filter(id => id !== o.id);
-      this.decir(this.llenar(this.t.dejar, { nombre }));
+      this.decir("STELLA: " + this.t.stella.consejos.dejar[o.id]);
     } else {
       const exceso = this.peso() + o.peso - CAPACIDAD_MOCHILA;
       if (exceso > 0) {
         this.decir(this.llenar(this.t.exceso, { nombre, kg: exceso }), 6000);
         this.cameras.main.shake(150, 0.003);
+        this.stellaSala.reaccionar("alerta");
         return;
       }
       if (o.id === OBLIGATORIO) { this.mochila.unshift(o.id); this.decir(this.t.oxigeno_ok); }
-      else { this.mochila.push(o.id); this.decir(this.t.reacciones[o.id]); }
+      else { this.mochila.push(o.id); this.decir("STELLA: " + this.t.stella.consejos.tomar[o.id]); }
       if (o.id === "linterna") this.mostrarTarjeta("tarjeta");
     }
     this.iconos[o.id].setAlpha(this.lleva(o.id) ? 0.25 : 1);
     this.actualizarHud();
+    this.stellaDetecta();
     if (this.activa?.o === o) this.mostrarBurbuja(this.activa);
     this.time.delayedCall(2500, () => this.intentarAlerta());   // primer objeto examinado
   }
@@ -434,13 +470,14 @@ export class CentroControl extends Phaser.Scene {
       this.add.rectangle(3, 3, 224, 88, 0x0b1026, 0.8).setOrigin(0.5, 0),
       this.add.rectangle(0, 0, 224, 88, COLOR.panel).setStrokeStyle(1, 0xffcd75).setOrigin(0.5, 0),
       this.add.ellipse(-90, 50, 34, 10, 0x1a1c2c),
-      this.add.image(-90, 30, "px_obj_linterna").setScale(2),
+      this.tjIcono = this.add.image(-90, 30, "px_obj_linterna").setScale(2),
       this.tjTitulo, this.tjTexto, this.tjFuente, this.tjCerrar
     ]);
   }
 
   mostrarTarjeta(clave) {
-    const tj = this.t[clave];
+    const tj = typeof clave === "string" ? this.t[clave] : clave;
+    this.tjIcono.setTexture(tj.icono || "px_obj_linterna").setScale(tj.icono === "astro32_0" ? 1 : 2);
     this.tjTitulo.setText(tj.titulo);
     this.tjTexto.setText(tj.texto);
     this.tjFuente.setText(tj.fuente);
@@ -474,6 +511,10 @@ export class CentroControl extends Phaser.Scene {
 
   cerrarPanel() {
     if (!this.modal) return;
+    this.limpiarContenido();
+    this.tabs = null;
+    this.stellaPanel = null;
+    this.cerrandoStella = false;
     this.eventosPanel.forEach(e => e.remove());
     this.eventosPanel = [];
     this.tweens.killTweensOf(this.modal.list);
@@ -494,10 +535,11 @@ export class CentroControl extends Phaser.Scene {
   cada(ms, fn) { const e = this.time.addEvent({ delay: ms, loop: true, callback: fn }); this.eventosPanel.push(e); return e; }
 
   // Franja inferior del panel donde habla el robot
-  lineaRobot(inicial) {
+  lineaRobot(inicial, avatar = "chispa_px") {
+    if (avatar === "stella") return this.lineaStella(inicial);
     this.modal.add([
       this.add.rectangle(16, 122, 288, 30, 0x0b1026, 0.6).setOrigin(0).setStrokeStyle(1, 0x333c57),
-      this.add.image(30, 137, "chispa_px")
+      this.add.image(30, 137, avatar)
     ]);
     const tx = texto(this, 42, 125, inicial, { tam: 6, ancho: 256, origenX: 0, align: "left" });
     this.modal.add(tx);
@@ -505,8 +547,88 @@ export class CentroControl extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- mapa
-  abrirMapa() {
-    const t = this.t.mapa, m = this.abrirPanel(t.titulo);
+  // Franja inferior con STELLA holográfica (en vez del ícono del robot)
+  lineaStella(inicial) {
+    this.modal.add(this.add.rectangle(16, 122, 288, 30, 0x0b1026, 0.6).setOrigin(0).setStrokeStyle(1, 0x333c57));
+    this.stellaPanel = new Stella(this, 30, 150);
+    this.modal.add(this.stellaPanel.c);
+    const tx = texto(this, 44, 125, inicial, { tam: 6, ancho: 256, origenX: 0, align: "left" });
+    this.modal.add(tx);
+    return tx;
+  }
+
+  // ---------------------------------------------------------------- minijuego de respaldo (STELLA)
+  // Normalmente la señal se identifica en la Misión 1 (Senal.js). Si llega
+  // sin identificar, STELLA ofrece este análisis para no dejar al jugador atorado.
+  abrirMinijuego() {
+    const s = this.t.stella.senal;
+    this.miniStella = true;
+    const t = this.miniTxt = { ...this.t.mini, titulo: s.titulo, explica: s.explica, mal: s.mal, bien: s.bien };
+    const m = this.abrirPanel(t.titulo, "#7ee6ff");
+    const g = this.add.graphics();
+    m.add(g);
+    // leyenda: la diferencia está en la LONGITUD del pulso, no en el color
+    g.fillStyle(0x7ee6ff).fillRect(96, 25, UNIDAD, 6).fillRect(170, 25, UNIDAD * 3, 6);
+    m.add([texto(this, 104, 23, t.corto, { tam: 6, origenX: 0 }), texto(this, 188, 23, t.largo, { tam: 6, origenX: 0 })]);
+    this.pulsos = [];
+    const filas = {};
+    Object.keys(SENALES).forEach((l, i) => {
+      const y = 48 + i * 25, nombre = this.llenar(t.senal, { l });
+      const b = this.btn(44, y, nombre, () => this.elegirSenal(l, filas), 56);
+      g.fillStyle(0x0b1026).fillRect(80, y - 9, 192, 18);
+      g.lineStyle(1, 0x333c57).strokeRect(80, y - 9, 192, 18);
+      let x = 86;
+      const rects = SENALES[l].map(([d, sil]) => {
+        const r = this.add.rectangle(x, y, d * UNIDAD, 8, 0x29adff).setOrigin(0, 0.5);
+        x += (d + sil) * UNIDAD;
+        return r;
+      });
+      const cabezal = this.add.rectangle(82, y, 1, 16, 0xfff27a);
+      m.add([...rects, cabezal]);
+      this.tweens.add({ targets: cabezal, x: 270, duration: 3600, repeat: -1 });
+      this.pulsos.push({ rects, cabezal });
+      this.btn(289, y, "♪", () => this.sonarPatron(SENALES[l]), 18);
+      filas[l] = { b, nombre, rects };
+    });
+    this.textoRobot = this.lineaRobot(t.explica, "stella");
+    this.stellaPanel.estado("pensando");
+    this.btn(50, 163, t.volver, () => this.volver(), 60);
+  }
+
+  elegirSenal(l, filas) {
+    if (this.reg.senalIdentificada) return;
+    const t = this.miniTxt, f = filas[l];
+    this.reg.intentosMinijuego = (this.reg.intentosMinijuego || 0) + 1;
+    if (l !== CORRECTA) {
+      f.b.etiqueta.setText("✗ " + f.nombre);
+      this.textoRobot.setText(t.mal);
+      this.stellaPanel?.reaccionar("alerta", 1200);
+      this.sonar("mal");
+      this.tweens.add({ targets: f.rects, x: "+=2", duration: 50, yoyo: true, repeat: 3 });
+      return;
+    }
+    this.reg.senalIdentificada = true;
+    f.b.etiqueta.setText("✓ " + f.nombre);
+    f.b.caja.setStrokeStyle(2, 0x5cff8a);
+    this.textoRobot.setText(t.bien);
+    this.stellaPanel?.estado("exito");
+    this.sonar("bien");
+    this.tweens.add({ targets: f.rects, scaleY: 1.8, duration: 160, yoyo: true, repeat: 3 });
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2, d = this.add.rectangle(176, f.rects[0].y, 2, 2, 0xfff27a);
+      this.modal.add(d);
+      this.tweens.add({ targets: d, x: 176 + Math.cos(a) * 60, y: f.rects[0].y + Math.sin(a) * 22, alpha: 0, duration: 700 });
+    }
+    this.marcarLocalizada();
+    this.luego(3000, () => { this.abrirStella(3); this.stellaLinea.setText(t.bien); this.stellaPanel.estado("exito"); });
+  }
+
+  // Volver desde el minijuego o el mapa: a STELLA si se abrió desde ahí
+  volver() { this.miniStella ? this.abrirStella(3) : this.cerrarPanel(); }
+
+  abrirMapa(desdeStella = false) {
+    this.miniStella = desdeStella;
+    const t = this.t.mapa, m = this.abrirPanel(t.titulo, desdeStella ? "#7ee6ff" : COLOR.titulo);
     const primeraVez = !this.reg.mapaConsultado;
     this.reg.mapaConsultado = true;
     const g = this.add.graphics();
@@ -553,10 +675,304 @@ export class CentroControl extends Phaser.Scene {
     m.add(this.add.circle(lx + 4, 77, 4).setStrokeStyle(1, 0xfff27a)); fila(73, t.senal);
     [0, 4, 8].forEach(d => g.fillStyle(0xffcd75).fillRect(lx + d - 1, 99, 2, 2)); fila(96, t.ruta);
 
-    this.lineaRobot(t.robot);
+    this.lineaRobot(desdeStella ? this.t.stella.senal.mapa : t.robot, desdeStella ? "stella" : "chispa_px");
+    this.stellaPanel?.estado("explicando");
     this.btn(200, 163, t.dato, () => this.mostrarTarjeta("tarjeta_mapa"), 70);
-    this.btn(272, 163, t.volver, () => this.cerrarPanel(), 56);
+    this.btn(272, 163, t.volver, () => this.volver(), 56);
     if (primeraVez) this.luego(2200, () => this.mostrarTarjeta("tarjeta_mapa"));
+  }
+
+  // ---------------------------------------------------------------- STELLA (monitor en la sala)
+  // Pared libre entre la última repisa y la puerta. Pantalla con avatar
+  // holográfico, luz de disponible, indicación "▶ TOCAR" y letrero que corre.
+  crearStella() {
+    const st = this.t.stella, X = STELLA.x;
+    crearTextura(this, "stella_px", STELLA_PX, { c: 0x7ee6ff, C: 0x29adff, w: 0xbff3ff, d: 0x1d2b53 });
+    const g = this.add.graphics().setDepth(-9);
+    g.fillStyle(0x1a1c2c).fillRect(215, 23, 46, 55);
+    g.fillStyle(0x333c57).fillRect(216, 24, 44, 53);
+    g.fillStyle(0x0b1026).fillRect(218, 26, 40, 30);                 // pantalla
+    g.lineStyle(1, 0x7ee6ff, 0.6).strokeRect(217.5, 25.5, 41, 31);
+    g.fillStyle(0x29366f).fillRect(217, 58, 42, 8);                   // consola
+    g.fillStyle(0x0b1026).fillRect(217, 67, 42, 9);                   // banda del letrero
+    // STELLA animada (src/stella.js) proyectada sobre su plataforma
+    this.stellaSala = new Stella(this, X, 54, -8);
+    this.stellaSala.aparecer();
+    this.ledStella = this.add.rectangle(255, 62, 3, 3, 0x5cff8a).setDepth(-7);
+    this.tweens.add({ targets: this.ledStella, alpha: 0.25, duration: 600, yoyo: true, repeat: -1 });
+    texto(this, 220, 59, st.tocar, { tam: 5, origenX: 0, color: "#7ee6ff" }).setDepth(-7);
+    // letrero que corre dentro de la banda
+    const banda = this.make.graphics({ add: false }).fillRect(217, 67, 42, 9);
+    const ticker = texto(this, 260, 68, st.ticker, { tam: 5, origenX: 0, ancho: 400, color: "#7ee6ff" }).setDepth(-6);
+    ticker.setMask(banda.createGeometryMask());
+    this.tweens.add({ targets: ticker, x: { from: 260, to: 216 - ticker.width }, duration: 9000, repeat: -1 });
+
+    const abrir = (p, lx, ly, ev) => {
+      ev.stopPropagation();
+      if (this.cola) return this.avanzar();
+      if (this.controlActivo) this.abrirStella(undefined, true);
+    };
+    this.add.zone(X, 50, 46, 54).setInteractive({ useHandCursor: true }).on("pointerdown", abrir);
+    this.zonas.push({ tipo: "stella", x: X, y: LIMITES.y1 + 4, r: 12 });
+  }
+
+  // Pequeña animación cuando STELLA detecta información nueva
+  stellaDetecta() {
+    [0, 250].forEach(d => {
+      const c = this.add.circle(STELLA.x, STELLA.y, 4).setStrokeStyle(1, 0x7ee6ff).setDepth(-6);
+      this.tweens.add({ targets: c, scale: 4, alpha: 0, duration: 700, delay: d, onComplete: () => c.destroy() });
+    });
+    this.stellaSala.reaccionar("hablando");
+  }
+
+  // Texto según la edad (preparado; aún no hay selector global de nivel)
+  txtNivel(v) {
+    if (typeof v === "string") return v;
+    return v[estado.nivel || this.t.stella.nivel_defecto] || v.explorador;
+  }
+
+  // ---------------------------------------------------------------- STELLA (interfaz)
+  abrirStella(sec = this.stellaSec || 1, saludo = false) {
+    const st = this.t.stella, r = this.reg.stella;
+    this.abrirPanel(st.titulo, "#7ee6ff");
+    r.consultada = true;
+    this.stellaLinea = this.lineaRobot("", "stella");
+    this.tabs = st.secciones.map((nombre, i) => ({ nombre, b: this.btn(50, 32 + i * 19, nombre, () => this.seccionStella(i + 1), 64) }));
+    this.btn(272, 163, st.cerrar, () => this.cerrarStella(), 56);
+    this.seccionStella(sec);
+    if (saludo) {
+      this.stellaLinea.setText(st.bienvenida);
+      this.stellaPanel.aparecer(() => this.stellaPanel?.reaccionar("saludo"));
+    }
+  }
+
+  cerrarStella() {
+    if (this.cerrandoStella) return;
+    if (!this.stellaPanel) return this.cerrarPanel();
+    this.cerrandoStella = true;
+    this.stellaPanel.despedida(() => this.cerrarPanel());
+  }
+
+  seccionStella(n) {
+    const clave = ["mision", "entorno", "senal", "equipo", "mochila"][n - 1], r = this.reg.stella;
+    this.stellaSec = n;
+    if (!r.secciones.includes(clave)) r.secciones.push(clave);
+    this.limpiarContenido();
+    this.contenido = this.add.container(0, 0);
+    this.modal.add(this.contenido);
+    this.tabs.forEach((tb, i) => {
+      const on = i + 1 === n;
+      tb.b.caja.setStrokeStyle(on ? 2 : 1, on ? 0x7ee6ff : COLOR.borde);
+      tb.b.etiqueta.setText((on ? "▸ " : "") + tb.nombre);
+    });
+    this["stella_" + clave]();
+  }
+
+  limpiarContenido() {
+    this.eventosSeccion.forEach(e => e.remove());
+    this.eventosSeccion = [];
+    [this.sub, this.contenido].forEach(c => { if (c) { this.tweens.killTweensOf(c.list); c.destroy(); } });
+    this.sub = this.contenido = null;
+  }
+
+  c(...objs) { this.contenido.add(objs); return objs[0]; }
+  cbtn(x, y, txt, fn, ancho) { const b = boton(this, x, y, txt, fn, ancho); this.c(b.caja, b.etiqueta); return b; }
+  encabezado(txt) { this.c(texto(this, 197, 24, txt, { tam: 6, color: "#7ee6ff", ancho: 210 })); }
+
+  // 1. Estado de la misión
+  stella_mision() {
+    const t = this.t.stella.mision;
+    this.encabezado(t.titulo);
+    t.lineas.forEach((l, i) => this.c(texto(this, 94, 37 + i * 10, l, { tam: 6, origenX: 0, align: "left", ancho: 210 })));
+    this.c(texto(this, 94, 103, t.aviso, { tam: 5, origenX: 0, align: "left", ancho: 210, color: COLOR.tenue }));
+    this.stellaLinea.setText(t.dialogo);
+    this.stellaPanel.estado("explicando");
+    this.cbtn(98, 163, t.boton, () => this.seccionStella(2), 160);
+  }
+
+  // 2. Condiciones del entorno lunar (4 categorías)
+  stella_entorno() {
+    const t = this.t.stella.entorno;
+    this.botonesCat = ["A", "B", "C", "D"].map((k, i) => [k, this.cbtn(117 + i * 53, 31, t[k].boton, () => this.categoria(k), 50)]);
+    this.cbtn(60, 163, t.saber, () => this.saberMas(), 70);
+    this.categoria(this.catActual || "A");
+  }
+
+  categoria(k) {
+    const t = this.t.stella.entorno, d = t[k], r = this.reg.stella;
+    this.catActual = k;
+    if (!r.entorno.includes(k)) r.entorno.push(k);
+    this.botonesCat.forEach(([kk, b]) => b.caja.setStrokeStyle(kk === k ? 2 : 1, kk === k ? 0x7ee6ff : COLOR.borde));
+    if (this.sub) { this.tweens.killTweensOf(this.sub.list); this.sub.destroy(); }
+    this.eventosSeccion.forEach(e => e.remove());
+    this.eventosSeccion = [];
+    this.sub = this.add.container(0, 0);
+    this.contenido.add(this.sub);
+    const g = this.add.graphics(), s = (...o) => { this.sub.add(o); return o[0]; };
+    s(g);
+    g.fillStyle(0x0b1026).fillRect(92, 42, 70, 66);
+    g.lineStyle(1, 0x333c57).strokeRect(92, 42, 70, 66);
+    this["ilustrar" + k](g, s);
+    const x = 168;
+    s(texto(this, x, 42, t.rec, { tam: 6, origenX: 0, color: "#7ee6ff" }),
+      texto(this, x, 51, d.recomendacion, { tam: 6, origenX: 0, align: "left", ancho: 134 }),
+      this.add.image(x + 6, 92, d.icono).setScale(d.icono === "astro32_0" ? 0.5 : d.icono === "stella_px" ? 1 : 0.75),
+      texto(this, x + 14, 88, d.objeto, { tam: 6, origenX: 0, align: "left", ancho: 122 }),
+      texto(this, x, 102, d.fuente, { tam: 5, origenX: 0, align: "left", ancho: 134, color: COLOR.tenue }));
+    this.stellaLinea.setText(this.txtNivel(d.explica));
+    this.stellaPanel.estado(k === "C" ? "alerta" : "explicando");   // tormenta solar = alerta
+  }
+
+  saberMas() {
+    const k = this.catActual, d = this.t.stella.entorno[k], r = this.reg.stella;
+    if (!r.saberMas.includes(k)) r.saberMas.push(k);
+    let tj = d.mas;
+    if (k === "C") {   // registro de DONKI que ya usa el juego (real o de ejemplo)
+      const cme = estado.datos.cme;
+      tj = { ...tj, texto: this.llenar(tj.texto, { fecha: cme.fecha, vel: cme.velocidad_kms }),
+        fuente: (cme.ejemplo ? "DATO DE EJEMPLO · " : "● Dato real · ") + cme.fuente + " — ccmc.gsfc.nasa.gov/tools/DONKI" };
+    }
+    this.mostrarTarjeta({ ...tj, icono: d.icono, cerrar: this.t.tarjeta.cerrar });
+  }
+
+  // Ilustraciones animadas dentro del recuadro 92..162 × 42..108
+  ilustrarA(g, s) {      // cráter con una parte iluminada y sombra permanente
+    [[98, 48], [120, 46], [150, 52], [140, 60]].forEach(([x, y]) => g.fillStyle(0xf4f4f4).fillRect(x, y, 1, 1));
+    g.fillStyle(0x566c86).fillRect(93, 82, 68, 25);
+    g.fillStyle(0x94b0c2).fillEllipse(128, 88, 56, 16);
+    g.fillStyle(0x1a1c2c).fillEllipse(131, 89, 46, 11);
+    g.fillStyle(0xc2c3c7).fillEllipse(111, 89, 9, 9);
+    g.fillStyle(0xffcd75).fillCircle(98, 76, 4);
+    const haz = s(this.add.triangle(0, 0, 100, 76, 116, 84, 112, 92, 0xfff27a, 0.35).setOrigin(0));
+    this.tweens.add({ targets: haz, alpha: 0.1, duration: 900, yoyo: true, repeat: -1 });
+    s(texto(this, 134, 97, "sombra", { tam: 5, color: COLOR.tenue }));
+  }
+
+  ilustrarB(g, s) {      // termómetro que baja y cráter frío
+    g.fillStyle(0x566c86).fillRect(93, 92, 68, 15);
+    g.fillStyle(0x1a1c2c).fillEllipse(140, 97, 34, 9);
+    g.fillStyle(0x1a1c2c).fillRect(103, 48, 9, 44).fillCircle(107.5, 96, 6);
+    g.fillStyle(0xf4f4f4).fillRect(105, 50, 5, 40);
+    g.fillStyle(0x29adff).fillCircle(107.5, 96, 4.5);
+    for (let y = 52; y < 90; y += 6) g.fillStyle(0x94b0c2).fillRect(113, y, 3, 1);
+    const mercurio = s(this.add.rectangle(107.5, 93, 3, 40, 0x29adff).setOrigin(0.5, 1));
+    this.tweens.add({ targets: mercurio, scaleY: 0.15, duration: 1400, yoyo: true, repeat: -1 });
+    [[128, 50], [146, 58], [136, 70]].forEach(([x, y], i) => {
+      const copo = s(texto(this, x, y, "*", { tam: 8, color: "#bff3ff" }));
+      this.tweens.add({ targets: copo, y: y + 12, alpha: 0.2, duration: 1600, delay: i * 400, yoyo: true, repeat: -1 });
+    });
+  }
+
+  ilustrarC(g, s) {      // Sol con actividad e indicador de riesgo SIMULADO
+    const rayos = s(this.add.graphics({ x: 110, y: 62 }));
+    rayos.lineStyle(2, 0xffcd75);
+    for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; rayos.lineBetween(Math.cos(a) * 11, Math.sin(a) * 11, Math.cos(a) * 15, Math.sin(a) * 15); }
+    this.tweens.add({ targets: rayos, angle: 360, duration: 6000, repeat: -1 });
+    s(this.add.circle(110, 62, 9, 0xffa300), this.add.circle(108, 60, 5, 0xffcd75));
+    [0, 1, 2, 3].forEach(i => {
+      const p = s(this.add.rectangle(122, 56 + i * 4, 2, 2, 0xfff27a));
+      this.tweens.add({ targets: p, x: 158, alpha: 0, duration: 1200, delay: i * 300, repeat: -1 });
+    });
+    [4, 7, 10].forEach((h, i) => {
+      const b = s(this.add.rectangle(136 + i * 8, 104, 6, h, i < 2 ? 0xff8a5c : 0x0b1026).setOrigin(0, 1).setStrokeStyle(1, 0xff8a5c));
+      if (i === 1) this.tweens.add({ targets: b, alpha: 0.4, duration: 500, yoyo: true, repeat: -1 });
+    });
+    s(texto(this, 94, 97, this.t.stella.entorno.C.simulado, { tam: 5, origenX: 0, color: COLOR.tenue }));
+  }
+
+  ilustrarD(g, s) {      // rocas, pendiente, cráter y polvo que flota
+    g.fillStyle(0x566c86).fillRect(93, 96, 68, 11).fillTriangle(110, 96, 161, 96, 161, 66);
+    g.fillStyle(0x94b0c2).fillTriangle(130, 96, 161, 96, 161, 74);
+    g.fillStyle(0x1a1c2c).fillEllipse(116, 103, 16, 4);
+    [[102, 98, 4], [126, 92, 3], [148, 84, 4], [152, 99, 3]].forEach(([x, y, r]) => {
+      g.fillStyle(0x1a1c2c).fillCircle(x, y, r + 1);
+      g.fillStyle(0xc2c3c7).fillCircle(x, y, r);
+    });
+    [[100, 94], [108, 96], [124, 90], [140, 88], [146, 80], [132, 94]].forEach(([x, y], i) => {
+      const p = s(this.add.rectangle(x, y, 1, 1, 0xf4f4f4));
+      this.tweens.add({ targets: p, x: x + 8, y: y - 6, alpha: 0, duration: 1500, delay: i * 250, repeat: -1 });
+    });
+  }
+
+  // 3. Señal de Chispa (usa el mismo minijuego y mapa de la sala)
+  stella_senal() {
+    const t = this.t.stella.senal, ok = this.reg.senalIdentificada;
+    this.encabezado(t.titulo);
+    const g = this.c(this.add.graphics());
+    g.fillStyle(0x0b1026).fillRect(96, 38, 204, 30);
+    g.lineStyle(1, 0x333c57).strokeRect(96, 38, 204, 30);
+    const barras = Array.from({ length: 34 }, (_, i) => this.c(this.add.rectangle(102 + i * 5.8, 53, 3, 3, 0x7ee6ff)));
+    this.eventosSeccion.push(this.time.addEvent({ delay: 120, loop: true,
+      callback: () => barras.forEach(b => b.setScale(1, Phaser.Math.Between(1, ok ? 7 : 3))) }));
+    this.c(texto(this, 96, 76, ok ? this.llenar(t.ok, { n: this.reg.intentosMinijuego }) : t.sin, { tam: 6, origenX: 0, color: ok ? "#5cff8a" : COLOR.texto }),
+      texto(this, 96, 90, t.aviso, { tam: 5, origenX: 0, align: "left", ancho: 206, color: COLOR.tenue }));
+    this.stellaLinea.setText(ok ? t.activa : t.detecta);
+    this.stellaPanel.estado(ok ? "hablando" : "pensando");
+    // el mapa es opcional: solo si el jugador lo pide
+    this.cbtn(80, 163, ok ? t.ver_mapa : t.iniciar, () => ok ? this.abrirMapa(true) : this.abrirMinijuego(), 100);
+  }
+
+  // 4. Análisis de equipo: orienta, no elige
+  stella_equipo() {
+    const t = this.t.stella.equipo, filas = [];
+    this.encabezado(t.titulo);
+    ORDEN.forEach((id, i) => {
+      const o = OBJETOS.find(x => x.id === id), y = 40 + i * 12, lleva = this.lleva(id), obl = id === OBLIGATORIO;
+      const fila = this.add.rectangle(92, y - 6, 212, 11, 0x0b1026, 0.5).setOrigin(0).setStrokeStyle(1, 0x333c57).setInteractive({ useHandCursor: true });
+      fila.on("pointerdown", (p, lx, ly, ev) => {
+        ev.stopPropagation();
+        filas.forEach(f => f.setStrokeStyle(1, 0x333c57));
+        fila.setStrokeStyle(2, 0x7ee6ff);
+        this.stellaLinea.setText(t.rec[id]);
+        this.stellaPanel?.estado("explicando");
+        if (!this.reg.stella.recomendaciones.includes(id)) this.reg.stella.recomendaciones.push(id);
+      });
+      filas.push(fila);
+      this.c(fila, this.add.image(100, y, "px_obj_" + id).setScale(0.625),
+        texto(this, 108, y - 4, this.t.nombres[id], { tam: 6, origenX: 0 }),
+        texto(this, 200, y - 4, o.peso + " kg", { tam: 6, origenX: 0 }),
+        texto(this, 226, y - 4, obl ? t.obligatorio : t.opcional, { tam: 6, origenX: 0, color: obl ? COLOR.titulo : COLOR.tenue }),
+        texto(this, 297, y - 4, lleva ? "✓" : "·", { tam: 6, color: lleva ? "#5cff8a" : COLOR.tenue }));
+    });
+    this.c(texto(this, 96, 108, t.leyenda, { tam: 5, origenX: 0, color: COLOR.tenue }));
+    this.stellaLinea.setText(t.intro);
+    this.stellaPanel.estado("hablando");
+  }
+
+  // 5. Evaluación de la mochila (lee el inventario compartido en ese momento)
+  stella_mochila() {
+    const t = this.t.stella.mochila, p = this.peso(), o2 = this.lleva(OBLIGATORIO);
+    this.reg.stella.evaluaciones++;
+    this.encabezado(t.titulo);
+    if (!this.mochila.length) this.c(texto(this, 96, 34, t.vacia, { tam: 6, origenX: 0, color: COLOR.tenue }));
+    this.mochila.forEach((id, i) => this.c(this.add.image(102 + i * 16, 39, "px_obj_" + id).setScale(0.75)));
+    this.c(texto(this, 200, 33, this.llenar(t.peso, { kg: p }), { tam: 6, origenX: 0 }),
+      texto(this, 200, 42, this.llenar(t.libre, { kg: Math.max(0, CAPACIDAD_MOCHILA - p) }), { tam: 6, origenX: 0 }),
+      texto(this, 200, 51, o2 ? t.o2_si : t.o2_no, { tam: 6, origenX: 0, color: o2 ? "#5cff8a" : "#ff8a5c" }));
+    for (let i = 0; i < CAPACIDAD_MOCHILA; i++)
+      this.c(this.add.rectangle(96 + i * 9, 52, 8, 6, i < p ? 0x5cff8a : 0x0a0f24).setOrigin(0).setStrokeStyle(1, 0x333c57));
+    const cubre = this.mochila.map(id => t.cubre_obj[id]);
+    const limita = ORDEN.filter(id => !this.lleva(id)).map(id => t.limita_obj[id]);
+    this.c(texto(this, 96, 63, t.cubre, { tam: 6, origenX: 0, color: "#7ee6ff" }),
+      texto(this, 200, 63, t.limita, { tam: 6, origenX: 0, color: "#7ee6ff" }),
+      texto(this, 96, 72, cubre.join("\n") || "—", { tam: 6, origenX: 0, align: "left", ancho: 100 }),
+      texto(this, 200, 72, limita.join("\n") || "—", { tam: 6, origenX: 0, align: "left", ancho: 104, color: COLOR.tenue }));
+    this.stellaLinea.setText(this.evaluar());
+    const problema = !o2 || p > CAPACIDAD_MOCHILA;
+    this.stellaPanel.estado("pensando");   // analiza y luego responde
+    this.eventosSeccion.push(this.time.delayedCall(900, () => this.stellaPanel?.estado(problema ? "alerta" : "hablando")));
+    this.cbtn(84, 163, t.boton, () => {
+      const v = this.evaluar();
+      if (!this.lleva(OBLIGATORIO) || this.peso() > CAPACIDAD_MOCHILA) { this.stellaPanel?.reaccionar("alerta"); return this.stellaLinea.setText(v); }
+      this.abrirRevision();
+    }, 130);
+  }
+
+  evaluar() {
+    const e = this.t.stella.mochila.eval;
+    if (!this.lleva(OBLIGATORIO)) return e.falta;
+    if (this.peso() > CAPACIDAD_MOCHILA) return e.exceso;
+    return e[["linterna", "radio", "escudo"].find(id => this.lleva(id))] || e.base;
   }
 
   // ---------------------------------------------------------------- revisión
@@ -597,10 +1013,12 @@ export class CentroControl extends Phaser.Scene {
       this.lleva("radio") ? t.radio_si : t.radio_no
     ];
     if (o2) obs.push(t.oxigeno_si);
-    const robot = this.lineaRobot(obs.join(" "));
+    const robot = this.lineaRobot(obs.join(" "), "stella");
+    this.stellaPanel.estado(o2 ? "exito" : "alerta");
     this.btn(80, 163, t.modificar, () => this.cerrarPanel(), 110);
     this.btn(240, 163, t.continuar, () => {
       // validación final
+      if (!this.lleva(OBLIGATORIO) || this.peso() > CAPACIDAD_MOCHILA) this.stellaPanel?.reaccionar("alerta");
       if (!this.lleva(OBLIGATORIO)) return robot.setText(t.sin_oxigeno);
       if (this.peso() > CAPACIDAD_MOCHILA) return robot.setText(t.exceso);
       this.reg.revisionFinal = true;
@@ -665,7 +1083,7 @@ export class CentroControl extends Phaser.Scene {
 
     // Se guarda la decisión para las siguientes misiones
     estado.mochila = [...this.mochila];
-    Object.assign(this.reg, { objetos: [...this.mochila], pesoTotal: this.peso(), oxigenoIncluido: this.lleva(OBLIGATORIO) });
+    Object.assign(this.reg, { salidaConfirmada: true, objetos: [...this.mochila], pesoTotal: this.peso(), oxigenoIncluido: this.lleva(OBLIGATORIO) });
     estado.mision2 = this.reg;
     estado.bitacora.push(`Mochila: ${this.mochila.map(id => this.t.nombres[id]).join(", ")} (${this.peso()} kg).`);
 
@@ -788,6 +1206,7 @@ export class CentroControl extends Phaser.Scene {
   usarZona(zona = this.activa) {
     if (!zona || !this.controlActivo) return;
     if (zona.tipo === "objeto") this.alternar(zona.o);
+    else if (zona.tipo === "stella") this.abrirStella(undefined, true);
     else this.salir();
   }
 
@@ -803,8 +1222,7 @@ export class CentroControl extends Phaser.Scene {
     this.burbuja.setVisible(false);
     if (!cerca) return;
     if (cerca.tipo === "puerta") return this.salir();
-    const s = this.iconos[cerca.o.id];
-    this.foco.setPosition(s.x, s.y - 8).setVisible(true);
+    if (cerca.o) { const s = this.iconos[cerca.o.id]; this.foco.setPosition(s.x, s.y - 8).setVisible(true); }
     this.mostrarBurbuja(cerca);
     this.time.delayedCall(2500, () => this.intentarAlerta());
   }
