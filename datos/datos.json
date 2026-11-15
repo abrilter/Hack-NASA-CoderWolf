@@ -34,7 +34,7 @@
   "rover": { "kmh": 0.5, "fuente": "COMPLETAR", "ejemplo": true },
 
   "rutas": [
-    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 2000, "oscura": true,  "ejemplo": true },
+    { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 400, "oscura": true,  "ejemplo": true },
     { "id": "cresta", "nombre": "Rodear por la cresta", "km": 16, "subida_m": 100,  "oscura": false, "ejemplo": true }
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
@@ -42,6 +42,7 @@
 
   "fuentes_extra": [
     { "_nota": "Datos NASA que se muestran en el juego y no están en otra parte de este archivo. Si su misión muestra un dato nuevo, agréguenlo aquí para que salga en la pantalla final." },
+    { "tema": "Las huellas del Apolo siguen en la Luna (fotos de LRO)", "fuente": "NASA LRO", "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/", "ejemplo": false },
     { "tema": "Gravedad de la Luna (1.62 m/s²)", "fuente": "NASA Moon Fact Sheet", "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "ejemplo": false }
   ],
 
@@ -52,6 +53,14 @@
     "fuente": "NASA Moon Trek",
     "link": "https://trek.nasa.gov/moon/",
     "ejemplo": false
+  },
+
+  "luz_polo_sur": {
+    "_nota": "Dato de la escena Ruta. Sigue como ejemplo hasta que alguien revise el enlace y cambie ejemplo a false.",
+    "texto": "En el polo sur de la Luna el Sol va pegado al horizonte y da vueltas alrededor. Las sombras son muy largas y hay cráteres donde nunca llega la luz.",
+    "fuente": "NASA LRO / Moon Trek",
+    "link": "https://science.nasa.gov/mission/lro/",
+    "ejemplo": true
   },
 
   "polo_sur": {
@@ -74,6 +83,7 @@
     "ejemplo": false
   },
 
+<<<<<<< HEAD
   "crater_helado": {
     "_nota": "Escena CraterHelado (Rol 5). 'juego' son valores de juego para balancear; los datos NASA llevan fuente y enlace.",
     "temperatura": {
@@ -109,5 +119,15 @@
       "choque_o2": 3,
       "choque_pausa": 1
     }
+=======
+  "huellas": {
+    "_nota": "Números de juego de la escena Huellas (Rol 4): oxígeno por pista revisada y por seguir el rastro equivocado.",
+    "o2_pista": 1,
+    "o2_error": 8,
+    "texto": "En la Luna no hay viento ni lluvia. Por eso las huellas y las marcas de ruedas duran muchísimo. La nave LRO de la NASA fotografió las de las misiones Apolo: ¡siguen ahí!",
+    "fuente": "NASA LRO · sitio de aterrizaje del Apolo 17",
+    "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/",
+    "ejemplo": false
+>>>>>>> 201ef206b170a72b89e61ea4908e8c483a615164
   }
 }

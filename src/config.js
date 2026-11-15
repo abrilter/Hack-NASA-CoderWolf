@@ -30,7 +30,7 @@ export const COLOR = {
 // en main.js y ponerla aquí. Las escenas nuevas usan siguienteEscena(this.scene.key)
 // en lugar de escribir el nombre de la siguiente escena a mano.
 export const ORDEN = [
-  "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior", "Final"
+  "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior", "Huellas", "Final"
 ];
 // Senal, Viaje, Ruta y Rescate siguen registradas en main.js (se pueden abrir
 // con ?escena=...) pero por ahora no forman parte del recorrido.

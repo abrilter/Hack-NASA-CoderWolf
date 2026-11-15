@@ -34,7 +34,7 @@ Los números de balance están en `src/config.js` (trajes, naves, pesos de la mo
 - **Modelo** en `src/modelo/simulacion.js`: calcula las consecuencias de cada decisión con los datos reales.
 
 ## Orden de escenas
-Carga → Intro → Carta → Equipo (traje y cohete) → Aterrizaje → CentroControl (mochila) → Final
+Carga → Intro → Carta → Equipo (traje y cohete) → Aterrizaje → CentroControl (mochila) → Exterior (rover) → Ruta → Rescate → Final
 
 ## Reparto
 Ver `TAREAS.md`. En el código, `TODO(Rol N)` marca lo pendiente de cada rol.
