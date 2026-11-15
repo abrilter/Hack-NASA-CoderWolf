@@ -7,6 +7,7 @@ import { Senal } from "./escenas/Senal.js";
 import { CentroControl } from "./escenas/CentroControl.js";
 import { Exterior } from "./escenas/Exterior.js";
 import { Viaje } from "./escenas/Viaje.js";
+import { CraterHelado } from "./escenas/CraterHelado.js";
 import { Equipo } from "./escenas/Equipo.js";
 import { Aterrizaje } from "./escenas/Aterrizaje.js";
 import { Ruta } from "./escenas/Ruta.js";
@@ -52,5 +53,5 @@ new Phaser.Game({
   physics: { default: "arcade" },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Senal, Viaje, Ruta, Rescate, Final]
+  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, CraterHelado, Senal, Viaje, Ruta, Rescate, Final]
 });

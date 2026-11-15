@@ -72,5 +72,42 @@
     "fecha": "2022-05-16",
     "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-476",
     "ejemplo": false
+  },
+
+  "crater_helado": {
+    "_nota": "Escena CraterHelado (Rol 5). 'juego' son valores de juego para balancear; los datos NASA llevan fuente y enlace.",
+    "temperatura": {
+      "texto": "En los cráteres de sombra permanente la sonda LRO midió más de 200 °C bajo cero (menos de −238 °C; −248 °C en el cráter Hermite).",
+      "fuente": "NASA LRO (Diviner): más de 200 °C bajo cero",
+      "link": "https://svs.gsfc.nasa.gov/cgi-bin/details.cgi?aid=10595",
+      "fecha": "2010",
+      "ejemplo": false
+    },
+    "polvo": {
+      "_nota": "Hecho confirmado en estudios técnicos de NASA (NTRS) sobre el Apolo; falta elegir el documento exacto para el enlace. Cambiar a false cuando se verifique.",
+      "texto": "El polvo lunar es afilado: en las misiones Apolo rayó visores y dañó sellos de los trajes.",
+      "fuente": "NASA NTRS (estudios del polvo en el Apolo)",
+      "link": "https://ntrs.nasa.gov/citations/20100033103",
+      "ejemplo": true
+    },
+    "juego": {
+      "largo_px": 1150,
+      "vel_linterna": 40,
+      "vel_sin_linterna": 26,
+      "radio_linterna": 62,
+      "radio_sin_linterna": 20,
+      "o2_por_segundo_traje": 0.2,
+      "o2_calefaccion": 0.25,
+      "frio_baja": 0.1,
+      "frio_recupera": 0.25,
+      "frio_min": 0.35,
+      "polvo_por_segundo": 0.06,
+      "polvo_luz": 0.7,
+      "reaccion_segundos": 1.0,
+      "polvo_borde": 64,
+      "limpiar_segundos": 2.5,
+      "choque_o2": 3,
+      "choque_pausa": 1
+    }
   }
 }

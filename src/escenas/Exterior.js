@@ -23,7 +23,7 @@ const PLATAFORMA = { x1: 336, x2: 548, y1: 104, y2: 172 };   // zona segura para
 const ROVER0 = { x: 440, y: 150 };
 const VEL_PIE = 60, CERCA = 24;
 // Conducción sencilla para 7–12 años: aceleración progresiva, freno, tope de velocidad
-const AUTO = { vmax: 72, vmaxRugoso: 38, acel: 40, freno: 95, reversa: 24, roce: 24, giro: 2.1, radio: 10 };
+const AUTO = { vmax: 72, vmaxRugoso: 38, acel: 40, freno: 95, reversa: 24, roce: 24, giroDirecto: 3.2, radio: 10 };
 const KMH = 0.25;            // 72 px/s ≈ 18 km/h (tope del rover lunar del Apolo)
 const METROS = 2;            // 1 px = 2 m
 const BALIZAS = [[610, 138], [730, 108], [860, 150], [990, 104], [1120, 146], [1250, 164],
@@ -93,7 +93,18 @@ export class Exterior extends Phaser.Scene {
     this.input.keyboard.on("keydown", ev => this.teclaSistemas(ev));
     this.input.on("pointerdown", p => {
       if (this.modo === "final") return this.usarE();
-      if (this.modo !== "pie" || p.y / ZOOM < 40 || p.worldY < PIE.y1 - 12) return;
+      // en el rover: mantener el clic en el suelo = ir hacia ese punto (zona central, sin el HUD)
+      if (this.modo === "rover") { if (p.y / ZOOM >= 40 && p.y / ZOOM < 150) this.punteroRover = true; return; }
+      if (this.modo !== "pie" || p.y / ZOOM < 40) return;
+      // clic sobre el rover: caminar hasta él y subir solo
+      const R = this.rover;
+      if (Math.abs(p.worldX - R.x) < 24 && p.worldY > R.y - 30 && p.worldY < R.y + 8) {
+        this.irRover = true;
+        this.destino = { x: Phaser.Math.Clamp(R.x, PIE.x1, PIE.x2), y: Phaser.Math.Clamp(R.y + 6, PIE.y1, PIE.y2) };
+        return;
+      }
+      if (p.worldY < PIE.y1 - 12) return;
+      this.irRover = false;
       this.destino = { x: Phaser.Math.Clamp(p.worldX, PIE.x1, PIE.x2), y: Phaser.Math.Clamp(p.worldY, PIE.y1, PIE.y2) };
     });
 
@@ -493,6 +504,8 @@ export class Exterior extends Phaser.Scene {
       .find(([x, y]) => dentro(x, y, PIE) && !this.choca(x, y, 4, false));
     if (!lugar) return this.avisar("bajar_zona", "alerta", 2500);
     this.modo = "bajando";
+    this.puedeAuto = false;            // no volver a subir solo hasta alejarse
+    this.punteroRover = false;
     this.ocultarTutorial();
     r.v = 0;
     this.motor(false);
@@ -621,8 +634,17 @@ export class Exterior extends Phaser.Scene {
       if (dx) a.setFlipX(dx < 0);
       if (dx > 0 && a.x >= PIE.x2 - 1) this.avisar("borde", "explicando");
     }
-    // aviso "Presiona E"
+    // subir al rover: basta con caminar hasta él (o hacerle clic). Después de
+    // bajar hay que alejarse un poco para que no se vuelva a subir solo.
+    const dRover = Phaser.Math.Distance.Between(a.x, a.y, this.rover.x, this.rover.y);
+    if (dRover > CERCA + 20) this.puedeAuto = true;
     const o = this.cercanos();
+    if (o?.rover && (this.irRover || (this.puedeAuto && movio))) {
+      this.irRover = false;
+      this.abordar();
+      return false;
+    }
+    // aviso "Presiona E" (para revisar cosas de la base)
     if (o) this.mostrarAviso(o.rover ? this.t.abordar : this.t.revisar, o.x, o.rover ? o.y : o.y - 34);
     else this.aviso.setVisible(false);
     return movio;
@@ -632,10 +654,18 @@ export class Exterior extends Phaser.Scene {
     const k = this.k, R = this.rover, manda = this.modo === "rover";
     const z = this.zona(R.x, R.y);
     const vmax = z.blando ? SIM.vmaxBlando : z.rugoso ? AUTO.vmaxRugoso : AUTO.vmax;
-    const acel = manda && (k.up.isDown || k.W.isDown), atras = manda && (k.down.isDown || k.S.isDown);
-    const giro = manda ? ((k.left.isDown || k.A.isDown) ? -1 : (k.right.isDown || k.D.isDown) ? 1 : 0) : 0;
-    const hacia0 = (v, d) => v > 0 ? Math.max(0, v - d) : Math.min(0, v + d);
+    // Controles directos (para 7–12 años): la flecha o el clic dicen HACIA DÓNDE ir
+    // en la pantalla. El rover gira solo hacia ahí (también detenido) y avanza
+    // cuando ya apunta en esa dirección.
     const patina = this.emerg?.tipo === "traccion";      // pérdida de tracción: las ruedas giran, el rover casi no avanza
+    const { dx, dy } = manda ? this.direccionDeseada() : { dx: 0, dy: 0 };
+    const hayRumbo = dx !== 0 || dy !== 0;
+    const dif = hayRumbo ? Phaser.Math.Angle.Wrap(Math.atan2(dy, dx) - R.ang) : 0;
+    // en la emergencia de tracción, la dirección contraria = retroceder despacio
+    const atras = hayRumbo && patina && Math.abs(dif) > 2.3;
+    const acel = hayRumbo && !atras && Math.abs(dif) < 0.9;
+    if (hayRumbo && !atras) R.ang += Phaser.Math.Clamp(dif, -AUTO.giroDirecto * dt, AUTO.giroDirecto * dt);
+    const hacia0 = (v, d) => v > 0 ? Math.max(0, v - d) : Math.min(0, v + d);
     if (acel && this.tutoAbierto) this.ocultarTutorial(); // empezar a conducir oculta el tutorial
 
     if (z.rugoso && Math.abs(R.v) > AUTO.vmaxRugoso + 6) this.avisar("rugoso", "alerta");
@@ -645,8 +675,6 @@ export class Exterior extends Phaser.Scene {
     else R.v = hacia0(R.v, (manda ? AUTO.roce : AUTO.freno) * dt);
     if (R.v > vmax) R.v = Math.max(vmax, R.v - AUTO.freno * 0.6 * dt);   // la zona irregular frena
 
-    // giro: solo con el rover en movimiento (como un carrito)
-    R.ang += giro * AUTO.giro * dt * Phaser.Math.Clamp(R.v / 22, -1, 1);
     const subida = 1 - 0.25 * z.pend * Math.cos(R.ang);                   // subir cuesta, bajar ayuda
     const avance = R.v * subida * dt * (patina && R.v > 0 ? 0.15 : 1);
     const nx = Phaser.Math.Clamp(R.x + Math.cos(R.ang) * avance, SUELO.x1, SUELO.x2);
@@ -676,6 +704,22 @@ export class Exterior extends Phaser.Scene {
       this.osc.o.frequency.setTargetAtTime(38 + Math.abs(R.v) * 1.1, c, 0.1);
       this.osc.g.gain.setTargetAtTime(0.006 + rapidez * 0.012, c, 0.1);
     }
+  }
+
+  // Hacia dónde quiere ir el niño: flechas/WASD (8 direcciones) o el clic sostenido
+  direccionDeseada() {
+    const k = this.k;
+    let dx = ((k.right.isDown || k.D.isDown) ? 1 : 0) - ((k.left.isDown || k.A.isDown) ? 1 : 0);
+    let dy = ((k.down.isDown || k.S.isDown) ? 1 : 0) - ((k.up.isDown || k.W.isDown) ? 1 : 0);
+    if (!dx && !dy && this.punteroRover) {
+      const p = this.input.activePointer;
+      if (!p.isDown) this.punteroRover = false;
+      else {
+        const w = p.positionToCamera(this.cameras.main), R = this.rover;
+        if (Math.hypot(w.x - R.x, w.y - R.y) > 12) { dx = w.x - R.x; dy = w.y - R.y; }
+      }
+    }
+    return { dx, dy };
   }
 
   choque(o) {

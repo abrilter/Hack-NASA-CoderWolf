@@ -449,7 +449,7 @@
   "exterior": {
     "bienvenida": "¡Bienvenido a la superficie lunar, astronauta! Nuestro vehículo de exploración nos espera cerca de la estación. Vamos a buscarlo.",
     "objetivo": "OBJETIVO: camina a la zona de vehículos y aborda el rover",
-    "abordar": "Presiona E para abordar el rover lunar",
+    "abordar": "Camina hasta el rover (o tócalo) para subir",
     "revisar": "Presiona E para revisar",
     "activado": "¡Vehículo de exploración activado! Sigue las balizas para llegar a la zona de búsqueda.",
     "balizas": "Sigue las balizas de navegación.",
@@ -490,48 +490,13 @@
       "titulo": "CONTROLES DEL ROVER",
       "stella": "¡Bienvenido al rover lunar! Soy STELLA, tu copiloto. Utiliza los controles para conducir y sigue las balizas de navegación. ¡Ten cuidado con los cráteres!",
       "filas": [
-        [
-          [
-            "W",
-            "↑"
-          ],
-          "Acelerar"
-        ],
-        [
-          [
-            "S",
-            "↓"
-          ],
-          "Frenar y retroceder"
-        ],
-        [
-          [
-            "A",
-            "←"
-          ],
-          "Girar a la izquierda"
-        ],
-        [
-          [
-            "D",
-            "→"
-          ],
-          "Girar a la derecha"
-        ],
-        [
-          [
-            "E"
-          ],
-          "Bajar (rover detenido)"
-        ],
-        [
-          [
-            "H"
-          ],
-          "Consultar ayuda"
-        ]
+        [["←", "→"], "Ir a la izquierda o derecha"],
+        [["↑", "↓"], "Ir hacia arriba o abajo"],
+        [["◉"], "Clic sostenido: ir ahí"],
+        [["E"], "Bajar (rover detenido)"],
+        [["H"], "Consultar ayuda"]
       ],
-      "arrancar": "Pulsa W o ↑ para arrancar",
+      "arrancar": "Flechas o clic para avanzar",
       "boton": "? AYUDA"
     },
     "em": {
@@ -544,7 +509,7 @@
       "traccion_pasos": [
         "Detener el rover",
         "Reducir la potencia",
-        "Retroceder despacio (S)"
+        "Retroceder despacio (flecha contraria)"
       ],
       "traccion_stella": "¡Atención, astronauta! Las ruedas están patinando sobre el regolito lunar. Si seguimos acelerando, podríamos quedar atrapados.",
       "traccion_exito": "¡Excelente maniobra! Recuperamos la tracción. Ahora busca una ruta más segura.",
@@ -657,5 +622,33 @@
       "reinicio": "↺ Rescate: volver a la última baliza",
       "reinicio_stella": "Un equipo de rescate nos llevó a la última baliza segura. Tu progreso se conserva: ¡sigamos!"
     }
+  },
+
+  "crater_helado": {
+    "_nota": "Escena CraterHelado (Rol 5). El traje aísla: el frío afecta al rover, no al astronauta.",
+    "intro": "STELLA: Entramos a un cráter donde nunca llega el Sol. Mantén → (o el clic) para avanzar.",
+    "intro_linterna": "STELLA: Tu linterna ilumina lejos. Así veremos las rocas a tiempo.",
+    "intro_sin_linterna": "STELLA: No trajimos linterna. Solo vemos un poquito y vamos más despacio.",
+    "calef_si": "Calefacción: SÍ",
+    "calef_no": "Calefacción: NO",
+    "dice_calef_si": "STELLA: Calefacción encendida. El rover va bien, pero usa energía y eso nos cuesta oxígeno.",
+    "dice_calef_no": "STELLA: Calefacción apagada. Ahorramos oxígeno, pero el frío irá frenando al rover.",
+    "aviso_frio": "STELLA: ¡El rover se enfría y va más lento! Tu traje te protege, pero las ruedas y la batería sienten el frío.",
+    "limpiar": "Limpiar polvo",
+    "limpiando": "Limpiando…",
+    "aviso_polvo": "STELLA: El polvo tapa los faros y la cámara del rover. Se ve menos y podemos chocar.",
+    "polvo_apolo": "STELLA: El polvo lunar es afilado y se pega a todo. En las misiones Apolo rayó visores y dañó equipo.",
+    "choque": "¡Roca! No la vimos a tiempo (−{o2} O2).",
+    "avanzar": "Mantén → o el clic para avanzar",
+    "velocidad": "{kmh} km/h",
+    "afuera": "Afuera: −238 °C",
+    "progreso": "Cruce",
+    "fin_titulo": "¡Salimos del cráter!",
+    "fin_lineas": "Oxígeno gastado: {o2}\nRocas esquivadas: {esquivas} · choques: {choques}\nLimpiezas: {limpiezas} · calefacción encendida {calef} % del tiempo",
+    "consejo_choques": "Consejo: con el polvo limpio y buena luz, las rocas se ven a tiempo.",
+    "consejo_frio": "Consejo: con la calefacción apagada mucho rato, el rover se arrastra y el viaje dura más.",
+    "consejo_bien": "¡Muy bien! Equilibraste luz, calor y tiempo.",
+    "continuar": "Continuar",
+    "bitacora": "Cruzaste el cráter helado: gastaste {o2} de oxígeno, chocaste con {choques} rocas y limpiaste el polvo {limpiezas} veces."
   }
 }
