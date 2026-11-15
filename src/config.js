@@ -31,7 +31,7 @@ export const COLOR = {
 // en main.js y ponerla aquí. Las escenas nuevas usan siguienteEscena(this.scene.key)
 // en lugar de escribir el nombre de la siguiente escena a mano.
 export const ORDEN = [
-  "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior",
+  "Titulo", "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior",
   "Ruta", "CraterHelado", "Huellas", "Tormenta", "Rescate", "Final"
 ];
 // CraterHelado se salta sola si en la Ruta se eligió la cresta.

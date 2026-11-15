@@ -1,4 +1,4 @@
-# Rescate en el Polo Sur Lunar
+# Stella's Ride · Rescate en el Polo Sur Lunar
 
 Juego web en pixel art (Phaser 3) para el reto **Junior Astronaut Mission Trainer**, NASA Space Apps 2026. Es para niñas y niños de 7 a 12 años. No pide cuentas, no guarda datos personales y no se instala nada.
 
@@ -16,7 +16,7 @@ No abran `index.html` con doble clic: el navegador bloquea la lectura de los dat
 - **Teclado:** flechas y Enter en todas las escenas. Donde se camina, las flechas o WASD mueven al astronauta. En las escenas de botones, las flechas mueven un marco amarillo, Enter elige y Esc cierra una tarjeta.
 
 ## Orden de la historia
-Carga → Intro → Carta → Equipo (traje y nave) → Aterrizaje → CentroControl (mochila) → Exterior (rover) → Ruta → CraterHelado (solo si se eligió el cráter) → Huellas → Tormenta → Rescate → Final
+Carga → Titulo (pantalla de inicio) → Intro → Carta → Equipo (traje y nave) → Aterrizaje → CentroControl (mochila) → Exterior (rover) → Ruta → CraterHelado (solo si se eligió el cráter) → Huellas → Tormenta → Rescate → Final
 
 El orden está en `ORDEN` (`src/config.js`). Si el oxígeno llega a 0 o la radiación a 100, el siguiente cambio de escena va al Final, donde Chispa explica por qué. "Jugar otra vez" empieza en Equipo.
 

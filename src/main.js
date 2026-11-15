@@ -2,6 +2,7 @@
 // Lee: ORDEN y estado.causaDerrota() · Escribe: nada (arma el juego y desvía al Final si se perdió).
 import { ANCHO, ALTO, COLOR, ZOOM } from "./config.js";
 import { Carga } from "./escenas/Carga.js";
+import { Titulo } from "./escenas/Titulo.js";
 import { Intro } from "./escenas/Intro.js";
 import { Carta } from "./escenas/Carta.js";
 import { Senal } from "./escenas/Senal.js";
@@ -55,7 +56,7 @@ const juego = new Phaser.Game({
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Tormenta, Senal, Viaje, Ruta, Rescate, Final]
+  scene: [Carga, Titulo, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Tormenta, Senal, Viaje, Ruta, Rescate, Final]
 });
 
 // Barra para saltar escenas al probar (solo con ?dev=1 o ?escena=...)

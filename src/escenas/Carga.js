@@ -42,7 +42,7 @@ export class Carga extends Phaser.Scene {
     }
 
     if (prueba) return this.modoPrueba(prueba, params);
-    this.scene.start("Intro");
+    this.scene.start(ORDEN[0]);
   }
 
   // ---------------------------------------------------------------- modo prueba
@@ -51,7 +51,7 @@ export class Carga extends Phaser.Scene {
       const lista = Object.keys(this.scene.manager.keys).filter(k => k !== "Carga").join(", ");
       console.warn(`[prueba] no existe la escena "${escena}". Escenas: ${lista}`);
       texto(this, ANCHO / 2, ALTO / 2 + 14, `No existe la escena "${escena}"`, { tam: 7, color: "#ff8a5c" });
-      this.time.delayedCall(2500, () => this.scene.start("Intro"));
+      this.time.delayedCall(2500, () => this.scene.start(ORDEN[0]));
       return;
     }
 

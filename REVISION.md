@@ -35,6 +35,7 @@
 | 22 | Táctil: aviso "Gira tu teléfono" en teléfonos en vertical; zona para tocar los botones 2 px más grande por lado (sin cambiar el dibujo); Huellas explica que la lupa se arrastra con el dedo | index.html, ui.js ⚙️, textos.json |
 | 23 | Código muerto quitado: la opción "refugio" (modelo, textos y datos), `costosRescate`, `ui.paginas()` | simulacion.js, Ruta, ui.js, datos, textos |
 | 24 | Datos verificados con fuente NASA: velocidad del rover (VIPER, 0.36–0.72 km/h; el juego usa 0.5), luz del polo sur (NASA Science), polvo lunar (Gaier 2005, NTRS). El polvo ahora aparece en "Fuentes NASA" | datos.json, Final, LEEME |
+| 25 | Pantalla de inicio de película: «STELLA'S RIDE» en letras pixel amarillas (fuente 5×7 hecha con mapas de letras), estrellas, la Luna y un rover que la recorre; «CoderWolf presenta», subtítulo y «Toca o presiona Enter». El primer toque salta la animación. El nombre se cambia en `textos.json → pantalla_titulo` | src/escenas/Titulo.js (nueva), main.js ⚙️, config.js ⚙️ (`ORDEN`), Carga.js ⚙️, index.html |
 
 ### Pendiente
 - **CME en vivo muy rápida**: si DONKI trae una CME de 2500 km/s, solo el 18 % de los equipos puede ganar (con 1000 km/s, el 100 %). Opción: aceptar en vivo solo CME entre 1000 y 2000 km/s, o limitar su efecto en el modelo.

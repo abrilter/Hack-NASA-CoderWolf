@@ -1,6 +1,13 @@
 {
   "_nota": "Dueño: Rol 5. Todos los diálogos del juego viven aquí. Se pueden cambiar sin tocar el código.",
 
+  "pantalla_titulo": {
+    "nombre": "STELLA'S RIDE",
+    "presenta": "CoderWolf presenta",
+    "subtitulo": "Rescate en el Polo Sur Lunar",
+    "empezar": "Toca o presiona Enter para empezar"
+  },
+
   "comun": {
     "_nota": "Etiquetas de las fuentes NASA (ui.js → etiquetaDato). en_vivo / no_en_vivo solo salen en el dato de DONKI.",
     "dato_real": "Dato real",
