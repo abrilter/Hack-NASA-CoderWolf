@@ -433,6 +433,43 @@
   },
 
   "rescate": {
+    "llegada": "Llegas a la última posición conocida de Itzel… pero no ves a nadie.",
+    "ir_luz": "Ir hacia la lucecita",
+    "chispa_aparece": "¡Es Chispa! Te reconoce y te guía entre las rocas.",
+    "itzel_refugio": "Itzel se refugió bajo una saliente de roca, como haría una astronauta de verdad.",
+    "radio_titulo": "La radio está dañada. Hay que repararla para hablar con la Tierra.",
+    "radio_kit": "+ Traes el kit de radio: la arreglas rápido.",
+    "radio_sin_kit": "− No traes el kit de radio: tardas más en arreglarla.",
+    "reparar_radio": "Reparar la radio ({o2} O2)",
+    "mensajes": {
+      "titulo": "Tres mensajes, energía para dos",
+      "explica": "La batería solo alcanza para 2 mensajes. ¿Cuáles mandas?",
+      "lleva": "Elegidos: {n} de 2",
+      "enviar": "Enviar a la Tierra",
+      "tormenta": {
+        "nombre": "La tormenta viene",
+        "efecto": "La Tierra protege sus satélites a tiempo.",
+        "respuesta": "Tierra: ¡Recibido! Ponemos los satélites a salvo."
+      },
+      "ayuda": {
+        "nombre": "Estamos vivos, vengan por nosotros",
+        "efecto": "Sale una nave de apoyo: el regreso gasta menos oxígeno.",
+        "respuesta": "Tierra: ¡Qué alegría! Va una nave de apoyo."
+      },
+      "hielo": {
+        "nombre": "Encontramos hielo",
+        "efecto": "El descubrimiento de Itzel llega a la Tierra.",
+        "respuesta": "Tierra: ¡Increíble! Ese hielo ayudará a futuras bases."
+      },
+      "viaja": "La señal viaja a la velocidad de la luz: tarda {s} s en llegar.",
+      "ida": "→ Tierra",
+      "vuelta": "← Luna",
+      "luna": "LUNA",
+      "tierra": "TIERRA"
+    },
+    "ayuda_viene": "Viene una nave de apoyo: el regreso gasta menos oxígeno.",
+    "nota_radio": "Reparaste la radio ({o2} O2).",
+    "nota_mensajes": "Mensajes a la Tierra: {lista}.",
     "titulo": "¡Encontraste a Itzel y a Chispa!",
     "encuentro": "Itzel está agotada y le queda muy poco aire.",
     "itzel_dice": "Itzel: ¡Gracias por venir! En la Estación Espacial, los astronautas pierden hueso y músculo si no hacen ejercicio. En la Luna aún se investiga.",
@@ -491,6 +528,59 @@
   },
 
   "final": {
+    "finales": {
+      "completa": {
+        "titulo": "¡Misión completa!",
+        "texto": "Todos están a salvo. La Tierra protegió sus satélites: en vez de apagones, hay auroras en el cielo. Y el hielo de Itzel ya es noticia.",
+        "voz": "¡Ganaste la insignia dorada!"
+      },
+      "sin_aviso": {
+        "titulo": "Rescate sin aviso",
+        "texto": "Todos están a salvo, pero la alerta no llegó. Algunos satélites fallan unas horas.",
+        "voz": "Itzel: A veces hay que elegir: los salvaste a ellos o a nosotros."
+      },
+      "hielo_secreto": {
+        "titulo": "El hielo queda en secreto",
+        "texto": "Todos están a salvo y la Tierra protegió sus satélites. Pero el descubrimiento de Itzel no llegó.",
+        "voz": "Itzel: ¡Volveré por mi hielo! ¿Me acompañas la próxima vez?"
+      },
+      "evacuacion": {
+        "titulo": "Evacuación",
+        "texto": "Una nave automática los recogió a todos. Nadie se quedó atrás.",
+        "voz": "Chispa: Lo que más nos costó {recurso} fue «{decision}» ({valor}). ¡La próxima vez saldrá mejor!"
+      }
+    },
+    "recurso_oxigeno": "oxígeno",
+    "recurso_radiacion": "radiación",
+    "b_bitacora": "Bitácora",
+    "b_ysi": "¿Y si…?",
+    "b_planta": "La planta",
+    "titulo_cadena": "Tu misión, decisión por decisión",
+    "cadena_vacia": "Juega la misión completa para ver aquí cada decisión.",
+    "c_mochila": "Mochila: {objetos}",
+    "c_linterna_si": "Hubo luz en el cráter oscuro",
+    "c_linterna_no": "Sin linterna: lo oscuro fue más difícil",
+    "c_equipo": "{traje} · {nave}",
+    "c_equipo_efecto": "El traje y el escudo detienen {n} de cada 10",
+    "c_efectos": "{o2} O2 · +{rad} radiación",
+    "c_solo_o2": "{o2} O2",
+    "c_crater": "Cruzaste el cráter helado",
+    "c_crater_efecto": "{o2} O2 · {choques} choques",
+    "c_mensaje": "Mensaje: {nombre}",
+    "titulo_ysi": "¿Y si…?",
+    "ysi_explica": "El juego vuelve a jugar el final con la otra opción:",
+    "ysi_real": "Elegiste «{opcion}»: O2 {o2} · radiación {rad} → {final}",
+    "ysi_otra": "¿Y si «{opcion}»? O2 {o2} · radiación {rad} → {final}",
+    "ysi_igual": "Con esa decisión el final habría sido el mismo.",
+    "ysi_cambia": "¡Con esa decisión el final habría cambiado!",
+    "ysi_vacio": "Juega el rescate completo para ver qué habría pasado.",
+    "ysi_aire": "Aire",
+    "ysi_regreso": "Regreso",
+    "ysi_mensajes": "Mensajes",
+    "ysi_real_m": "Mandaste «{a}» y «{b}»: O2 {o2} · radiación {rad} → {final}",
+    "ysi_otra_m": "¿Y si mandabas «{nuevo}» en vez de «{viejo}»? O2 {o2} · radiación {rad} → {final}",
+    "titulo_planta": "La planta de Chispa",
+    "planta_itzel": "Itzel: Esta planta creció en la base. Te la dejo a ti: cuídala mucho.",
     "titulo_exito": "Misión cumplida!",
     "titulo_fallo": "La misión regresó",
     "resumen_fuentes": "Ciencia de la NASA en este juego: {reales} datos reales y {ejemplo} de ejemplo (todavía no verificados).",

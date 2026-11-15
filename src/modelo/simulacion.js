@@ -5,6 +5,8 @@
 // Los números de balance están en config.js (trajes, naves, mochila) y en
 // datos.json → "modelo". Se verifican con pruebas/balance.html.
 // ===========================================================================
+import { LIMITES, LIMITE_RADIACION } from "../estado.js";
+
 const KM_SOL_TIERRA = 149_600_000;
 
 // Horas que tarda la nube (CME) en llegar desde el Sol: distancia ÷ velocidad
@@ -157,6 +159,53 @@ export function estimarCruceCrater(datos, estado) {
   const segundos = J.largo_px / vel;
   const porSegundo = (estado.traje?.gastoO2 ?? 1.6) * J.o2_por_segundo_traje + J.o2_calefaccion;
   return Math.round(segundos * porSegundo * 1.15);
+}
+
+// ---------------------------------------------------------------- cierre de la misión
+// Rescate: aire → reparar la radio → 2 de 3 mensajes → regreso. Las mismas
+// funciones sirven para jugar y para el "¿Y si…?" del Final.
+export const MENSAJES = ["tormenta", "ayuda", "hielo"];
+
+// Reparar la radio: poco oxígeno con el kit de la mochila, más sin él
+export const costoRadio = (datos, e) => ({ oxigeno: -(e.lleva("radio") ? datos.modelo.radio_con_kit_o2 : datos.modelo.radio_sin_kit_o2) });
+
+// Regreso: el mensaje "vengan por nosotros" manda una nave de apoyo (gasta menos
+// oxígeno); sin botiquín, Itzel agotada camina más despacio.
+export function efectosRegreso(datos, e, id, mensajes = []) {
+  const ef = opcionesRescate(datos, e).regreso[id].efectos;
+  let oxigeno = ef.oxigeno;
+  if (mensajes.includes("ayuda")) oxigeno = Math.round(oxigeno * datos.rescate_aire.ayuda_factor);
+  if (!e.lleva("botiquin")) oxigeno -= datos.modelo.sin_botiquin_o2;
+  return { oxigeno, radiacion: ef.radiacion };
+}
+
+// Copia del estado para recalcular sin tocar la partida real
+export function copiaEstado(e, cambios = {}) {
+  return {
+    oxigeno: e.oxigeno, radiacion: e.radiacion, escudo: e.escudo, traje: e.traje, nave: e.nave,
+    mochila: [...(e.mochila || [])], misiones: e.misiones || {}, ...cambios,
+    lleva(id) { return this.mochila.includes(id); },
+    cambiar(r, d) { const [mn, mx] = LIMITES[r] || [-Infinity, Infinity]; return (this[r] = Math.max(mn, Math.min(mx, (this[r] || 0) + d))); }
+  };
+}
+
+// Juega el cierre completo desde antes de la decisión del aire
+export function simularCierre(datos, inicio, { aire, mensajes, regreso }) {
+  const e = copiaEstado(inicio);
+  aplicar(e, opcionesRescate(datos, e).aire[aire].efectos);
+  aplicar(e, costoRadio(datos, e));
+  aplicar(e, efectosRegreso(datos, e, tieneRover(e) ? regreso : "caminar", mensajes));
+  return e;
+}
+
+// Cuál de los cuatro finales: evacuación (sin oxígeno o con radiación al
+// límite) o, si todos están a salvo, según los dos mensajes enviados.
+export function finalDeMision(e, mensajes) {
+  if (e.oxigeno <= 0 || e.radiacion >= LIMITE_RADIACION) return "evacuacion";
+  if (!mensajes) return "completa";
+  if (!mensajes.includes("tormenta")) return "sin_aviso";
+  if (!mensajes.includes("hielo")) return "hielo_secreto";
+  return "completa";
 }
 
 export function costosRescate(datos, estado, repararRadio) {

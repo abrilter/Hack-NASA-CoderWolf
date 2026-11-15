@@ -1,12 +1,17 @@
-// Final: resultado, bitácora y fuentes NASA. Dueño: Rol 5.
+// Final: cuatro finales, bitácora en cadena, "¿Y si…?", la planta, fuentes NASA
+// e insignia. Dueño: Rol 5.
+// Finales (ninguno castiga), según oxígeno, radiación y los 2 mensajes del Rescate:
+//   misión completa (tormenta + hielo) · hielo en secreto (tormenta + ayuda)
+//   rescate sin aviso (ayuda + hielo) · evacuación (oxígeno 0 o radiación 100:
+//   Chispa explica qué decisión lo causó).
 // Cada fuente dice si es "Dato real" o "Dato de ejemplo" (nunca se presenta un
 // ejemplo como real) y se puede tocar para abrir su página.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
 import { titulo, texto, boton } from "../ui.js";
 import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
+import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
 
-const LIMITE_TEXTO = 134;          // la bitácora no puede bajar de aquí (abajo van el resumen y los botones)
 const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 // ---------------------------------------------------------------- insignia (A-10)
@@ -82,6 +87,7 @@ export function fuentesNASA(d) {
     d.luz_polo_sur && { tema: "Luz en el polo sur", ...d.luz_polo_sur },
     d.crater_helado && { tema: "Frío en el cráter", ...d.crater_helado.temperatura },
     d.itzel_estacion && { tema: d.itzel_estacion.tema, ...d.itzel_estacion },
+    d.planta_espacio && { tema: d.planta_espacio.tema, ...d.planta_espacio },
     ...(d.fuentes_extra || []).filter(f => f.tema)
   ].filter(Boolean);
   // Una fuente sin nombre todavía ("COMPLETAR") siempre cuenta como ejemplo
@@ -97,41 +103,175 @@ export class Final extends Phaser.Scene {
   create() {
     crearTexturasEquipo(this);                    // chispa_px, planta y naves (por si se abre en modo prueba)
     crearTextura(this, "luna_px", LUNA, { k: CONTORNO, M: 0xc2c3c7, N: 0x566c86 });
-    const causa = estado.causaDerrota();          // "oxigeno", "radiacion" o null
-    const exito = !causa;
-    this.exito = exito;
     this.t = estado.textos.final;
-    const t = this.t;
+    const t = this.t, r = estado.misiones?.rescate;
+    this.final = estado.causaDerrota() ? "evacuacion" : finalDeMision(estado, r?.mensajes?.length ? r.mensajes : null);
+    this.exito = this.final === "completa";       // insignia dorada con estrellas
+    const f = t.finales[this.final];
 
-    titulo(this, exito ? t.titulo_exito : t.titulo_fallo, 8);
-    const resultado = texto(this, ANCHO / 2, 26, `${estado.nombreClave}: ${exito ? t.exito : t.fallo}`, { ancho: 290 });
-
-    // Si se perdió, Chispa explica por qué (con los números de la partida)
-    let y = resultado.y + resultado.height + 4;
-    if (causa) {
-      const porQue = llenar(t["causa_" + causa], { oxigeno: Math.round(estado.oxigeno), radiacion: Math.round(estado.radiacion) });
-      this.add.image(18, y + 6, "chispa_px");
-      const chispa = texto(this, 30, y, porQue, { tam: 6, ancho: 270, origenX: 0, align: "left", color: "#ffcd75" });
-      y = chispa.y + chispa.height + 4;
-    }
-    this.bitacora(Math.max(y, 56));
+    titulo(this, f.titulo, 6);
+    this.dibujarFinal(this.final);
+    const cuerpo = texto(this, 126, 24, `${estado.nombreClave || "Astronauta"}: ${f.texto}`, { tam: 6, ancho: 186, origenX: 0, align: "left" });
+    const voz = this.final === "evacuacion" ? this.porQueEvacuacion() : f.voz;
+    if (this.final === "evacuacion" || this.final === "completa") this.add.image(132, cuerpo.y + cuerpo.height + 8, "chispa_px");
+    texto(this, 142, cuerpo.y + cuerpo.height + 3, voz, { tam: 6, ancho: 170, origenX: 0, align: "left", color: "#ffcd75" });
 
     // Resumen honesto de las fuentes: cuántas son reales y cuántas de ejemplo
     const fuentes = fuentesNASA(estado.datos);
-    const reales = fuentes.filter(f => !f.ejemplo).length;
-    texto(this, ANCHO / 2, 140, llenar(t.resumen_fuentes, { reales, ejemplo: fuentes.length - reales }),
-      { tam: 6, color: COLOR.tenue, ancho: 300 });
+    const reales = fuentes.filter(x => !x.ejemplo).length;
+    texto(this, ANCHO / 2, 129, llenar(t.resumen_fuentes, { reales, ejemplo: fuentes.length - reales }),
+      { tam: 5, color: COLOR.tenue, ancho: 300 });
 
-    // Mi insignia (con una mini insignia dentro del botón) · Fuentes · Otra vez
-    boton(this, 56, 165, "   " + t.mi_insignia, () => this.abrirInsignia(), 98);
+    // Bitácora · ¿Y si…? · La planta / Fuentes · Mi insignia · Otra vez
+    boton(this, 56, 145, t.b_bitacora, () => this.panelCadena(), 98);
+    boton(this, 160, 145, t.b_ysi, () => this.panelYSi(), 98);
+    boton(this, 264, 145, t.b_planta, () => this.panelPlanta(), 98);
+    boton(this, 56, 167, "   " + t.mi_insignia, () => this.abrirInsignia(), 98);
     this.miniInsignia();
-    boton(this, 160, 165, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
-    boton(this, 264, 165, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
+    boton(this, 160, 167, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
+    boton(this, 264, 167, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
   }
 
   miniInsignia() {
     this.mini?.destroy();
-    this.mini = dibujarInsignia(this, 20, 165, 6.5, estado.insignia || INSIGNIA_INICIAL).setDepth(10);
+    this.mini = dibujarInsignia(this, 20, 167, 6.5, estado.insignia || INSIGNIA_INICIAL, this.exito).setDepth(10);
+  }
+
+  // ---------------------------------------------------------------- ilustración de cada final
+  dibujarFinal(id) {
+    const g = this.add.graphics(), X = 8, Y = 22, W = 112, H = 98;
+    g.fillStyle(0x05070f).fillRect(X, Y, W, H);
+    g.lineStyle(1, 0x333c57).strokeRect(X + 0.5, Y + 0.5, W - 1, H - 1);
+    for (let i = 0; i < 24; i++) g.fillStyle(0x94b0c2).fillRect(X + 3 + (i * 37) % (W - 6), Y + 3 + (i * 23) % (H - 6), 1, 1);
+    const cx = X + W / 2, cy = Y + H / 2 + 6;
+    const tierra = () => {
+      g.fillStyle(0x29adff).fillCircle(cx, cy, 24);
+      g.fillStyle(0x38b764).fillCircle(cx - 8, cy - 5, 7).fillCircle(cx + 9, cy + 8, 5).fillCircle(cx + 6, cy - 12, 3);
+    };
+    if (id === "completa") {
+      tierra();
+      // auroras: cintas verdes y moradas sobre el polo (en vez de apagones)
+      [[0x5cff8a, 0], [0xa47de0, 4], [0x5cff8a, 8]].forEach(([c, d]) => {
+        for (let x = -18; x <= 18; x++) g.fillStyle(c, 0.8).fillRect(cx + x, cy - 30 - d + Math.round(Math.sin(x / 4 + d) * 2), 1, 2);
+      });
+      const brillo = this.add.circle(cx + 30, Y + 12, 4, 0xffcd75);
+      this.tweens.add({ targets: brillo, scale: 1.6, alpha: 0.4, duration: 600, yoyo: true, repeat: -1 });
+    } else if (id === "sin_aviso") {
+      tierra();
+      // satélites: algunos fallan unas horas
+      [[-34, -26, true], [30, -30, false], [36, 16, true], [-36, 20, false]].forEach(([dx, dy, falla]) => {
+        g.fillStyle(0xc2c3c7).fillRect(cx + dx - 2, cy + dy - 1, 4, 2);
+        g.fillStyle(0x29adff).fillRect(cx + dx - 5, cy + dy - 1, 2, 2).fillRect(cx + dx + 3, cy + dy - 1, 2, 2);
+        if (falla) {
+          const x = this.add.text(cx + dx, cy + dy - 8, "✕", { fontSize: "6px", color: "#ff5c5c" }).setOrigin(0.5).setResolution(4);
+          this.tweens.add({ targets: x, alpha: 0.2, duration: 400, yoyo: true, repeat: -1 });
+        }
+      });
+    } else if (id === "hielo_secreto") {
+      // la Luna con hielo escondido en un cráter
+      g.fillStyle(0xc2c3c7).fillCircle(cx, cy, 26);
+      g.fillStyle(0x566c86).fillCircle(cx - 8, cy + 6, 6).fillCircle(cx + 10, cy - 8, 4);
+      [[-10, 7], [-6, 4], [-8, 9]].forEach(([dx, dy]) => {
+        const h = this.add.rectangle(cx + dx, cy + dy, 1, 1, 0xbff3ff);
+        this.tweens.add({ targets: h, alpha: 0.1, duration: 500 + dx * -30, yoyo: true, repeat: -1 });
+      });
+    } else {
+      // evacuación: una nave automática baja por todos
+      g.fillStyle(0x94b0c2).fillRect(X + 1, Y + H - 18, W - 2, 17);
+      g.fillStyle(0xc2c3c7).fillRect(X + 1, Y + H - 18, W - 2, 1);
+      const nave = this.add.image(cx, Y + 20, "nave_pequena").setScale(0.6).setOrigin(0.5, 1);
+      this.tweens.add({ targets: nave, y: Y + H - 18, duration: 2600, ease: "Sine.easeOut" });
+      this.add.image(cx - 26, Y + H - 18, "chispa_px").setOrigin(0.5, 1);
+    }
+  }
+
+  // ---------------------------------------------------------------- evacuación: ¿qué decisión lo causó?
+  porQueEvacuacion() {
+    const recurso = estado.oxigeno <= 0 ? "oxigeno" : "radiacion";
+    const pasos = this.cadena().filter(p => p[recurso]);
+    const peor = pasos.sort((a, b) => Math.abs(b[recurso]) - Math.abs(a[recurso]))[0];
+    if (!peor) return llenar(this.t["causa_" + recurso], { oxigeno: Math.round(estado.oxigeno), radiacion: Math.round(estado.radiacion) });
+    return llenar(this.t.finales.evacuacion.voz, {
+      recurso: this.t["recurso_" + recurso], decision: peor.decision,
+      valor: recurso === "oxigeno" ? `${peor.oxigeno} O2` : `+${peor.radiacion} radiación`
+    });
+  }
+
+  // ---------------------------------------------------------------- bitácora en cadena
+  // Cada decisión con su consecuencia, de la mochila al último mensaje
+  cadena() {
+    const t = this.t, tx = estado.textos, m = estado.misiones || {}, pasos = [];
+    const efectos = (o2, rad) => rad > 0 ? llenar(t.c_efectos, { o2, rad }) : llenar(t.c_solo_o2, { o2 });
+    const add = (decision, consecuencia, oxigeno = 0, radiacion = 0) => pasos.push({ decision, consecuencia, oxigeno, radiacion });
+    const nombres = tx.centro_control?.nombres || {};
+    if (estado.mochila?.length) add(llenar(t.c_mochila, { objetos: estado.mochila.map(id => nombres[id] || id).join(", ") }),
+      estado.lleva("linterna") ? t.c_linterna_si : t.c_linterna_no);
+    if (estado.traje && estado.nave) add(llenar(t.c_equipo, {
+      traje: tx.equipo?.opciones?.[estado.traje.id]?.nombre || estado.traje.id,
+      nave: tx.equipo?.opciones?.[estado.nave.id]?.nombre || estado.nave.id
+    }), llenar(t.c_equipo_efecto, { n: Math.round(proteccion(estado) * 10) }));
+    if (m.ruta) add(tx.ruta?.rutas?.[m.ruta.id]?.nombre || m.ruta.id, efectos(m.ruta.oxigeno, m.ruta.radiacion), m.ruta.oxigeno, m.ruta.radiacion);
+    if (m.crater) add(t.c_crater, llenar(t.c_crater_efecto, { o2: m.crater.oxigeno, choques: m.crater.choques }), m.crater.oxigeno);
+    const huellas = estado.bitacora.find(b => b.startsWith("Huellas"));
+    if (huellas) add(huellas, "");
+    if (m.tormenta) add(tx.tormenta.opciones[m.tormenta.eleccion].nombre, efectos(m.tormenta.oxigeno, m.tormenta.radiacion), m.tormenta.oxigeno, m.tormenta.radiacion);
+    const r = m.rescate;
+    if (r?.aire) add(tx.rescate.aire[r.aire].nombre, efectos(r.aireEfectos.oxigeno, r.aireEfectos.radiacion), r.aireEfectos.oxigeno, r.aireEfectos.radiacion);
+    if (r?.radio) add(tx.rescate.nota_radio.split(" (")[0], llenar(t.c_solo_o2, { o2: r.radio }), r.radio);
+    (r?.mensajes || []).forEach(id => add(llenar(t.c_mensaje, { nombre: tx.rescate.mensajes[id].nombre }), tx.rescate.mensajes[id].efecto));
+    if (r?.regreso) add(tx.rescate.regreso[r.regreso].nombre, efectos(r.regresoEfectos.oxigeno, r.regresoEfectos.radiacion), r.regresoEfectos.oxigeno, r.regresoEfectos.radiacion);
+    return pasos;
+  }
+
+  panelCadena() {
+    const pasos = this.cadena();
+    this.panel(this.t.titulo_cadena, pasos.length
+      ? pasos.map(p => ({ texto: "▸ " + p.decision + (p.consecuencia ? "  →  " + p.consecuencia : ""), color: p.radiacion > 0 || p.oxigeno < -15 ? "#ffcd75" : COLOR.texto }))
+      : [{ texto: this.t.cadena_vacia, color: COLOR.tenue }]);
+  }
+
+  // ---------------------------------------------------------------- ¿Y si…?
+  // Vuelve a jugar el cierre (aire → radio → mensajes → regreso) cambiando una
+  // decisión clave por la contraria: un mensaje, el aire o el regreso. Se muestra
+  // la primera que cambia el final; si ninguna lo cambia, la del aire.
+  panelYSi() {
+    const t = this.t, r = estado.misiones?.rescate, tx = estado.textos.rescate;
+    if (!r?.inicio || !r.aire || !r.regreso || r.mensajes?.length !== 2) return this.panel(t.titulo_ysi, [{ texto: t.ysi_vacio, color: COLOR.tenue }]);
+    const base = { ...estado, ...r.inicio, mochila: estado.mochila, misiones: estado.misiones };
+    const real = { aire: r.aire, mensajes: r.mensajes, regreso: r.regreso };
+    const jugar = c => { const e = simularCierre(estado.datos, base, c); return { e, final: finalDeMision(e, c.mensajes) }; };
+    const nombreFinal = id => t.finales[id].titulo, nm = id => tx.mensajes[id].nombre;
+    const fila = (plantilla, campos, x) => llenar(plantilla, { ...campos, o2: Math.round(x.e.oxigeno), rad: Math.round(x.e.radiacion), final: nombreFinal(x.final) });
+    const yo = jugar(real);
+    const otroAire = r.aire === "manguera" ? "reserva" : "manguera", otroRegreso = r.regreso === "rover" ? "caminar" : "rover";
+    const falta = ["tormenta", "ayuda", "hielo"].find(id => !r.mensajes.includes(id));
+    const otras = [
+      ...r.mensajes.map(viejo => ({ c: { ...real, mensajes: r.mensajes.map(id => (id === viejo ? falta : id)) },
+        real: fila(t.ysi_real_m, { a: nm(r.mensajes[0]), b: nm(r.mensajes[1]) }, yo), otra: x => fila(t.ysi_otra_m, { nuevo: nm(falta), viejo: nm(viejo) }, x) })),
+      { c: { ...real, aire: otroAire },
+        real: fila(t.ysi_real, { opcion: tx.aire[r.aire].nombre }, yo), otra: x => fila(t.ysi_otra, { opcion: tx.aire[otroAire].nombre }, x) },
+      ...(estado.misiones?.rocas?.dejoRover === true ? [] : [{ c: { ...real, regreso: otroRegreso },
+        real: fila(t.ysi_real, { opcion: tx.regreso[r.regreso].nombre }, yo), otra: x => fila(t.ysi_otra, { opcion: tx.regreso[otroRegreso].nombre }, x) }])
+    ].map(o => ({ ...o, ...jugar(o.c) }));
+    const clave = otras.find(o => o.final !== yo.final) || otras.find(o => o.c.aire !== real.aire);
+    const cambia = clave.final !== yo.final;
+    this.panel(t.titulo_ysi, [
+      { texto: t.ysi_explica, color: COLOR.tenue },
+      { texto: clave.real },
+      { texto: clave.otra(clave), color: "#7ee6ff" },
+      { texto: cambia ? t.ysi_cambia : t.ysi_igual, color: cambia ? "#ffcd75" : COLOR.tenue }
+    ]);
+  }
+
+  // ---------------------------------------------------------------- la planta
+  panelPlanta() {
+    const t = this.t, p = estado.datos.planta_espacio;
+    const capa = this.panel(t.titulo_planta, [
+      { texto: t.planta_itzel, color: "#ffcd75" },
+      { texto: p.texto },
+      { texto: `${p.ejemplo ? "⚠ " + t.etiqueta_ejemplo : "✓ " + t.etiqueta_real} · ${p.fuente} · ${p.fecha} ↗`, color: "#5cff8a", link: p.link }
+    ]);
+    capa.add([this.add.image(ANCHO / 2 - 10, 140, "planta").setScale(3).setOrigin(0.5, 1), this.add.image(ANCHO / 2 + 22, 136, "chispa_px")]);
   }
 
   // ---------------------------------------------------------------- diseñador de insignia
@@ -189,27 +329,6 @@ export class Final extends Phaser.Scene {
     c.add([listo.caja, listo.etiqueta]);
   }
 
-  // Bitácora de decisiones: se achica la letra si no cabe; si aun así no cabe,
-  // se muestran las primeras líneas y un botón para verla completa.
-  bitacora(y) {
-    const lineas = estado.bitacora.map(b => "- " + b);
-    for (const tam of [6, 5]) {
-      const txt = texto(this, ANCHO / 2, y, lineas.join("\n"), { tam, ancho: 290, align: "left" });
-      if (y + txt.height <= LIMITE_TEXTO) return;
-      txt.destroy();
-    }
-    let n = lineas.length;
-    let txt;
-    do {
-      txt?.destroy();
-      n--;
-      txt = texto(this, ANCHO / 2, y, lineas.slice(0, n).join("\n"), { tam: 5, ancho: 290, align: "left" });
-    } while (n > 1 && y + txt.height > LIMITE_TEXTO - 8);
-    const mas = texto(this, ANCHO / 2, txt.y + txt.height + 1, llenar(this.t.bitacora_mas, { n: lineas.length - n }),
-      { tam: 5, color: "#5cff8a" }).setInteractive({ useHandCursor: true });
-    mas.on("pointerdown", () => this.panel(this.t.titulo_bitacora, lineas.map(l => ({ texto: l }))));
-  }
-
   panelFuentes(fuentes) {
     const filas = fuentes.map(f => ({
       texto: `${f.ejemplo ? "⚠ " + this.t.etiqueta_ejemplo : "✓ " + this.t.etiqueta_real} · ${f.tema}: ${f.fuente}` +
@@ -251,5 +370,6 @@ export class Final extends Phaser.Scene {
     }
     const cerrar = boton(this, ANCHO / 2, ALTO - 18, this.t.cerrar, () => capa.destroy(), 90);
     capa.add([cerrar.caja, cerrar.etiqueta]);
+    return capa;
   }
 }

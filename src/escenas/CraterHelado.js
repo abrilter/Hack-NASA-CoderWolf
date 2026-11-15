@@ -342,6 +342,8 @@ export class CraterHelado extends Phaser.Scene {
     this.presionado = false;
     const t = this.t, pct = this.tiempo ? Math.round(100 * this.tCalef / this.tiempo) : 100;
     estado.bitacora.push(llenar(t.bitacora, { o2: this.o2Gastado, choques: this.choques, limpiezas: this.limpiezas }));
+    // registro para la bitácora en cadena del Final
+    estado.misiones.crater = { oxigeno: -this.o2Gastado, choques: this.choques, limpiezas: this.limpiezas };
     if (sinOxigeno) return this.time.delayedCall(600, () => this.scene.start("Final"));
 
     const consejo = this.choques ? t.consejo_choques : pct < 50 ? t.consejo_frio : t.consejo_bien;

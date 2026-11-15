@@ -174,7 +174,8 @@
     "rover_o2": 12,
     "rover_horas": 1,
     "caminar_horas": 4,
-    "caminar_dos": 1.2
+    "caminar_dos": 1.2,
+    "ayuda_factor": 0.5
   },
 
   "itzel_estacion": {
@@ -183,6 +184,16 @@
     "texto": "En la Estación Espacial, los astronautas pierden hueso y músculo si no hacen ejercicio. En la Luna aún se investiga.",
     "fuente": "NASA OSDR (estudios en la Estación Espacial)",
     "link": "https://osdr.nasa.gov/bio/",
+    "ejemplo": false
+  },
+
+  "planta_espacio": {
+    "_nota": "Verificado en la metadata de OSDR (osdr.nasa.gov/osdr/data/osd/meta/38): 'Arabidopsis seeds were flown to the International Space Station and allowed to germinate and grow for 3 days in microgravity'. Misión SpaceX-5, experimento BRIC-20.",
+    "tema": "Plantas que crecen en el espacio",
+    "texto": "En 2015, semillas de Arabidopsis viajaron a la Estación Espacial (misión SpaceX-5). Allá germinaron y crecieron 3 días sin gravedad.",
+    "fuente": "NASA OSDR · OSD-38 (BRIC-20)",
+    "fecha": "2015",
+    "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-38",
     "ejemplo": false
   }
 }
