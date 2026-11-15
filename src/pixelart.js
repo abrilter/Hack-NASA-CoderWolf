@@ -75,17 +75,17 @@ const TORSO_BLINDADO = [
 // Ligero: casco de burbuja transparente (se ve la cara) y cuerpo delgado.
 const CASCO_LIGERO = [
   ".....kkkkkk.....",
-  "...kkccvvvvkk...",
-  "..kcvvvvvvvvvk..",
-  ".kcvvvvvvvvvvvk.",
-  ".kvvvvSSSSvvvvk.",
-  ".kvvvSSSSSSvvvk.",
-  ".kvvvSSeSSeSvvk.",
-  ".kvvvSSSSSSSvvk.",
-  "..kvvvSSSSSvvk..",
-  "...kkvvvvvvkk...",
-  "...kkkCCCCkkk..."
-];
+  "....kccvvvvk....",
+  "...kcvvvvvvvk...",
+  "..kcvvSSSSvvvk..",
+  "..kvvSSSSSSvvk..",
+  "..kvvSeSSeSvvk..",
+  "..kvvSSSSSSvvk..",
+  "..kvvvSSSSvvvk..",
+  "...kvvvvvvvvk...",
+  "....kkkkkkkk....",
+  "....kkCCCCkk...."
+]
 const TORSO_LIGERO = [
   "....kkCCCCkk....",
   "...kAkAAAAkAk...",
@@ -130,13 +130,13 @@ export const COLORES_TRAJE = {
 
 function paletaAstro(colores, visorVacio = false, id = "") {
   const burbuja = id === "ligero";                       // vidrio claro: se ve la cara
-  const visor = burbuja ? 0xa8e4ff : 0x1d2b53;
+  const vidrio = burbuja ? 0xa8e4ff : 0x1d2b53;
   return {
     k: K, ...colores,
-    v: visorVacio ? (burbuja ? 0x29366f : 0x1a1c2c) : visor,
+    v: visorVacio ? (burbuja ? 0x94d8f0 : 0x1a1c2c) : vidrio,
     c: visorVacio ? (burbuja ? 0xffffff : 0x333c57) : (burbuja ? 0xffffff : 0x7ee6ff),
-    S: visorVacio ? 0x29366f : 0xf0bf94,                 // cara
-    e: visorVacio ? 0x29366f : 0x1a1c2c,                 // ojos
+    S: visorVacio ? 0x94d8f0 : 0xf0bf94,                 // cara (en el maniquí: vidrio vacío)
+    e: visorVacio ? 0x94d8f0 : 0x1a1c2c,                 // ojos
     y: 0x5cff8a, r: 0xff5c5c
   };
 }
@@ -288,6 +288,30 @@ const CHISPA = [
   "....c..c...."
 ];
 const PALETA_CHISPA = { k: K, Y: 0xffcd75, O: 0xef7d57, r: 0xff5c5c, v: 0x5cff8a, c: 0xbff3ff };
+// Bit: el robot guía del hangar. Mismo dibujo que Chispa, en azul.
+const PALETA_BIT = { k: K, Y: 0x7ee6ff, O: 0x29adff, r: 0xffcd75, v: 0x5cff8a, c: 0xbff3ff };
+
+// Palomita verde para las flechas del piso y el indicador
+const PALOMITA = [
+  "..........kk",
+  ".........kgk",
+  "........kggk",
+  ".......kggk.",
+  "kk....kggk..",
+  "kggk.kggk...",
+  ".kggkggk....",
+  "..kgggk.....",
+  "...kkk......"
+];
+const PALOMITA_CHICA = [
+  ".....kk",
+  "....kgk",
+  "kk.kgk.",
+  "kgkgk..",
+  ".kgk...",
+  "..k...."
+];
+const PALETA_PALOMITA = { k: K, g: 0x5cff8a };
 
 // ----------------------------------------------------------------- iconos piso
 const ICONO_TRAJE = [
@@ -374,6 +398,9 @@ export function crearTexturasEquipo(escena) {
   crearTextura(escena, "nave_grande", NAVE_GRANDE, PALETA_NAVE(0xff5c5c, 0xb13e53));
   crearTextura(escena, "nave_pequena", NAVE_PEQUENA, PALETA_NAVE(0xffa300, 0xc4680a));
   crearTextura(escena, "chispa_px", CHISPA, PALETA_CHISPA);
+  crearTextura(escena, "bit", CHISPA, PALETA_BIT);
+  crearTextura(escena, "palomita", PALOMITA, PALETA_PALOMITA);
+  crearTextura(escena, "palomita_chica", PALOMITA_CHICA, PALETA_PALOMITA);
   crearTextura(escena, "icono_traje", ICONO_TRAJE, PALETA_ICONO);
   crearTextura(escena, "icono_cohete", ICONO_COHETE, PALETA_ICONO);
   crearTextura(escena, "cono", CONO, PALETA_DECORADO);

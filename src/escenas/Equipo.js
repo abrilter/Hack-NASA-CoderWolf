@@ -2,17 +2,18 @@
 // Una sola sala, el hangar, vista 3/4. El astronauta camina (clic en el piso o
 // flechas). Al acercarse a un traje o a una nave aparece una burbuja con su
 // ventaja (verde) y su costo (rojo); clic o Enter lo elige. Se puede cambiar.
-// Antes de decidir puede probar: la báscula (con el blindado camina más lento)
-// y el arco de radiación (ve cuántos puntitos atraviesan el traje). La pantalla
-// del polo sur da una pista. Con traje y nave elegidos, la nave baja una rampa
-// y el niño sube para despegar → Misión 4.
+// Antes de decidir puede probar: la báscula (peso en la Tierra y en la Luna;
+// con el blindado camina más lento) y el arco de radiación (ve cuántos
+// puntitos atraviesan el traje). El radar muestra un dato real del polo sur.
+// Bit, el robot del hangar, lo acompaña (Chispa está en la Luna con Itzel).
+// Con traje y nave elegidos, la nave baja una rampa y el niño sube para
+// despegar → Misión 4.
 // Figuras en pixel art hechas con mapas de letras (src/pixelart.js).
 // TODO(Rol 3): reemplazar por PNG cuando estén listos.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
 import { texto } from "../ui.js";
 import { crearTexturasEquipo } from "../pixelart.js";
-import { horasDeLlegada } from "../modelo/simulacion.js";
 
 // TODO(Rol 4): ajustar valores para que ninguna opción sea mejor en todo
 // peso: kg del traje (solo se muestra en la báscula y cambia la velocidad al caminar)
@@ -26,34 +27,58 @@ const NAVES = [
 ];
 const O2_TANQUE = 20;        // si la mochila trae el tanque de oxígeno
 const PESO_NINO = 30;        // kg del niño sin traje (para la báscula)
+const GRAVEDAD_LUNA = 1 / 6; // en la Luna se pesa la sexta parte
 const LENTITUD_BLINDADO = 0.6;
 // Probabilidad de que el traje frene un puntito de radiación en el arco
 const BLOQUEO = { base: 0, ligero: 0.35, blindado: 0.85 };
 
-const VERDE = 0x5cff8a, AMARILLO = 0xffcd75;
+const VERDE = 0x5cff8a, ROJO = 0xff5c5c, AMARILLO = 0xffcd75;
+const TAM = 6;               // un solo tamaño de letra para todos los rótulos
 const PARED = 56;            // donde termina la pared del fondo y empieza el piso
-const LIMITES = { x1: 12, x2: ANCHO - 12, y1: 92, y2: 172 };   // pies del astronauta
+const LIMITES = { x1: 12, x2: ANCHO - 14, y1: 100, y2: 172 };  // pies del astronauta
 const VELOCIDAD = 70;        // px por segundo
-const CERCA = 24;            // radio de la zona de proximidad
-const COMPUERTA = { x: 306, y: 146 };
+const CERCA = 14;            // radio normal de la zona de proximidad
 
-// Dónde va cada cosa nueva (coordenadas de 320×180)
+// Dónde va cada cosa (coordenadas de 320×180)
 const LUGAR = {
-  entrada:  { x: 140, y: 150 },
-  bascula:  { x: 96, y: 156 },
-  arco:     { x: 168, y: 156 },
-  pantalla: { x: 134, y: 96 },      // en el piso, frente al radar del polo sur
-  reloj:    { x: 248, y: 33, w: 62, h: 16 }
+  entrada:  { x: 160, y: 150 },
+  // vestidor: cápsulas completas sobre el piso, rejilla pegada a sus bases
+  capsulas: [32, 88], capsula: { arriba: 58, vidrio: 63, base: 93, piso: 100 }, zonaCapsula: 122,
+  rejilla:  { x: 17, y: 100, w: 86, h: 16 },
+  // pared: radar con la posición de Itzel (la pantalla interactiva)
+  radar:    { x: 120, y: 18, w: 28, h: 22, cx: 134, cy: 28 },
+  hud:      { x: 256, y: 33, w: 60, h: 15 },
+  // prueba de traje (abajo a la izquierda)
+  bascula:  { x: 30, y: 166 },
+  arco:     { x: 70, y: 166 },
+  // plataformas
+  naves:    { grande: 204, pequena: 272 }, pies: 112,
+  tecnico:  { x: 172, y: 110 },
+  caja:     { x: 152, y: 110 },
+  // recorrido del técnico alrededor de las naves (ida y vuelta, sin cruzar nada)
+  rondaTecnico: [[170, 108], [170, 142], [238, 142], [238, 126], [238, 142], [284, 142], [284, 124]],
+  compuerta:{ x: 306, y: 146 }
 };
+// Cosas que ocupan piso (rectángulo de los pies: x1, y1, x2, y2). Nadie las atraviesa:
+// al hacer clic, el astronauta calcula un camino que las rodea.
+const OBSTACULOS = [
+  [17, 56, 47, 100], [73, 56, 103, 100],        // cápsulas
+  [180, 98, 228, 119], [248, 98, 296, 119],     // naves sobre sus plataformas
+  [300, 85, 319, 105],                          // cajas
+  [236, 113, 244, 121],                         // cono
+  [146, 103, 158, 111],                         // caja de herramientas
+  [28, 148, 33, 162],                           // poste de la báscula
+  [56, 158, 60, 167], [80, 158, 84, 167],       // columnas del arco
+  [295, 128, 319, 165]                          // compuerta
+];
+const MARGEN = { x: 5, arriba: 2, abajo: 3 };   // medio cuerpo del astronauta
+const CELDA = 4;                                // tamaño de la cuadrícula para buscar caminos
+
 // Luces de posición y toberas de cada nave (coordenadas de la sala)
 const NAVE_EXTRA = {
   grande:  { luces: [[189, 72], [217, 72], [203, 46]], tobera: [204, 106] },
   pequena: { luces: [[258, 103], [286, 103], [271, 62]], tobera: [272, 107] }
 };
-const TECNICOS = [
-  { id: "tecnico",  ruta: [[22, 128], [92, 128]] },
-  { id: "tecnico2", ruta: [[236, 154], [288, 154]] }
-];
 
 export class Equipo extends Phaser.Scene {
   constructor() { super("Equipo"); }
@@ -64,19 +89,20 @@ export class Equipo extends Phaser.Scene {
     this.naveElegida = null;
     this.activa = null;          // zona en la que está parado el astronauta
     this.saliendo = false;
+    this.zonas = [];
 
     crearTexturasEquipo(this);
     this.dibujarSala();
     this.decorarPiso();
-    this.crearObjetos();
     this.crearVestidor();
     this.crearHangar();
     this.crearCompuerta();
     this.crearEstaciones();
     this.crearFlechas();
     this.crearPersonajes();
-    this.crearTecnicos();
-    this.crearBurbuja();
+    this.crearTecnico();
+    this.crearBurbujas();
+    this.crearIndicador();
     this.crearAmbiente();
 
     // Entrada: camina desde abajo hasta el centro
@@ -97,9 +123,13 @@ export class Equipo extends Phaser.Scene {
     this.input.keyboard.on("keydown-SPACE", () => this.usarZona());
   }
 
+  // Rótulo con el tamaño único de la escena
+  rotulo(x, y, s, color = "#eef1ff", profundidad = -8) {
+    return texto(this, x, y, s, { tam: TAM, color }).setDepth(profundidad);
+  }
+
   // ---------------------------------------------------------------- sala
-  // Fondo estilo "centro de control": pared de paneles azules, monitores,
-  // consola, ventanal redondeado con la Luna y la Tierra, piso de baldosas.
+  // Pared: paneles azules, letrero del hangar, tres monitores y ventanal con la Luna.
   dibujarSala() {
     const g = this.add.graphics();
     const r = (color, x, y, w, h) => g.fillStyle(color).fillRect(x, y, w, h);
@@ -118,43 +148,38 @@ export class Equipo extends Phaser.Scene {
     r(0x1a1c2c, 0, PARED - 6, ANCHO, 6);
     for (let x = 2; x < ANCHO; x += 8) r(0xffcd75, x, PARED - 4, 4, 3);
 
-    // letrero "Centro de Control" (arriba a la izquierda) con la Luna
-    r(0x1a1c2c, 6, 1, 78, 22); r(0x1d2650, 7, 2, 76, 20); marco(7, 2, 76, 20, 0x4fd1ff); marco(8, 3, 74, 18, 0x29366f);
-    g.fillStyle(0x94b0c2).fillCircle(18, 12, 6);
-    r(0x566c86, 15, 9, 3, 2); r(0x566c86, 19, 13, 2, 2); r(0x566c86, 16, 15, 2, 1);
-    // cartel del título de la misión (centro arriba)
-    r(0x1a1c2c, 88, 1, 146, 15); r(0x1d2650, 89, 2, 144, 13); marco(89, 2, 144, 13, 0xffcd75);
-    r(0xffa300, 95, 5, 4, 7); r(0xffcd75, 96, 4, 2, 1); r(0x29adff, 96, 6, 2, 2);   // cohete
-    // ventanal redondeado (arriba a la derecha) con la Tierra y la superficie de la Luna
+    // letrero "Hangar de la Estación Terrestre" en dos renglones (esquina superior izquierda)
+    r(0x1a1c2c, 4, 11, 86, 24); r(0x1d2650, 5, 12, 84, 22); marco(5, 12, 84, 22, 0xffcd75);
+    r(0xffa300, 11, 19, 4, 7); r(0xffcd75, 12, 18, 2, 1); r(0x29adff, 12, 20, 2, 2);  // cohete
+    // ventanal redondeado (arriba a la derecha): estrellas y la Luna
     const V = { x: 245, y: 4, w: 68, h: 22 };
     r(0x1a1c2c, V.x - 4, V.y - 2, V.w + 8, V.h + 4); r(0x1a1c2c, V.x - 2, V.y - 4, V.w + 4, V.h + 8);
     r(0x566c86, V.x - 3, V.y - 1, V.w + 6, V.h + 2); r(0x566c86, V.x - 1, V.y - 3, V.w + 2, V.h + 6);
     r(0x94b0c2, V.x - 1, V.y - 1, V.w + 2, V.h + 2);
     r(0x0b1026, V.x, V.y, V.w, V.h);
-    [[6, 4], [18, 8], [30, 3], [44, 6], [58, 3], [12, 11], [50, 10]].forEach(([x, y]) => r(0xf4f4f4, V.x + x, V.y + y, 1, 1));
-    g.fillStyle(0x29adff).fillCircle(V.x + 36, V.y + 7, 4);                      // la Tierra
-    r(0x5cff8a, V.x + 34, V.y + 5, 2, 2); r(0x5cff8a, V.x + 37, V.y + 8, 2, 1);
-    for (let x = 0; x < V.w; x++) {
-      const alto = 7 + Math.round(Math.sin(x / 8) * 2 + Math.sin(x / 3.5) * 0.7);
-      r(0x94b0c2, V.x + x, V.y + V.h - alto, 1, alto); r(0xc2c3c7, V.x + x, V.y + V.h - alto, 1, 1);
-    }
-    [[8, 2], [26, 3], [48, 2]].forEach(([x, w]) => r(0x566c86, V.x + x, V.y + V.h - 3, w * 2, 1));
+    [[5, 4], [14, 15], [22, 6], [30, 18], [9, 11], [58, 4], [63, 16], [52, 19], [26, 12], [61, 9]]
+      .forEach(([x, y]) => r(0xf4f4f4, V.x + x, V.y + y, 1, 1));
+    const L = { x: V.x + 42, y: V.y + 11 };                               // la Luna
+    g.fillStyle(0x94b0c2).fillCircle(L.x, L.y, 8);
+    g.fillStyle(0xc2c3c7).fillCircle(L.x - 1, L.y - 1, 7);
+    g.fillStyle(0xe4e6ec).fillCircle(L.x - 2, L.y - 2, 4);
+    [[-3, -3, 2], [2, 1, 2], [-1, 4, 1], [4, -3, 1], [-5, 2, 1]]
+      .forEach(([dx, dy, rr]) => g.fillStyle(0x94b0c2).fillCircle(L.x + dx, L.y + dy, rr));   // cráteres
 
-    // tres monitores: radar, vista de la Tierra sobre la Luna y gráfica
+    // tres monitores: radar del polo sur, la Luna y gráfica
     const monitor = (x, y, w, h) => { r(0x1a1c2c, x, y, w, h); r(0x0b1026, x + 2, y + 2, w - 4, h - 4); marco(x + 1, y + 1, w - 2, h - 2, 0x333c57); };
-    monitor(120, 18, 28, 22);                                       // radar
-    g.lineStyle(1, 0x29adff, 0.9).strokeCircle(134, 28, 7).strokeCircle(134, 28, 3);
-    r(0x29adff, 126, 28, 17, 1); r(0x29adff, 134, 20, 1, 17); r(0xff5c5c, 137, 25, 2, 2);
+    const Rd = LUGAR.radar;
+    monitor(Rd.x, Rd.y, Rd.w, Rd.h);                                           // radar
+    g.lineStyle(1, 0x29adff, 0.9).strokeCircle(Rd.cx, Rd.cy, 7).strokeCircle(Rd.cx, Rd.cy, 3);
+    r(0x29adff, Rd.cx - 8, Rd.cy, 17, 1); r(0x29adff, Rd.cx, Rd.cy - 8, 1, 17); r(0xff5c5c, Rd.cx + 3, Rd.cy - 3, 2, 2);
     r(0x5cff8a, 124, 35, 6, 1); r(0x5cff8a, 124, 37, 4, 1);
-    monitor(151, 16, 48, 26);                                       // Tierra sobre la Luna
-    [[156, 20], [163, 26], [170, 19], [192, 22], [158, 30]].forEach(([x, y]) => r(0xf4f4f4, x, y, 1, 1));
-    for (let x = 153; x < 197; x++) {
-      const alto = 6 + Math.round(Math.sin(x / 6) * 1.5);
-      r(0x94b0c2, x, 40 - alto, 1, alto); r(0xc2c3c7, x, 40 - alto, 1, 1);
-    }
-    g.fillStyle(0x29adff).fillCircle(183, 26, 6);
-    r(0x5cff8a, 180, 23, 3, 3); r(0x5cff8a, 185, 27, 3, 2); r(0xf4f4f4, 181, 21, 2, 1);
-    monitor(202, 18, 28, 22);                                       // gráfica de barras
+    monitor(151, 16, 48, 26);                                                  // la Luna en el espacio
+    [[156, 20], [163, 33], [170, 19], [192, 22], [158, 30], [195, 35], [178, 37]].forEach(([x, y]) => r(0xf4f4f4, x, y, 1, 1));
+    g.fillStyle(0x94b0c2).fillCircle(178, 29, 8);
+    g.fillStyle(0xc2c3c7).fillCircle(177, 28, 7);
+    g.fillStyle(0xe4e6ec).fillCircle(176, 27, 4);
+    [[-3, -3, 2], [2, 1, 2], [-1, 4, 1], [4, -3, 1]].forEach(([dx, dy, rr]) => g.fillStyle(0x94b0c2).fillCircle(178 + dx, 29 + dy, rr));
+    monitor(202, 18, 28, 22);                                                  // gráfica de barras
     // consolas con botones debajo de cada monitor
     [[122, 24], [149, 52], [204, 24]].forEach(([x, w]) => {
       r(0x1a1c2c, x, 41, w, 9); r(0x566c86, x + 1, 42, w - 2, 2); r(0x333c57, x + 1, 44, w - 2, 5);
@@ -162,9 +187,12 @@ export class Equipo extends Phaser.Scene {
       for (let i = 0; x + 3 + i * 5 < x + w - 3; i++) r(colores[i % 4], x + 3 + i * 5, 45, 3, 2);
     });
 
-    // reloj con la cuenta regresiva de la tormenta (bajo el ventanal)
-    const R = LUGAR.reloj;
-    r(0x1a1c2c, R.x, R.y, R.w, R.h); r(0x0b1026, R.x + 1, R.y + 1, R.w - 2, R.h - 2); marco(R.x + 1, R.y + 1, R.w - 2, R.h - 2, 0xb13e53);
+    // tubos de oxígeno en la pared, junto a las cápsulas
+    [104, 112].forEach(x => {
+      r(0x1a1c2c, x - 1, 28, 7, 22);
+      r(0x29adff, x, 30, 5, 19); r(0x7ee6ff, x + 1, 31, 1, 16);
+      r(0xc2c3c7, x + 1, 27, 3, 2);
+    });
 
     // piso: baldosas 16×16 gris azulado con juntas
     r(0x5a6890, 0, PARED, ANCHO, ALTO - PARED);
@@ -173,62 +201,38 @@ export class Equipo extends Phaser.Scene {
       r(0x434f74, x, y + 15, 16, 1); r(0x434f74, x + 15, y, 1, 16); // junta
     }
     r(0x1a1c2c, 0, PARED, ANCHO, 2);                               // sombra de la pared
-
-    // tanques de oxígeno junto a las cápsulas
-    [104, 112].forEach(x => {
-      r(0x1a1c2c, x - 1, 28, 7, 22);
-      r(0x29adff, x, 30, 5, 19); r(0x7ee6ff, x + 1, 31, 1, 16);
-      r(0xc2c3c7, x + 1, 27, 3, 2);
-    });
     g.setDepth(-10);
 
-    // cajas de carga (abajo a la izquierda), ordenadas por profundidad
-    [[14, 172, 18], [30, 172, 14], [18, 158, 12]].forEach(([x, y, t]) => {
-      const c = this.add.graphics().setDepth(y);
-      c.fillStyle(0x1a1c2c).fillRect(x - t / 2 - 1, y - t - 1, t + 2, t + 2);
-      c.fillStyle(0xbe7a4a).fillRect(x - t / 2, y - t, t, t);
-      c.fillStyle(0xe0a46a).fillRect(x - t / 2, y - t, t, 2);
-      c.fillStyle(0x7a4a2a).fillRect(x - t / 2, y - t / 2, t, 1).fillRect(x - 1, y - t, 1, t);
-    });
-
-    texto(this, 51, 3, this.t.centro, { tam: 7, color: "#eef1ff", ancho: 52 }).setDepth(-5);
-    texto(this, 165, 4, this.t.titulo, { tam: 7, color: "#eef1ff", ancho: 130 }).setDepth(-5);
-    texto(this, R.x + R.w / 2, R.y + 1, this.t.reloj, { tam: 5, color: "#ff8a5c" }).setDepth(-5);
-    this.textoReloj = texto(this, R.x + R.w / 2, R.y + 7, "", { tam: 7, color: "#ff5c5c" }).setDepth(-5);
+    texto(this, 51, 15, this.t.titulo, { tam: 6, color: "#eef1ff", ancho: 72 }).setDepth(-5);
   }
 
   // ---------------------------------------------------------------- piso pintado
-  // Tapete frente al vestidor, carril amarillo hacia las naves, círculos de
-  // zona de despegue y mangueras de combustible de la pared a las naves.
+  // Rejilla del vestidor, círculos punteados alrededor
+  // de las plataformas y mangueras de combustible (desde el zócalo).
   decorarPiso() {
     const g = this.add.graphics().setDepth(-9);
     const r = (color, x, y, w, h) => g.fillStyle(color).fillRect(x, y, w, h);
-    // tapete / rejilla frente al vestidor
-    r(0x1a1c2c, 10, 88, 100, 24); r(0x434f74, 11, 89, 98, 22);
-    for (let x = 13; x < 108; x += 4) r(0x333c57, x, 89, 1, 22);
-    for (let y = 91; y < 111; y += 4) r(0x333c57, 11, y, 98, 1);
-    for (let x = 11; x < 109; x += 8) { r(0xffcd75, x, 89, 4, 1); r(0xffcd75, x, 110, 4, 1); }
-    // carril con líneas amarillas hacia las naves
-    for (let x = 196; x < 300; x += 10) { r(0xffcd75, x, 132, 6, 1); r(0xffcd75, x, 146, 6, 1); }
-    for (let i = 0; i < 3; i++) {                                   // chevrones del carril
-      const x = 214 + i * 26;
-      for (let k = 0; k < 4; k++) { r(0xd9b35f, x + k, 135 + k, 1, 1); r(0xd9b35f, x + k, 142 - k, 1, 1); }
-    }
-    // círculos de "zona de despegue" alrededor de cada plataforma
-    [[204, 111, 36, 12], [272, 111, 27, 10]].forEach(([cx, cy, rx, ry]) => {
-      for (let a = 0; a < 360; a += 9) {
-        if ((a / 9) % 2) continue;
-        const t = a * Math.PI / 180;
-        r(0xffcd75, Math.round(cx + Math.cos(t) * rx), Math.round(cy + Math.sin(t) * ry), 2, 1);
+    // rejilla: ancho exacto de las dos cápsulas, pegada a sus bases, una baldosa de alto
+    const Rj = LUGAR.rejilla;
+    r(0x1a1c2c, Rj.x, Rj.y, Rj.w, Rj.h); r(0x434f74, Rj.x + 1, Rj.y + 1, Rj.w - 2, Rj.h - 2);
+    for (let x = Rj.x + 3; x < Rj.x + Rj.w - 1; x += 3) r(0x333c57, x, Rj.y + 1, 1, Rj.h - 2);
+    for (let y = Rj.y + 4; y < Rj.y + Rj.h - 1; y += 4) r(0x333c57, Rj.x + 1, y, Rj.w - 2, 1);
+    // círculo punteado limpio alrededor de cada plataforma
+    NAVES.forEach(nave => {
+      const cx = LUGAR.naves[nave.id], cy = LUGAR.pies - 1;
+      const rx = (nave.w + 10) / 2 + 6, ry = Math.round(rx * 0.3);
+      const puntos = Math.round(Math.PI * (rx + ry) / 3);            // un punto cada ~6 px
+      for (let i = 0; i < puntos; i++) {
+        const t = (i / puntos) * Math.PI * 2;
+        r(0xffcd75, Math.round(cx + Math.cos(t) * rx), Math.round(cy + Math.sin(t) * ry), 1, 1);
       }
     });
-    // mangueras de combustible: bajan por la pared y llegan a cada plataforma
-    [[[238, 34], [238, 56], [246, 92], [226, 106]], [[316, 34], [316, 56], [318, 92], [294, 106]]].forEach(([a, b, c, d]) => {
-      r(0x1a1c2c, a[0] - 1, a[1], 3, b[1] - a[1]); r(0x566c86, a[0], a[1], 1, b[1] - a[1]);
+    // mangueras de combustible: salen del zócalo y llegan a cada plataforma
+    [[[238, 52], [246, 92], [226, 106]], [[292, 52], [300, 90], [294, 106]]].forEach(([b, c, d]) => {
       for (let i = 0; i <= 40; i++) {
         const t = i / 40, u = 1 - t;
-        const x = u * u * u * b[0] + 3 * u * u * t * c[0] + 3 * u * t * t * c[0] + t * t * t * d[0];
-        const y = u * u * u * b[1] + 3 * u * u * t * c[1] + 3 * u * t * t * d[1] + t * t * t * d[1];
+        const x = u * u * b[0] + 2 * u * t * c[0] + t * t * d[0];
+        const y = u * u * b[1] + 2 * u * t * c[1] + t * t * d[1];
         r(0x1a1c2c, Math.round(x) - 1, Math.round(y) - 1, 3, 3);
         r(0x566c86, Math.round(x), Math.round(y) - 1, 1, 1);
       }
@@ -236,70 +240,39 @@ export class Equipo extends Phaser.Scene {
     });
   }
 
-  // ---------------------------------------------------------------- objetos
-  // Objetos con profundidad: el astronauta pasa por detrás o por delante.
-  crearObjetos() {
-    this.add.image(9, 72, "planta").setOrigin(0.5, 1).setDepth(72);
-    this.add.image(122, 70, "bote").setOrigin(0.5, 1).setDepth(70);
-    this.add.image(172, 102, "cono").setOrigin(0.5, 1).setDepth(102);
-    this.add.image(238, 128, "cono").setOrigin(0.5, 1).setDepth(128);
-    this.add.image(306, 112, "cono").setOrigin(0.5, 1).setDepth(112);
-
-    // banca
-    const b = this.add.graphics().setDepth(146);
-    b.fillStyle(0x1a1c2c).fillRect(52, 138, 28, 5).fillRect(55, 142, 3, 4).fillRect(74, 142, 3, 4);
-    b.fillStyle(0x566c86).fillRect(53, 139, 26, 2);
-    b.fillStyle(0x29adff).fillRect(58, 137, 3, 2).fillRect(62, 137, 3, 2);           // guantes olvidados
-
-    // tanques de gas entre las naves
-    const t = this.add.graphics().setDepth(84);
-    [[234, 0x38b764], [239, 0x29adff], [244, 0xef7d57]].forEach(([x, c], i) => {
-      t.fillStyle(0x1a1c2c).fillRect(x - 1, 70 + i % 2, 5, 14 - i % 2);
-      t.fillStyle(c).fillRect(x, 71 + i % 2, 3, 12 - i % 2);
-      t.fillStyle(0xc2c3c7).fillRect(x + 1, 69 + i % 2, 1, 2);
-    });
-
-    // carrito de herramientas
-    const c = this.add.graphics().setDepth(170);
-    c.fillStyle(0x1a1c2c).fillRect(242, 156, 22, 13);
-    c.fillStyle(0xb13e53).fillRect(243, 157, 20, 10);
-    c.fillStyle(0xef7d57).fillRect(243, 157, 20, 2);
-    c.fillStyle(0x1a1c2c).fillRect(243, 161, 20, 1).fillRect(243, 164, 20, 1);
-    c.fillStyle(0xc2c3c7).fillRect(251, 162, 4, 1).fillRect(251, 165, 4, 1);         // manijas
-    c.fillStyle(0xc2c3c7).fillRect(246, 154, 7, 1).fillRect(245, 153, 2, 3);          // llave inglesa
-    c.fillStyle(0xffcd75).fillRect(257, 152, 1, 4);                                   // destornillador
-    c.fillStyle(0x1a1c2c).fillRect(244, 168, 3, 2).fillRect(259, 168, 3, 2);          // ruedas
-  }
-
-  // ---------------------------------------------------------------- opciones
+  // ---------------------------------------------------------------- vestidor
   crearVestidor() {
-    this.zonas = [];
+    const K = LUGAR.capsula;
     TRAJES.forEach((traje, i) => {
-      const x = 32 + i * 56, dy = 8;     // dy: baja la cápsula bajo el letrero
-      // cápsula de vidrio: base, tapa, soporte y el traje colgado
-      const g = this.add.graphics().setDepth(78);
-      g.fillStyle(0x1a1c2c).fillRect(x - 15, 66 + dy, 30, 9);              // base
-      g.fillStyle(0x566c86).fillRect(x - 14, 67 + dy, 28, 3);
-      g.fillStyle(0x333c57).fillRect(x - 14, 70 + dy, 28, 4);
-      g.fillStyle(0x5cff8a).fillRect(x - 2, 71 + dy, 4, 1);                 // lucecita
-      g.fillStyle(0x1a1c2c).fillRect(x - 15, 16 + dy, 30, 6);               // tapa
-      g.fillStyle(0x566c86).fillRect(x - 14, 17 + dy, 28, 3);
-      g.fillStyle(0x333c57).fillRect(x - 1, 22 + dy, 2, 44);                // soporte del maniquí
-      const traje3 = this.add.image(x, 66 + dy, `maniqui_${traje.id}`).setOrigin(0.5, 1).setDepth(79);
-      const capsula = this.add.rectangle(x, 44 + dy, 28, 44, 0x4fd1ff, 0.10)
-        .setStrokeStyle(1, 0xbff3ff, 0.5).setDepth(80);
-      this.add.rectangle(x - 10, 40 + dy, 2, 30, 0xffffff, 0.25).setDepth(80);   // reflejo del vidrio
-      const zona = { tipo: "traje", opcion: traje, x, y: 98 + dy, foco: capsula, piezas: [traje3] };
+      const x = LUGAR.capsulas[i];
+      // cápsula de vidrio completa sobre el piso: tapa, vidrio, base y el traje colgado
+      const g = this.add.graphics().setDepth(K.piso - 2);
+      g.fillStyle(0x1a1c2c).fillRect(x - 15, K.arriba, 30, 5);             // tapa
+      g.fillStyle(0x566c86).fillRect(x - 14, K.arriba + 1, 28, 3);
+      g.fillStyle(0x333c57).fillRect(x - 1, K.vidrio, 2, K.base - K.vidrio);  // soporte del maniquí
+      g.fillStyle(0x1a1c2c).fillRect(x - 15, K.base, 30, K.piso - K.base);    // base
+      g.fillStyle(0x566c86).fillRect(x - 14, K.base + 1, 28, 2);
+      g.fillStyle(0x333c57).fillRect(x - 14, K.base + 3, 28, 3);
+      g.fillStyle(0x5cff8a).fillRect(x - 2, K.base + 4, 4, 1);              // lucecita
+      const maniqui = this.add.image(x, K.base, `maniqui_${traje.id}`).setOrigin(0.5, 1).setDepth(K.piso - 1);
+      const alto = K.base - K.vidrio;
+      const capsula = this.add.rectangle(x, K.vidrio + alto / 2, 28, alto, 0x4fd1ff, 0.10)
+        .setStrokeStyle(1, 0xbff3ff, 0.5).setDepth(K.piso);
+      this.add.rectangle(x - 10, K.vidrio + alto / 2 - 2, 2, alto - 10, 0xffffff, 0.25).setDepth(K.piso);   // reflejo
+      const zona = { tipo: "traje", opcion: traje, x, y: LUGAR.zonaCapsula, foco: capsula, piezas: [maniqui] };
       capsula.setInteractive({ useHandCursor: true }).on("pointerdown", (p, lx, ly, ev) => this.irAZona(zona, ev));
       this.zonas.push(zona);
     });
+
   }
 
+  // ---------------------------------------------------------------- plataformas
   crearHangar() {
     this.lucesNave = [];
     this.naves = {};
-    NAVES.forEach((nave, i) => {
-      const x = 204 + i * 68, y = 112;          // y = donde apoyan las patas
+    const y = LUGAR.pies;
+    NAVES.forEach(nave => {
+      const x = LUGAR.naves[nave.id];
       // plataforma con franja de peligro, proporcional al ancho de la nave
       const pw = nave.w + 10, ph = Math.round(pw * 0.24);
       const g = this.add.graphics().setDepth(y - 2);
@@ -308,11 +281,10 @@ export class Equipo extends Phaser.Scene {
       g.fillStyle(0x333c57).fillEllipse(x, y - 1, pw - 8, ph - 6);
       const plataforma = this.add.ellipse(x, y - 1, pw, ph - 1).setDepth(y - 1);
       const sprite = this.add.image(x, y, `nave_${nave.id}`).setOrigin(0.5, 1).setDepth(y);
-      // luces de posición que parpadean
       const luces = NAVE_EXTRA[nave.id].luces.map(([lx, ly], k) =>
-        this.add.rectangle(lx, ly, 2, 2, k === 2 ? 0xff5c5c : (k ? VERDE : 0xff5c5c)).setDepth(y + 0.5));
+        this.add.rectangle(lx, ly, 2, 2, k === 1 ? VERDE : ROJO).setDepth(y + 0.5));
       this.lucesNave.push(...luces.map((img, k) => ({ img, k, nave: nave.id })));
-      const zona = { tipo: "nave", opcion: nave, x, y: 132, foco: plataforma, piezas: [sprite] };
+      const zona = { tipo: "nave", opcion: nave, x, y: y + 22, foco: plataforma, piezas: [sprite] };
       sprite.setInteractive({ useHandCursor: true }).on("pointerdown", (p, lx, ly, ev) => this.irAZona(zona, ev));
       this.zonas.push(zona);
       this.naves[nave.id] = { x, sprite, luces, zona };
@@ -325,11 +297,21 @@ export class Equipo extends Phaser.Scene {
         l.img.setVisible(!apagada && (paso + l.k) % 2 === 0);
       });
     } });
+
+    // cajas junto a la nave pequeña y un cono entre las plataformas (fuera de los pasillos)
+    [[305, 104, 10], [314, 104, 8], [309, 94, 7]].forEach(([x, yy, t]) => {
+      const c = this.add.graphics().setDepth(yy);
+      c.fillStyle(0x1a1c2c).fillRect(x - t / 2 - 1, yy - t - 1, t + 2, t + 2);
+      c.fillStyle(0xbe7a4a).fillRect(x - t / 2, yy - t, t, t);
+      c.fillStyle(0xe0a46a).fillRect(x - t / 2, yy - t, t, 1);
+      c.fillStyle(0x7a4a2a).fillRect(x - t / 2, yy - t / 2, t, 1);
+    });
+    this.add.image(240, 120, "cono").setOrigin(0.5, 1).setDepth(120);
   }
 
-  // La compuerta queda como decorado: ahora se sale subiendo a la nave
+  // Compuerta: roja (luz grande y marco) mientras falte algo; verde con resplandor al estar listos
   crearCompuerta() {
-    const x = COMPUERTA.x, y = COMPUERTA.y;
+    const { x, y } = LUGAR.compuerta;
     const g = this.add.graphics().setDepth(y - 1);
     g.fillStyle(0x1a1c2c).fillRect(x - 10, y - 17, 20, 34);
     g.fillStyle(0x566c86).fillRect(x - 8, y - 15, 7, 28);
@@ -337,22 +319,42 @@ export class Equipo extends Phaser.Scene {
     g.fillStyle(0x94b0c2).fillRect(x - 8, y - 15, 1, 28).fillRect(x + 1, y - 15, 1, 28);   // brillo
     g.fillStyle(0x333c57).fillRect(x - 6, y - 8, 3, 6).fillRect(x + 3, y - 8, 3, 6);       // ventanitas
     for (let i = 0; i < 4; i++) g.fillStyle(i % 2 ? 0x1a1c2c : 0xffcd75).fillRect(x - 8 + i * 4, y + 13, 4, 3);
-    g.fillStyle(0xffcd75).fillRect(x - 4, y - 21, 8, 3);
+    this.resplandorCompuerta = this.add.ellipse(x - 6, y + 17, 36, 10, VERDE, 0.25).setDepth(-8).setVisible(false);
+    this.marcoCompuerta = this.add.rectangle(x, y, 22, 36).setStrokeStyle(2, ROJO).setDepth(y);
+    this.halo = this.add.rectangle(x, y - 22, 16, 7, ROJO, 0.3).setDepth(y);
+    this.luzCompuerta = this.add.rectangle(x, y - 22, 12, 4, ROJO).setDepth(y + 0.1);
+    this.tweens.add({ targets: this.halo, alpha: 0.05, duration: 600, yoyo: true, repeat: -1 });
+    this.zonas.push({ tipo: "compuerta", x: x - 16, y: y + 8, r: 12 });
   }
 
-  // ---------------------------------------------------------------- estaciones
-  // Báscula y arco de radiación para probar los trajes antes de decidir.
+  actualizarCompuerta() {
+    const c = this.listos() ? VERDE : ROJO;
+    this.marcoCompuerta.setStrokeStyle(2, c);
+    this.luzCompuerta.setFillStyle(c);
+    this.halo.setFillStyle(c, 0.3);
+    this.resplandorCompuerta.setVisible(!!this.listos());
+  }
+
+  // ---------------------------------------------------------------- estaciones de prueba
+  // Báscula y arco de radiación, abajo a la izquierda.
   crearEstaciones() {
-    // báscula: plataforma con pantalla en un poste
+    // rótulos: encima de cada estación su nombre, debajo de ambas "Prueba de traje"
+    const B0 = LUGAR.bascula, A0 = LUGAR.arco;
+    texto(this, B0.x, B0.y - 41, this.t.rotulo_bascula, { tam: 5, color: "#eef1ff" }).setDepth(B0.y);
+    texto(this, A0.x, A0.y - 37, this.t.rotulo_arco, { tam: 5, color: "#eef1ff" }).setDepth(A0.y);
+    texto(this, (B0.x + A0.x) / 2, B0.y + 5, this.t.zona_pruebas, { tam: 5, color: "#ffcd75" }).setDepth(-8);
+
+    // báscula: plataforma y pantalla que muestra el peso en la Tierra y en la Luna
     const B = LUGAR.bascula, gb = this.add.graphics().setDepth(B.y - 4);
-    gb.fillStyle(0x1a1c2c).fillRect(B.x - 1, B.y - 22, 3, 18);                 // poste
-    gb.fillStyle(0x1a1c2c).fillRect(B.x - 10, B.y - 30, 21, 10);               // pantalla
-    gb.fillStyle(0x0b1026).fillRect(B.x - 9, B.y - 29, 19, 8);
+    gb.fillStyle(0x1a1c2c).fillRect(B.x - 1, B.y - 20, 3, 16);                 // poste
+    gb.fillStyle(0x1a1c2c).fillRect(B.x - 15, B.y - 34, 30, 15);               // pantalla
+    gb.fillStyle(0x0b1026).fillRect(B.x - 14, B.y - 33, 28, 13);
     const gp = this.add.graphics().setDepth(B.y - 6);
     gp.fillStyle(0x1a1c2c).fillRect(B.x - 10, B.y - 4, 21, 7);                 // plataforma
     gp.fillStyle(0x94b0c2).fillRect(B.x - 9, B.y - 3, 19, 4);
     gp.fillStyle(0xffcd75).fillRect(B.x - 9, B.y + 1, 19, 1);
-    this.textoPeso = texto(this, B.x, B.y - 29, "-- kg", { tam: 5, color: "#5cff8a" }).setDepth(B.y - 3);
+    this.textoTierra = texto(this, B.x, B.y - 33, "-- kg", { tam: 5, color: "#5cff8a" }).setDepth(B.y - 3);
+    this.textoLuna = texto(this, B.x, B.y - 27, "", { tam: 5, color: "#7ee6ff" }).setDepth(B.y - 3);
     this.zonas.push({ tipo: "bascula", x: B.x, y: B.y, r: 9 });
 
     // arco de radiación: dos columnas y un techo con luces
@@ -376,46 +378,16 @@ export class Equipo extends Phaser.Scene {
     } });
     this.zonas.push({ tipo: "arco", x: A.x, y: A.y, r: 9 });
 
-    // pantalla del polo sur (radar): al acercarse, Chispa da una pista
-    this.marcoRadar = this.add.rectangle(134, 29, 28, 22).setStrokeStyle(1, AMARILLO).setDepth(-5).setVisible(false);
-    this.zonas.push({ tipo: "pantalla", x: LUGAR.pantalla.x, y: LUGAR.pantalla.y, r: 18 });
+    // radar del polo sur: al acercarse, burbuja con un dato real
+    const Rd = LUGAR.radar;
+    this.marcoRadar = this.add.rectangle(Rd.cx, Rd.y + Rd.h / 2, Rd.w, Rd.h).setStrokeStyle(1, AMARILLO).setDepth(-5).setVisible(false);
+    this.zonas.push({ tipo: "pantalla", x: Rd.cx + 2, y: LIMITES.y1, r: 13 });
   }
 
-  // Flechas en el piso que parpadean hasta que el niño elige
+  // Flecha verde hacia la rampa, apagada hasta tener traje y nave
   crearFlechas() {
-    const flecha = (x, y, izq, color) => izq
-      ? this.add.triangle(x, y, 8, 0, 0, 4, 8, 8, color)
-      : this.add.triangle(x, y, 0, 0, 8, 4, 0, 8, color);
-
-    // Traje (izquierda): flecha + icono de traje
-    const fT = flecha(114, 124, true, COLOR.borde);
-    const iT = [this.add.image(127, 124, "icono_traje")];
-    // Nave (derecha): flecha + icono de cohete
-    const iN = [this.add.image(193, 124, "icono_cohete")];
-    const fN = flecha(206, 124, false, COLOR.borde);
-
-    this.flechas = {
-      traje: this.crearIndicador([fT, ...iT], 126, 124),
-      nave: this.crearIndicador([fN, ...iN], 192, 124)
-    };
-
-    // Flecha hacia la rampa, apagada hasta tener las dos cosas
     this.flechaRampa = this.add.triangle(0, 0, 0, 8, 4, 0, 8, 8, VERDE).setDepth(-1).setVisible(false);
     this.parpadeoRampa = this.tweens.add({ targets: this.flechaRampa, alpha: 0.2, duration: 400, yoyo: true, repeat: -1, paused: true });
-  }
-
-  crearIndicador(piezas, xCheck, yCheck) {
-    piezas.forEach(p => p.setDepth(-1));
-    const parpadeo = this.tweens.add({ targets: piezas, alpha: 0.2, duration: 500, yoyo: true, repeat: -1 });
-    const check = texto(this, xCheck, yCheck, "✓", { tam: 10, color: "#5cff8a", origenY: 0.5 }).setVisible(false).setDepth(-1);
-    return { piezas, parpadeo, check };
-  }
-
-  marcarFlecha(tipo) {
-    const f = this.flechas[tipo];
-    f.parpadeo.stop();
-    f.piezas.forEach(p => p.setVisible(false));
-    f.check.setVisible(true);
   }
 
   // ---------------------------------------------------------------- personajes
@@ -428,9 +400,10 @@ export class Equipo extends Phaser.Scene {
     this.sombra = this.add.ellipse(0, 0, 14, 4, 0x1a1c2c, 0.4);
     this.astro = this.add.image(LUGAR.entrada.x, ALTO + 30, "astro_base_0").setOrigin(0.5, 1);
 
-    this.sombraChispa = this.add.ellipse(0, 0, 8, 3, 0x1a1c2c, 0.3);
-    this.chispa = this.add.image(LUGAR.entrada.x + 24, 112, "chispa_px");
-    this.dialogo = texto(this, 0, 0, "", { tam: 6, ancho: 120, origenY: 1 })
+    // Bit, el robot del hangar
+    this.sombraBit = this.add.ellipse(0, 0, 8, 3, 0x1a1c2c, 0.3);
+    this.bit = this.add.image(LUGAR.entrada.x + 24, 112, "bit");
+    this.dialogo = texto(this, 0, 0, "", { tam: TAM, ancho: 120, origenY: 1 })
       .setBackgroundColor("#1d2650").setPadding(2, 1).setDepth(1000).setVisible(false);
   }
 
@@ -440,73 +413,127 @@ export class Equipo extends Phaser.Scene {
     this.ocultarDialogo = this.time.delayedCall(ms, () => this.dialogo.setVisible(false));
   }
 
-  // Técnicos que caminan entre dos puntos y cuentan datos reales
-  crearTecnicos() {
+  // Un técnico que camina alrededor de las naves y se detiene a revisarlas.
+  // Su caja de herramientas queda junto a la nave grande.
+  crearTecnico() {
+    const C = LUGAR.caja;
+    const caja = this.add.graphics().setDepth(C.y + 1);
+    caja.fillStyle(0x1a1c2c).fillRect(C.x - 5, C.y - 6, 11, 7);
+    caja.fillStyle(0xb13e53).fillRect(C.x - 4, C.y - 5, 9, 5);
+    caja.fillStyle(0xef7d57).fillRect(C.x - 4, C.y - 5, 9, 1);
+    caja.fillStyle(0xc2c3c7).fillRect(C.x - 1, C.y - 7, 3, 1);
+    const [x, y] = LUGAR.rondaTecnico[0];
+    this.sombraTecnico = this.add.ellipse(x, y, 14, 4, 0x1a1c2c, 0.4);
+    this.tecnico = this.add.image(x, y, "astro_tecnico2_0").setOrigin(0.5, 1).setDepth(y);
+    this.globoTecnico = texto(this, x, y - 26, "", { tam: TAM, ancho: 100, origenY: 1 })
+      .setBackgroundColor("#3b2a1d").setPadding(2, 1).setDepth(1000).setVisible(false);
+    this.ronda = { i: 0, paso: 1, espera: 1500, cuadro: 0, tiempo: 0 };
     this.indiceDato = 0;
-    this.tecnicos = TECNICOS.map(def => {
-      const [x, y] = def.ruta[0];
-      const img = this.add.image(x, y, `astro_${def.id}_0`).setOrigin(0.5, 1);
-      const sombra = this.add.ellipse(x, y, 14, 4, 0x1a1c2c, 0.4);
-      const globo = texto(this, x, y - 26, "", { tam: 5, ancho: 100, origenY: 1 })
-        .setBackgroundColor("#3b2a1d").setPadding(2, 1).setDepth(1000).setVisible(false);
-      return { def, img, sombra, globo, meta: 1, espera: 0, paso: 0, tiempoPaso: 0, enfriar: 0, hablando: 0 };
-    });
+    this.tecnicoEnfriar = 0;
+    this.tecnicoHablando = 0;
   }
 
-  actualizarTecnicos(delta) {
-    const dt = delta / 1000;
-    this.tecnicos.forEach(tc => {
-      const cerca = Phaser.Math.Distance.Between(this.astro.x, this.astro.y, tc.img.x, tc.img.y) < 22;
-      tc.enfriar -= delta;
-      tc.hablando -= delta;
-      if (cerca && tc.enfriar <= 0 && this.controlActivo) {
-        const datos = this.t.tecnicos;
-        tc.globo.setText(datos[this.indiceDato++ % datos.length]).setVisible(true);
-        tc.hablando = 4500; tc.enfriar = 8000;
-      }
-      if (tc.hablando <= 0) tc.globo.setVisible(false);
+  actualizarTecnico(delta) {
+    const tc = this.tecnico, R = this.ronda, puntos = LUGAR.rondaTecnico;
+    this.tecnicoEnfriar -= delta;
+    this.tecnicoHablando -= delta;
+    const cerca = Phaser.Math.Distance.Between(this.astro.x, this.astro.y, tc.x, tc.y) < 22;
+    if (cerca && this.tecnicoEnfriar <= 0 && this.controlActivo) {
+      const datos = this.t.tecnicos;
+      this.globoTecnico.setText(datos[this.indiceDato++ % datos.length]).setVisible(true);
+      this.tecnicoHablando = 4500; this.tecnicoEnfriar = 8000;
+    }
+    if (this.tecnicoHablando <= 0) this.globoTecnico.setVisible(false);
 
-      let camina = false;
-      if (tc.hablando > 0) tc.img.setFlipX(this.astro.x < tc.img.x);       // mira al niño
-      else if (tc.espera > 0) tc.espera -= delta;                           // revisa la nave
-      else {
-        const [mx, my] = tc.def.ruta[tc.meta];
-        const dx = mx - tc.img.x;
-        if (Math.abs(dx) < 1) { tc.meta = 1 - tc.meta; tc.espera = 1800; }
-        else { tc.img.x += Math.sign(dx) * Math.min(Math.abs(dx), 18 * dt); tc.img.y = my; tc.img.setFlipX(dx < 0); camina = true; }
+    let camina = false;
+    if (this.tecnicoHablando > 0) tc.setFlipX(this.astro.x < tc.x);       // se detiene y mira al niño
+    else if (R.espera > 0) R.espera -= delta;                              // revisa la nave
+    else {
+      const [mx, my] = puntos[R.i];
+      const dx = mx - tc.x, dy = my - tc.y, d = Math.hypot(dx, dy), v = 20 * delta / 1000;
+      if (d <= v) {
+        tc.setPosition(mx, my);
+        if (R.i + R.paso < 0 || R.i + R.paso >= puntos.length) { R.paso *= -1; R.espera = 2000; }
+        else if (R.i === 3 || R.i === 6) R.espera = 1500;                   // se detiene junto a cada nave
+        R.i += R.paso;
+      } else {
+        tc.x += dx / d * v; tc.y += dy / d * v;
+        if (Math.abs(dx) > 0.5) tc.setFlipX(dx < 0);
+        camina = true;
       }
-      tc.tiempoPaso += delta;
-      if (camina && tc.tiempoPaso > 200) { tc.tiempoPaso = 0; tc.paso = 1 - tc.paso; }
-      if (!camina) tc.paso = 0;
-      tc.img.setTexture(`astro_${tc.def.id}_${tc.paso}`).setDepth(tc.img.y);
-      tc.sombra.setPosition(tc.img.x, tc.img.y).setDepth(tc.img.y - 0.5);
-      tc.globo.setPosition(Phaser.Math.Clamp(tc.img.x, 54, ANCHO - 54), tc.img.y - 26);
-    });
+    }
+    R.tiempo += delta;
+    if (R.tiempo > (camina ? 200 : 600)) { R.tiempo = 0; R.cuadro = 1 - R.cuadro; }
+    tc.setTexture(`astro_tecnico2_${camina || this.tecnicoHablando <= 0 ? R.cuadro : 0}`).setDepth(tc.y);
+    this.sombraTecnico.setPosition(tc.x, tc.y).setDepth(tc.y - 0.5);
+    this.globoTecnico.setPosition(Phaser.Math.Clamp(tc.x, 54, ANCHO - 54), tc.y - 26);
+  }
+
+  // ---------------------------------------------------------------- indicador
+  // Arriba a la derecha: traje y nave (gris si falta, a color con palomita si
+  // ya eligió) y el oxígeno con el que saldrá.
+  crearIndicador() {
+    const H = LUGAR.hud, prof = 2000;
+    this.add.rectangle(H.x, H.y, H.w, H.h, 0x1a1c2c).setOrigin(0).setDepth(prof);
+    this.add.rectangle(H.x + 1, H.y + 1, H.w - 2, H.h - 2, 0x1d2650).setOrigin(0).setStrokeStyle(1, 0x4fd1ff).setDepth(prof);
+    this.hudTraje = this.add.image(H.x + 8, H.y + 7, "icono_traje").setDepth(prof + 1);
+    this.hudNave = this.add.image(H.x + 20, H.y + 7, "icono_cohete").setDepth(prof + 1);
+    this.hudPalomitaTraje = this.add.image(H.x + 12, H.y + 11, "palomita_chica").setDepth(prof + 2).setVisible(false);
+    this.hudPalomitaNave = this.add.image(H.x + 24, H.y + 11, "palomita_chica").setDepth(prof + 2).setVisible(false);
+    [this.hudTraje, this.hudNave].forEach(i => i.setTint(0x566c86).setAlpha(0.7));
+    texto(this, H.x + 35, H.y + 4, "O", { tam: TAM, color: "#7ee6ff" }).setDepth(prof + 1);
+    texto(this, H.x + 39, H.y + 7, "2", { tam: 4, color: "#7ee6ff" }).setDepth(prof + 1);   // subíndice
+    this.o2Mostrado = this.oxigenoAlSalir();
+    this.hudO2 = texto(this, H.x + 51, H.y + 4, String(this.o2Mostrado), { tam: TAM, color: "#eef1ff" }).setDepth(prof + 1);
+  }
+
+  // Oxígeno con el que saldrá: el actual + tanque de la mochila + extra de la nave
+  oxigenoAlSalir() {
+    return estado.oxigeno + (estado.lleva("oxigeno") ? O2_TANQUE : 0) + (this.naveElegida ? this.naveElegida.oxigenoExtra : 0);
+  }
+
+  actualizarIndicador() {
+    const marcar = (img, palomita, listo) => {
+      if (listo) img.clearTint().setAlpha(1); else img.setTint(0x566c86).setAlpha(0.7);
+      palomita.setVisible(!!listo);
+    };
+    marcar(this.hudTraje, this.hudPalomitaTraje, this.trajeElegido);
+    marcar(this.hudNave, this.hudPalomitaNave, this.naveElegida);
+
+    // el oxígeno cambia con una animación corta y un aviso flotante (+20, -20…)
+    const nuevo = this.oxigenoAlSalir(), cambio = nuevo - this.o2Mostrado;
+    if (!cambio) return;
+    const H = LUGAR.hud, contador = { v: this.o2Mostrado };
+    this.o2Mostrado = nuevo;
+    this.tweens.add({ targets: contador, v: nuevo, duration: 600, onUpdate: () => this.hudO2.setText(String(Math.round(contador.v))) });
+    const aviso = texto(this, H.x + 51, H.y + H.h + 1, (cambio > 0 ? "+" : "") + cambio, { tam: TAM, color: cambio > 0 ? "#5cff8a" : "#ff5c5c" }).setDepth(2002);
+    this.tweens.add({ targets: aviso, y: H.y + H.h + 8, alpha: 0, duration: 1200, onComplete: () => aviso.destroy() });
   }
 
   // ---------------------------------------------------------------- ambiente
-  // Pantallas que cambian, luces que parpadean, reloj, dron, vapor y polvo.
+  // Radar que gira, luces que parpadean, dron, vapor y polvo en la luz del ventanal.
   crearAmbiente() {
-    // pantallas animadas: barrido del radar y gráfica que cambia
-    this.gPantallas = this.add.graphics().setDepth(-9.5);
+    this.gRadar = this.add.graphics().setDepth(-9.5);
     this.anguloRadar = 0;
-    this.time.addEvent({ delay: 120, loop: true, callback: () => this.dibujarPantallas() });
+    this.time.addEvent({ delay: 120, loop: true, callback: () => {
+      const g = this.gRadar.clear(), { cx, cy } = LUGAR.radar;
+      this.anguloRadar += 0.35;
+      for (let k = 1; k <= 7; k++) g.fillStyle(0x7ee6ff, 0.9).fillRect(Math.round(cx + Math.cos(this.anguloRadar) * k), Math.round(cy + Math.sin(this.anguloRadar) * k), 1, 1);
+      if (Math.sin(this.anguloRadar) < -0.3) g.fillStyle(0xffffff).fillRect(cx + 3, cy - 3, 2, 2);   // eco de Itzel
+      // gráfica: barras y líneas que cambian
+      g.fillStyle(0x0b1026).fillRect(204, 20, 24, 18);
+      for (let i = 0; i < 4; i++) g.fillStyle(0x7ee6ff).fillRect(205, 22 + i * 3, 2 + Math.floor(Math.random() * 6), 1);
+      for (let i = 0; i < 5; i++) {
+        const h = 3 + Math.floor(Math.random() * 11);
+        g.fillStyle(i % 2 ? 0x29adff : 0x7ee6ff).fillRect(214 + i * 3, 37 - h, 2, h);
+      }
+    } });
 
     // luces del techo con parpadeo leve
     this.focos = [];
     for (let x = 36; x < ANCHO; x += 64) this.focos.push(this.add.rectangle(x, 0, 10, 2, 0xfff27a).setOrigin(0).setDepth(-5));
     this.time.addEvent({ delay: 200, loop: true, callback: () =>
       this.focos.forEach(f => f.setAlpha(Math.random() < 0.08 ? 0.2 : 1)) });
-
-    // cuenta regresiva de la tormenta (horas reales calculadas con DONKI)
-    this.segundosTormenta = Math.round(horasDeLlegada(estado.datos.cme.velocidad_kms) * 3600);
-    const reloj = () => {
-      const s = Math.max(0, this.segundosTormenta--);
-      const dos = n => String(n).padStart(2, "0");
-      this.textoReloj.setText(`${dos(Math.floor(s / 3600))}:${dos(Math.floor(s / 60) % 60)}:${dos(s % 60)}`);
-    };
-    reloj();
-    this.time.addEvent({ delay: 1000, loop: true, callback: reloj });
 
     // haz de luz del ventanal con polvo flotando
     this.add.graphics().setDepth(-8).fillStyle(0xfff8d0, 0.06)
@@ -516,10 +543,10 @@ export class Equipo extends Phaser.Scene {
       img: this.add.rectangle(0, 0, 1, 1, 0xfff8d0).setOrigin(0).setAlpha(0.6).setDepth(500)
     }));
 
-    // dron que va y viene sobre las naves y las revisa con un rayo
-    this.dron = this.add.image(186, 40, "dron").setDepth(400);
-    this.rayoDron = this.add.rectangle(186, 44, 1, 14, 0x29adff, 0.5).setOrigin(0.5, 0).setDepth(399).setVisible(false);
-    this.tweens.add({ targets: this.dron, x: 296, duration: 7000, yoyo: true, repeat: -1, ease: "Sine.easeInOut", hold: 1200, repeatDelay: 1200 });
+    // dron que revisa la nave grande (no pasa por el indicador)
+    this.dron = this.add.image(184, 40, "dron").setDepth(400);
+    this.rayoDron = this.add.rectangle(184, 44, 1, 14, 0x29adff, 0.5).setOrigin(0.5, 0).setDepth(399).setVisible(false);
+    this.tweens.add({ targets: this.dron, x: 236, duration: 4000, yoyo: true, repeat: -1, ease: "Sine.easeInOut", hold: 1200, repeatDelay: 1200 });
 
     // vapor en las toberas
     this.time.addEvent({ delay: 380, loop: true, callback: () => {
@@ -532,33 +559,15 @@ export class Equipo extends Phaser.Scene {
     } });
   }
 
-  dibujarPantallas() {
-    const g = this.gPantallas.clear();
-    // radar: línea que gira y un eco que se enciende
-    this.anguloRadar += 0.35;
-    const a = this.anguloRadar;
-    for (let k = 1; k <= 6; k++) g.fillStyle(0x7ee6ff, 0.9).fillRect(Math.round(134 + Math.cos(a) * k), Math.round(28 + Math.sin(a) * k), 1, 1);
-    if (Math.sin(a) < -0.3) g.fillStyle(0xff5c5c).fillRect(137, 25, 2, 2);
-    // gráfica: barras y líneas que cambian
-    g.fillStyle(0x0b1026).fillRect(204, 20, 24, 18);
-    for (let i = 0; i < 4; i++) g.fillStyle(0x7ee6ff).fillRect(205, 22 + i * 3, 2 + Math.floor(Math.random() * 6), 1);
-    for (let i = 0; i < 5; i++) {
-      const h = 3 + Math.floor(Math.random() * 11);
-      g.fillStyle(i % 2 ? 0x29adff : 0x7ee6ff).fillRect(214 + i * 3, 37 - h, 2, h);
-    }
-  }
-
   animarAmbiente(delta) {
     const dt = delta / 1000;
-    // polvo dentro del haz de luz
     this.polvo.forEach(p => {
       p.t += p.v * dt; p.u += Math.sin(p.t * 9) * 0.002;
       if (p.t > 1) { p.t = 0; p.u = Math.random(); }
       const y = 26 + p.t * 134, x0 = 245 - p.t * 59, ancho = 68 + p.t * 8;
       p.img.setPosition(Math.round(x0 + Phaser.Math.Clamp(p.u, 0, 1) * ancho), Math.round(y));
     });
-    // rayo del dron cuando pasa sobre una nave
-    const sobreNave = Object.values(this.naves).some(n => Math.abs(this.dron.x - n.x) < 6);
+    const sobreNave = Math.abs(this.dron.x - LUGAR.naves.grande) < 6;
     this.dron.y = 38 + Math.round(Math.sin(this.time.now / 300));
     this.rayoDron.setPosition(Math.round(this.dron.x), this.dron.y + 4).setVisible(sobreNave && Math.floor(this.time.now / 120) % 2 === 0);
     // puntitos de radiación del arco: el traje frena algunos
@@ -581,15 +590,27 @@ export class Equipo extends Phaser.Scene {
     });
   }
 
-  // ---------------------------------------------------------------- burbuja
-  crearBurbuja() {
+  // ---------------------------------------------------------------- burbujas
+  crearBurbujas() {
+    // opción (traje o nave): ventaja en verde y costo en rojo
     this.burbuja = this.add.container(0, 0).setDepth(1001).setVisible(false);
     this.fondoBurbuja = this.add.rectangle(0, 0, 120, 34, COLOR.panel).setStrokeStyle(1, COLOR.borde).setOrigin(0.5, 0);
-    this.bNombre = texto(this, 0, 2, "", { tam: 6, ancho: 116 });
-    this.bVentaja = texto(this, 0, 10, "", { tam: 6, ancho: 116, color: "#5cff8a" });
-    this.bCosto = texto(this, 0, 18, "", { tam: 6, ancho: 116, color: "#ff5c5c" });
-    this.bAccion = texto(this, 0, 26, "", { tam: 5, ancho: 116, color: COLOR.tenue });
+    this.bNombre = texto(this, 0, 2, "", { tam: TAM, ancho: 116 });
+    this.bVentaja = texto(this, 0, 10, "", { tam: TAM, ancho: 116, color: "#5cff8a" });
+    this.bCosto = texto(this, 0, 18, "", { tam: TAM, ancho: 116, color: "#ff5c5c" });
+    this.bAccion = texto(this, 0, 26, "", { tam: TAM, ancho: 116, color: COLOR.tenue });
     this.burbuja.add([this.fondoBurbuja, this.bNombre, this.bVentaja, this.bCosto, this.bAccion]);
+
+    // dato real del radar (polo sur lunar) con su fuente NASA
+    const dato = estado.datos.polo_sur;
+    // a la izquierda del radar, para no tapar el radar ni el indicador
+    this.burbujaDato = this.add.container(78, 26).setDepth(1002).setVisible(false);
+    const etiqueta = texto(this, 0, 3, dato.ejemplo ? this.t.dato_ejemplo : this.t.dato_real, { tam: TAM, color: "#ffcd75" });
+    const cuerpo = texto(this, 0, 11, dato.texto, { tam: TAM, ancho: 140 });
+    const fuente = texto(this, 0, 13 + cuerpo.height, dato.fuente, { tam: 5, ancho: 140, color: COLOR.tenue });
+    const alto = Math.ceil(fuente.y + fuente.height + 3);
+    const fondo = this.add.rectangle(0, 0, 148, alto, COLOR.panel).setStrokeStyle(1, AMARILLO).setOrigin(0.5, 0);
+    this.burbujaDato.add([fondo, etiqueta, cuerpo, fuente]);
   }
 
   // Cambia {proteccion}, {gastoO2}, etc. por los números de la opción
@@ -605,8 +626,9 @@ export class Equipo extends Phaser.Scene {
     this.bVentaja.setText(this.llenar(info.ventaja, zona.opcion));
     this.bCosto.setText(this.llenar(info.costo, zona.opcion));
     this.bAccion.setText(elegida ? this.t.elegido : this.t.elegir);
+    // trajes: debajo de la rejilla; naves: arriba, entre el título y el indicador
     const x = Phaser.Math.Clamp(zona.x, 62, ANCHO - 62);
-    this.burbuja.setPosition(x, zona.tipo === "traje" ? 112 : 2).setVisible(true);
+    this.burbuja.setPosition(x, zona.tipo === "traje" ? 132 : 18).setVisible(true);
   }
 
   // ---------------------------------------------------------------- elegir
@@ -633,8 +655,7 @@ export class Equipo extends Phaser.Scene {
     this.trajeVisible = traje.id;
     this.astro.setTexture(`astro_${traje.id}_${this.paso}`);
     this.cameras.main.flash(150, 255, 255, 255);
-    this.marcarFlecha("traje");
-    this.decir(this.llenar(this.t.chispa_traje, { nombre: this.t.opciones[traje.id].nombre.toLowerCase() }));
+    this.decir(this.llenar(this.t.bit_traje, { nombre: this.t.opciones[traje.id].nombre.toLowerCase() }));
     this.revisarListos();
   }
 
@@ -646,22 +667,23 @@ export class Equipo extends Phaser.Scene {
       z.piezas.forEach(p => p.setAlpha(sel ? 1 : 0.35));
       z.foco.setStrokeStyle(sel ? 2 : 0, VERDE);
     });
-    this.marcarFlecha("nave");
-    this.decir(this.llenar(this.t.chispa_nave, { nombre: this.t.opciones[nave.id].nombre.toLowerCase() }));
+    this.decir(this.llenar(this.t.bit_nave, { nombre: this.t.opciones[nave.id].nombre.toLowerCase() }));
     this.revisarListos();
   }
 
   listos() { return this.trajeElegido && this.naveElegida; }
 
-  // Con traje y nave, la nave elegida baja su rampa (si cambia de nave, la rampa se mueve)
+  // Actualiza indicador y compuerta; con traje y nave, la nave elegida baja su rampa
   revisarListos() {
+    this.actualizarIndicador();
+    this.actualizarCompuerta();
     if (!this.listos()) return;
     const n = this.naves[this.naveElegida.id];
     if (this.rampa && this.rampa.nave === this.naveElegida.id) return;
     const primera = !this.rampa;
     if (this.rampa) { this.rampa.g.destroy(); this.zonas = this.zonas.filter(z => z.tipo !== "rampa"); }
 
-    const g = this.add.graphics().setPosition(n.x, 104).setDepth(113);
+    const g = this.add.graphics().setPosition(n.x, LUGAR.pies - 8).setDepth(LUGAR.pies + 1);
     for (let j = 0; j < 30; j++) {
       const w = 8 + Math.round(j * 0.2);
       g.fillStyle(0x1a1c2c).fillRect(-w / 2 - 1, j, w + 2, 1);
@@ -671,11 +693,11 @@ export class Equipo extends Phaser.Scene {
     g.scaleY = 0;
     this.tweens.add({ targets: g, scaleY: 1, duration: 900, ease: "Bounce.easeOut" });
     this.rampa = { g, nave: this.naveElegida.id };
-    this.zonas.push({ tipo: "rampa", x: n.x, y: 140, r: 10 });
+    this.zonas.push({ tipo: "rampa", x: n.x, y: LUGAR.pies + 26, r: 7 });
 
-    this.flechaRampa.setPosition(n.x, 152).setVisible(true);
+    this.flechaRampa.setPosition(n.x, LUGAR.pies + 34).setVisible(true);
     this.parpadeoRampa.resume();
-    if (primera) this.time.delayedCall(1200, () => this.decir(this.t.chispa_listos));
+    if (primera) this.time.delayedCall(1200, () => this.decir(this.t.bit_listos));
   }
 
   // Subir a la nave y despegar → Misión 4
@@ -684,27 +706,27 @@ export class Equipo extends Phaser.Scene {
     this.saliendo = true;
     this.controlActivo = false;
     this.burbuja.setVisible(false);
+    this.burbujaDato.setVisible(false);
     this.flechaRampa.setVisible(false);
 
     estado.traje = this.trajeElegido;
     estado.nave = this.naveElegida;
     estado.oxigeno += this.naveElegida.oxigenoExtra;
     const tanque = estado.lleva("oxigeno");
-    if (tanque) { estado.oxigeno += O2_TANQUE; this.decir(this.t.chispa_tanque); }
+    if (tanque) { estado.oxigeno += O2_TANQUE; this.decir(this.t.bit_tanque); }
     estado.bitacora.push(`Equipo: ${this.t.opciones[this.trajeElegido.id].nombre} y ${this.t.opciones[this.naveElegida.id].nombre}.`);
 
     const n = this.naves[this.naveElegida.id];
     // sube por la rampa y entra
-    this.tweens.add({ targets: this.astro, x: n.x, y: 114, duration: 900, delay: tanque ? 900 : 200 });
-    this.tweens.add({ targets: [this.astro, this.sombra, this.chispa, this.sombraChispa], alpha: 0, duration: 300, delay: tanque ? 1700 : 1000 });
+    this.tweens.add({ targets: this.astro, x: n.x, y: LUGAR.pies + 2, duration: 900, delay: tanque ? 900 : 200 });
+    this.tweens.add({ targets: [this.astro, this.sombra, this.bit, this.sombraBit], alpha: 0, duration: 300, delay: tanque ? 1700 : 1000 });
     // la rampa se recoge, se encienden los motores y la nave despega
     this.time.delayedCall(tanque ? 2100 : 1400, () => {
       this.tweens.add({ targets: this.rampa.g, scaleY: 0, duration: 400 });
-      const fuego = this.add.rectangle(n.x, 112, 8, 6, 0xffa300).setOrigin(0.5, 0).setDepth(n.sprite.depth - 0.1);
+      const fuego = this.add.rectangle(n.x, LUGAR.pies, 8, 6, 0xffa300).setOrigin(0.5, 0).setDepth(n.sprite.depth - 0.1);
       this.time.addEvent({ delay: 60, loop: true, callback: () => fuego.setFillStyle(Math.random() < 0.5 ? 0xffa300 : 0xfff27a).setScale(0.8 + Math.random() * 0.5, 0.8 + Math.random()) });
       this.cameras.main.shake(1800, 0.004);
-      const piezas = [n.sprite, fuego, ...n.luces];
-      this.tweens.add({ targets: piezas, y: "-=170", duration: 1800, delay: 500, ease: "Cubic.easeIn" });
+      this.tweens.add({ targets: [n.sprite, fuego, ...n.luces], y: "-=170", duration: 1800, delay: 500, ease: "Cubic.easeIn" });
       this.time.delayedCall(1900, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0);
         this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("Viaje"));
@@ -713,11 +735,75 @@ export class Equipo extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- movimiento
+  // ¿Se puede pararse aquí sin atravesar nada?
+  libre(x, y) {
+    if (x < LIMITES.x1 || x > LIMITES.x2 || y < LIMITES.y1 || y > LIMITES.y2) return false;
+    return !OBSTACULOS.some(([a, b, c, d]) =>
+      x > a - MARGEN.x && x < c + MARGEN.x && y > b - MARGEN.arriba && y < d + MARGEN.abajo);
+  }
+
+  // ¿Hay camino recto (sin obstáculos) entre dos puntos?
+  despejado(x1, y1, x2, y2) {
+    const pasos = Math.ceil(Math.hypot(x2 - x1, y2 - y1) / 2);
+    for (let i = 1; i <= pasos; i++) if (!this.libre(x1 + (x2 - x1) * i / pasos, y1 + (y2 - y1) * i / pasos)) return false;
+    return true;
+  }
+
+  // Busca un camino que rodee los obstáculos (cuadrícula de 4 px, 8 direcciones)
+  buscarCamino(x0, y0, x1, y1) {
+    if (this.despejado(x0, y0, x1, y1)) return [[x1, y1]];
+    const cols = Math.ceil(ANCHO / CELDA), filas = Math.ceil(ALTO / CELDA);
+    const celda = (x, y) => [Math.floor(x / CELDA), Math.floor(y / CELDA)];
+    const centro = (i, j) => [i * CELDA + CELDA / 2, j * CELDA + CELDA / 2];
+    const [si, sj] = celda(x0, y0), [ti, tj] = celda(x1, y1);
+    const costo = new Float32Array(cols * filas).fill(Infinity), de = new Int32Array(cols * filas).fill(-1);
+    const abiertos = [[0, si, sj]];
+    costo[sj * cols + si] = 0;
+    let llegada = -1;
+    while (abiertos.length) {
+      abiertos.sort((a, b) => a[0] - b[0]);
+      const [, i, j] = abiertos.shift(), k = j * cols + i;
+      if (i === ti && j === tj) { llegada = k; break; }
+      for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+        const ni = i + di, nj = j + dj;
+        if (ni < 0 || nj < 0 || ni >= cols || nj >= filas) continue;
+        const [cx, cy] = centro(ni, nj);
+        if (!(ni === ti && nj === tj) && !this.libre(cx, cy)) continue;
+        if (di && dj && (!this.libre(...centro(i + di, j)) || !this.libre(...centro(i, j + dj)))) continue;   // sin cortar esquinas
+        const nk = nj * cols + ni, c = costo[k] + (di && dj ? 1.414 : 1);
+        if (c < costo[nk]) { costo[nk] = c; de[nk] = k; abiertos.push([c + Math.hypot(ti - ni, tj - nj), ni, nj]); }
+      }
+    }
+    if (llegada < 0) return null;
+    const puntos = [];
+    for (let k = llegada; k >= 0 && k !== sj * cols + si; k = de[k]) puntos.unshift(centro(k % cols, Math.floor(k / cols)));
+    puntos[puntos.length - 1] = [x1, y1];
+    // quita puntos intermedios cuando hay línea recta libre
+    const ruta = [];
+    let desde = [x0, y0], i = 0;
+    while (i < puntos.length) {
+      let j = puntos.length - 1;
+      while (j > i && !this.despejado(desde[0], desde[1], puntos[j][0], puntos[j][1])) j--;
+      ruta.push(puntos[j]); desde = puntos[j]; i = j + 1;
+    }
+    return ruta;
+  }
+
+  // El punto libre más cercano (si se hace clic encima de algo)
+  puntoLibre(x, y) {
+    if (this.libre(x, y)) return [x, y];
+    for (let r = 2; r < 60; r += 2)
+      for (let a = 0; a < 16; a++) {
+        const px = x + Math.cos(a / 16 * Math.PI * 2) * r, py = y + Math.sin(a / 16 * Math.PI * 2) * r;
+        if (this.libre(px, py)) return [px, py];
+      }
+    return [this.astro.x, this.astro.y];
+  }
+
   caminarA(x, y, alLlegar) {
-    this.destino = {
-      x: Phaser.Math.Clamp(x, LIMITES.x1, LIMITES.x2),
-      y: Phaser.Math.Clamp(y, LIMITES.y1, LIMITES.y2)
-    };
+    const [fx, fy] = this.puntoLibre(Phaser.Math.Clamp(x, LIMITES.x1, LIMITES.x2), Phaser.Math.Clamp(y, LIMITES.y1, LIMITES.y2));
+    this.ruta = this.buscarCamino(this.astro.x, this.astro.y, fx, fy) || [[fx, fy]];
+    this.destino = { x: fx, y: fy };
     this.alLlegar = alLlegar;
   }
 
@@ -732,16 +818,16 @@ export class Equipo extends Phaser.Scene {
     this.astro.setTexture(`astro_${this.trajeVisible}_${this.paso}`).setDepth(this.astro.y);
     this.sombra.setPosition(this.astro.x, this.astro.y).setDepth(this.astro.y - 0.5);
 
-    // Chispa flota detrás del astronauta, con un poco de retraso
+    // Bit flota detrás del astronauta, con un poco de retraso
     const lado = this.astro.flipX ? 1 : -1;
     const cx = this.astro.x + lado * 16, piso = this.astro.y - 2;
-    this.chispa.x += (cx - this.chispa.x) * Math.min(1, dt * 3);
-    this.chispa.y += (piso - 22 + Math.sin(tiempo / 250) * 2 - this.chispa.y) * Math.min(1, dt * 3);
-    this.chispa.setFlipX(this.astro.flipX).setDepth(piso + 1);
-    this.sombraChispa.setPosition(this.chispa.x, piso).setDepth(piso - 1);
-    this.dialogo.setPosition(Phaser.Math.Clamp(this.chispa.x, 64, ANCHO - 64), Math.max(this.chispa.y - 10, 22));
+    this.bit.x += (cx - this.bit.x) * Math.min(1, dt * 3);
+    this.bit.y += (piso - 22 + Math.sin(tiempo / 250) * 2 - this.bit.y) * Math.min(1, dt * 3);
+    this.bit.setFlipX(this.astro.flipX).setDepth(piso + 1);
+    this.sombraBit.setPosition(this.bit.x, piso).setDepth(piso - 1);
+    this.dialogo.setPosition(Phaser.Math.Clamp(this.bit.x, 64, ANCHO - 64), Math.max(this.bit.y - 10, 22));
 
-    this.actualizarTecnicos(delta);
+    this.actualizarTecnico(delta);
     this.animarAmbiente(delta);
     if (this.controlActivo) this.revisarProximidad();
   }
@@ -753,11 +839,16 @@ export class Equipo extends Phaser.Scene {
     if (this.teclas.up.isDown) dy = -1;
     else if (this.teclas.down.isDown) dy = 1;
 
-    if (dx || dy) { this.destino = null; this.alLlegar = null; }
-    else if (this.destino) {
-      const vx = this.destino.x - this.astro.x, vy = this.destino.y - this.astro.y;
+    if (dx || dy) { this.destino = null; this.ruta = null; this.alLlegar = null; }
+    else if (this.destino && this.ruta && this.ruta.length) {
+      // sigue el camino punto por punto, rodeando lo que haya
+      const [px, py] = this.ruta[0];
+      const vx = px - this.astro.x, vy = py - this.astro.y;
       const d = Math.hypot(vx, vy);
       if (d < 2) {
+        this.astro.setPosition(px, py);                   // justo en el punto del camino
+        this.ruta.shift();
+        if (this.ruta.length) return true;
         this.destino = null;
         const f = this.alLlegar; this.alLlegar = null;
         if (f) f();
@@ -770,10 +861,19 @@ export class Equipo extends Phaser.Scene {
     // con el traje blindado se camina más lento: así se siente el costo
     const v = VELOCIDAD * (this.trajeVisible === "blindado" ? LENTITUD_BLINDADO : 1);
     const n = Math.hypot(dx, dy);
-    this.astro.x = Phaser.Math.Clamp(this.astro.x + (dx / n) * v * dt, LIMITES.x1, LIMITES.x2);
-    this.astro.y = Phaser.Math.Clamp(this.astro.y + (dy / n) * v * dt, LIMITES.y1, LIMITES.y2);
+    const nx = this.astro.x + (dx / n) * v * dt, ny = this.astro.y + (dy / n) * v * dt;
+    if (this.ruta && this.ruta.length) {                  // tramo del camino ya revisado: libre de obstáculos
+      this.astro.setPosition(nx, ny);
+      if (dx) this.astro.setFlipX(dx < 0);
+      return true;
+    }
+    // con flechas: se desliza a lo largo de los obstáculos en vez de atravesarlos
+    let movio = false;
+    if (this.libre(nx, this.astro.y)) { this.astro.x = nx; movio = true; }
+    if (this.libre(this.astro.x, ny)) { this.astro.y = ny; movio = true; }
+    if (!movio && this.destino) { this.ruta = this.buscarCamino(this.astro.x, this.astro.y, this.destino.x, this.destino.y); if (!this.ruta) this.destino = null; }
     if (dx) this.astro.setFlipX(dx < 0);
-    return true;
+    return movio;
   }
 
   revisarProximidad() {
@@ -787,10 +887,10 @@ export class Equipo extends Phaser.Scene {
     // Apaga la anterior
     if (this.activa) {
       const a = this.activa;
-      if (a.tipo === "traje") a.foco.setFillStyle(0x4fd1ff, 0.12);
+      if (a.tipo === "traje") a.foco.setFillStyle(0x4fd1ff, 0.10);
       if (a.tipo === "nave" && a.opcion !== this.naveElegida) a.foco.setStrokeStyle(0);
-      if (a.tipo === "bascula") this.textoPeso.setText("-- kg");
-      if (a.tipo === "pantalla") this.marcoRadar.setVisible(false);
+      if (a.tipo === "bascula") { this.textoTierra.setText("-- kg"); this.textoLuna.setText(""); }
+      if (a.tipo === "pantalla") { this.marcoRadar.setVisible(false); this.burbujaDato.setVisible(false); }
     }
     this.activa = cerca;
     if (!cerca) return this.burbuja.setVisible(false);
@@ -800,12 +900,14 @@ export class Equipo extends Phaser.Scene {
     if (cerca.tipo === "nave" && cerca.opcion !== this.naveElegida) cerca.foco.setStrokeStyle(2, 0xfff27a);
     if (cerca.tipo === "bascula") {
       const traje = TRAJES.find(t => t.id === this.trajeVisible);
-      const peso = PESO_NINO + (traje ? traje.peso : 0);
-      this.textoPeso.setText(peso + " kg");
-      this.decir(this.llenar(this.t.bascula, { peso }) + " " + this.t["bascula_" + this.trajeVisible], 4000);
+      const tierra = PESO_NINO + (traje ? traje.peso : 0), luna = Math.round(tierra * GRAVEDAD_LUNA);
+      this.textoTierra.setText(this.llenar(this.t.pantalla_tierra, { kg: tierra }));
+      this.textoLuna.setText(this.llenar(this.t.pantalla_luna, { kg: luna }));
+      this.decir(this.llenar(this.t.bascula, { tierra, luna }) + " " + (traje ? this.t.bascula_luna : this.t.bascula_base), 5500);
     }
     if (cerca.tipo === "arco") this.decir(this.t["arco_" + this.trajeVisible], 4000);
-    if (cerca.tipo === "pantalla") { this.marcoRadar.setVisible(true); this.decir(this.t.pista, 5500); }
+    if (cerca.tipo === "pantalla") { this.marcoRadar.setVisible(true); this.burbujaDato.setVisible(true); this.decir(this.t.pista, 5500); }
+    if (cerca.tipo === "compuerta") this.decir(this.listos() ? this.t.bit_listos : this.t.bit_falta);
     if (cerca.tipo === "rampa") return this.abordar();
     this.mostrarBurbuja(cerca);
   }
