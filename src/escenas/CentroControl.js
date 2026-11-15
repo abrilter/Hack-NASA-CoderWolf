@@ -5,8 +5,8 @@
 //  - La mochila nunca pasa de CAPACIDAD_MOCHILA.
 //  - El tanque de oxígeno es OBLIGATORIO: sin él no se sale y, una vez
 //    guardado, no se puede quitar.
-// Historia: el robot detecta la señal del collar de Chispa (una sola vez),
-// minijuego para identificarla, mapa del polo sur, revisión del equipo y
+// Historia: la señal de Chispa ya se identificó en la Misión 1 (Senal.js);
+// el monitor muestra el mapa del polo sur. Revisión del equipo y
 // última transmisión de Itzel → puerta → Misión 3 (Equipo).
 // Las decisiones se guardan en estado.mochila y estado.mision2.
 import { ANCHO, ALTO, COLOR, OBJETOS, CAPACIDAD_MOCHILA } from "../config.js";
@@ -25,16 +25,8 @@ const ORDEN = ["oxigeno", "escudo", "radio", "botiquin", "comida", "linterna"];
 const OBLIGATORIO = "oxigeno";
 const PUERTA = { x: 280, y: 104 };
 const MONITOR = { x: 10, y: 24, w: 36, h: 30 };
-const ESPERA_ALERTA = 8000;  // ms explorando antes de que llegue la señal
 
-// Minijuego: cada pulso es [duración, silencio] en unidades
-const SENALES = {
-  A: Array(8).fill([2, 2]),                                            // uniforme
-  B: [[1, 1], [1, 1], [3, 3], [1, 1], [1, 1], [3, 3], [1, 1], [1, 1], [3, 3]],   // corto, corto, largo
-  C: [[3, 1], [1, 3], [2, 1], [1, 1], [3, 2], [1, 1], [2, 3], [1, 1]]  // irregular
-};
-const CORRECTA = "B";
-const UNIDAD = 5;            // px por unidad de pulso
+
 
 const ESTRELLA = ["...k...", "..kYk..", "kkkYkkk", "kYYYYYk", ".kYYYk.", ".kYkYk.", ".kk.kk."];
 
@@ -72,6 +64,11 @@ export class CentroControl extends Phaser.Scene {
     this.btnOmitir = [om.caja.setDepth(1500), om.etiqueta.setDepth(1501)];
     this.btnOmitir.forEach(o => o.setVisible(false));
     this.actualizarHud();
+    // La señal y el mapa se resolvieron en la Misión 1 (escena Senal): aquí el monitor solo muestra el mapa
+    Object.assign(this.reg, estado.mision1 || { alertaVista: true });
+    this.indicador.setVisible(true);
+    this.marcarLocalizada();
+    this.zonaMonitor.setInteractive({ useHandCursor: true });
 
     // Entrada: camina desde abajo; luego el robot explica el oxígeno
     this.actualizarControl();
@@ -79,8 +76,7 @@ export class CentroControl extends Phaser.Scene {
       targets: this.astro, y: 140, duration: 900,
       onComplete: () => {
         this.entro = true;
-        this.hablar([this.t.inicial, this.t.bienvenida], () =>
-          this.time.delayedCall(ESPERA_ALERTA, () => this.intentarAlerta()));
+        this.hablar([this.t.inicial, this.t.bienvenida]);
       }
     });
 
@@ -215,7 +211,7 @@ export class CentroControl extends Phaser.Scene {
       ev.stopPropagation();
       if (this.cola) return this.avanzar();
       if (!this.controlActivo) return;
-      this.reg.senalIdentificada ? this.abrirMapa() : this.abrirMinijuego();
+      this.abrirMapa();
     });
   }
 
@@ -506,67 +502,6 @@ export class CentroControl extends Phaser.Scene {
     const tx = texto(this, 42, 125, inicial, { tam: 6, ancho: 256, origenX: 0, align: "left" });
     this.modal.add(tx);
     return tx;
-  }
-
-  // ---------------------------------------------------------------- minijuego
-  abrirMinijuego() {
-    const t = this.t.mini, m = this.abrirPanel(t.titulo);
-    const g = this.add.graphics();
-    m.add(g);
-    // leyenda: la diferencia está en la LONGITUD del pulso, no en el color
-    g.fillStyle(0x7ee6ff).fillRect(96, 25, UNIDAD, 6).fillRect(170, 25, UNIDAD * 3, 6);
-    m.add([texto(this, 104, 23, t.corto, { tam: 6, origenX: 0 }), texto(this, 188, 23, t.largo, { tam: 6, origenX: 0 })]);
-
-    this.pulsos = [];
-    const filas = {};
-    Object.keys(SENALES).forEach((l, i) => {
-      const y = 48 + i * 25;
-      const nombre = this.llenar(t.senal, { l });
-      const b = this.btn(44, y, nombre, () => this.elegirSenal(l, filas), 56);
-      g.fillStyle(0x0b1026).fillRect(80, y - 9, 192, 18);
-      g.lineStyle(1, 0x333c57).strokeRect(80, y - 9, 192, 18);
-      let x = 86;
-      const rects = SENALES[l].map(([d, s]) => {
-        const r = this.add.rectangle(x, y, d * UNIDAD, 8, 0x29adff).setOrigin(0, 0.5);
-        x += (d + s) * UNIDAD;
-        return r;
-      });
-      const cabezal = this.add.rectangle(82, y, 1, 16, 0xfff27a);
-      m.add([...rects, cabezal]);
-      this.tweens.add({ targets: cabezal, x: 270, duration: 3600, repeat: -1 });
-      this.pulsos.push({ rects, cabezal });
-      this.btn(289, y, "♪", () => this.sonarPatron(SENALES[l]), 18);
-      filas[l] = { b, nombre, rects };
-    });
-    this.textoRobot = this.lineaRobot(t.explica);
-    this.btn(50, 163, t.volver, () => this.cerrarPanel(), 60);
-  }
-
-  elegirSenal(l, filas) {
-    if (this.reg.senalIdentificada) return;
-    const t = this.t.mini, f = filas[l];
-    this.reg.intentosMinijuego++;
-    if (l !== CORRECTA) {
-      f.b.etiqueta.setText("✗ " + f.nombre);
-      this.textoRobot.setText(t.mal);
-      this.sonar("mal");
-      this.tweens.add({ targets: f.rects, x: "+=2", duration: 50, yoyo: true, repeat: 3 });
-      return;
-    }
-    this.reg.senalIdentificada = true;
-    f.b.etiqueta.setText("✓ " + f.nombre);
-    f.b.caja.setStrokeStyle(2, 0x5cff8a);
-    this.textoRobot.setText(t.bien);
-    this.sonar("bien");
-    this.tweens.add({ targets: f.rects, scaleY: 1.8, duration: 160, yoyo: true, repeat: 3 });
-    // destellos
-    for (let i = 0; i < 14; i++) {
-      const a = (i / 14) * Math.PI * 2, d = this.add.rectangle(176, f.rects[0].y, 2, 2, 0xfff27a);
-      this.modal.add(d);
-      this.tweens.add({ targets: d, x: 176 + Math.cos(a) * 60, y: f.rects[0].y + Math.sin(a) * 22, alpha: 0, duration: 700 });
-    }
-    this.marcarLocalizada();
-    this.btn(250, 163, t.ver_mapa, () => this.abrirMapa(), 90);
   }
 
   // ---------------------------------------------------------------- mapa
