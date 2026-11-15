@@ -42,6 +42,7 @@
 
   "fuentes_extra": [
     { "_nota": "Datos NASA que se muestran en el juego y no están en otra parte de este archivo. Si su misión muestra un dato nuevo, agréguenlo aquí para que salga en la pantalla final." },
+    { "tema": "Las huellas del Apolo siguen en la Luna (fotos de LRO)", "fuente": "NASA LRO", "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/", "ejemplo": false },
     { "tema": "Gravedad de la Luna (1.62 m/s²)", "fuente": "NASA Moon Fact Sheet", "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "ejemplo": false }
   ],
 
@@ -71,6 +72,16 @@
     "fuente": "NASA OSDR · OSD-476 (Paul, Elardo y Ferl)",
     "fecha": "2022-05-16",
     "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-476",
+    "ejemplo": false
+  },
+
+  "huellas": {
+    "_nota": "Números de juego de la escena Huellas (Rol 4): oxígeno por pista revisada y por seguir el rastro equivocado.",
+    "o2_pista": 1,
+    "o2_error": 8,
+    "texto": "En la Luna no hay viento ni lluvia. Por eso las huellas y las marcas de ruedas duran muchísimo. La nave LRO de la NASA fotografió las de las misiones Apolo: ¡siguen ahí!",
+    "fuente": "NASA LRO · sitio de aterrizaje del Apolo 17",
+    "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/",
     "ejemplo": false
   }
 }

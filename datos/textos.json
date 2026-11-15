@@ -657,5 +657,47 @@
       "reinicio": "↺ Rescate: volver a la última baliza",
       "reinicio_stella": "Un equipo de rescate nos llevó a la última baliza segura. Tu progreso se conserva: ¡sigamos!"
     }
+  },
+  "huellas": {
+    "intro": "Mira: hay dos rastros de ruedas. Uno es del rover de Itzel. El otro es de un rover de carga de la base.",
+    "ficha": "El rover de Itzel es ligero y de ruedas delgadas. El de carga es pesado y de ruedas anchas. Acerca la lupa a los círculos ?.",
+    "decidir": "Cada pista nueva gasta {n} de oxígeno. Si eliges bien, seguimos sin gastar más. Si fallas, perdemos oxígeno al regresar.",
+    "botones": [
+      "1 ← Izquierda",
+      "2 Derecha →"
+    ],
+    "lados": [
+      "izquierdo",
+      "derecho"
+    ],
+    "lupa": {
+      "ancho_itzel": "delgada",
+      "ancho_carga": "ancha",
+      "prof_itzel": "poco honda",
+      "prof_carga": "muy honda",
+      "obj_itzel": "¡un guante!",
+      "obj_carga": "nada"
+    },
+    "pistas": {
+      "ancho_itzel": "Esta rueda es delgada: mide 2 cuadritos.",
+      "ancho_carga": "Esta rueda es ancha: mide 4 cuadritos.",
+      "prof_itzel": "La marca es poco honda. El vehículo pesa poco.",
+      "prof_carga": "La marca es muy honda. El vehículo pesa mucho y se hunde.",
+      "obj_itzel": "¡Un guante morado junto al rastro! Tiene una I blanca.",
+      "obj_carga": "Aquí solo hay polvo y piedritas."
+    },
+    "ayuda": [
+      "¿Ves los círculos con ? Acerca la lupa a uno y espera un momento.",
+      "Recuerda: lo pesado se hunde más. ¿Cuál marca es menos honda?",
+      "Mira bien cerca del rastro {lado}. ¡Algo brilla ahí!"
+    ],
+    "menos_o2": "−{n} O2",
+    "error": "¡Es el rover de carga de la base! Itzel no está aquí. Regresar nos cuesta {o2} de oxígeno.",
+    "volver": "Ya volvimos a la bifurcación. Ahora sigamos el otro rastro.",
+    "bien": "¡Este es el rastro de Itzel! Bien pensado. ¡Sigámoslo!",
+    "dato_titulo": "¿Sabías que...?",
+    "continuar": "Continuar",
+    "bitacora_bien": "Huellas: seguiste el rastro de Itzel a la primera ({pistas} pistas revisadas).",
+    "bitacora_mal": "Huellas: primero seguiste el rastro del rover de carga y perdiste {o2} de oxígeno ({pistas} pistas revisadas)."
   }
 }
