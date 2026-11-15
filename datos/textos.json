@@ -173,14 +173,14 @@
       "radio_si": "We can try to restore communication.",
       "radio_no": "We'll have to find another way to send the data.",
       "oxigeno_si": "Oxygen reserve confirmed! We're ready to help the explorers.",
-      "sin_oxigeno": "An essential object is missing: the oxygen tank. Tap «Change backpack» and go get it.",
+      "sin_oxigeno": "An essential object is missing: the oxygen tank. Tap “Change backpack” and go get it.",
       "exceso": "There's more than 10 kg. Remove optional objects to continue.",
       "modificar": "Change backpack",
       "continuar": "Continue ▸"
     },
     "transmision": {
       "titulo": "TRANSMISSION RECOVERED — DR. ITZEL RAMOS",
-      "mensaje": "«If anyone can hear this... Chispa went into the crater. I went to look for him, but I'm losing contact with the base...»",
+      "mensaje": "“If anyone can hear this... Chispa went into the crater. I went to look for him, but I'm losing contact with the base...”",
       "ladrido": "(You hear a faint bark...)",
       "corte": "— TRANSMISSION LOST —",
       "robot": "We can still help them! We have our oxygen and the gear you chose. Are you ready to start the rescue?",
@@ -302,7 +302,7 @@
             "especialista": "Lunar regolith is a fine, sharp dust that sticks to everything and can wear down seals and mechanisms. Crater slopes and rocks mean we have to plan the route with the map."
           },
           "recomendacion": "Look at the map and choose a safe route.",
-          "objeto": "Map in the «Signal» section",
+          "objeto": "Map in the “Signal” section",
           "icono": "stella_px",
           "fuente": "● Real data · NASA Moon / Moon Trek",
           "mas": {
@@ -657,7 +657,7 @@
       "evacuacion": {
         "titulo": "Evacuation",
         "texto": "An automatic ship picked everyone up. Nobody was left behind.",
-        "voz": "Chispa: What cost us the most {recurso} was «{decision}» ({valor}). Next time will go better!"
+        "voz": "Chispa: What cost us the most {recurso} was “{decision}” ({valor}). Next time will go better!"
       }
     },
     "recurso_oxigeno": "oxygen",
@@ -1149,7 +1149,9 @@
           "saliente": "If I had kept going, I'd have arrived sooner, but with much more radiation.",
           "rover": "Under the rock overhang I would have been better protected.",
           "seguir": "Under the rock overhang I would have been much better protected."
-        }
+        },
+        "comida_si": "I had food, so the long wait wasn't so tiring.",
+        "comida_no": "I had no food: the long wait made me tired and I used more air."
       },
       "aire": {
         "titulo": "Itzel's air",
@@ -1164,13 +1166,17 @@
         "titulo": "The messages",
         "radio": "I fixed the radio.",
         "texto": "I sent these messages to Earth: {lista}.",
-        "ysi": "If I had sent «{falta}»: {efecto}"
+        "ysi": "If I had sent “{falta}”: {efecto}",
+        "radio_kit": "I fixed the radio fast because I brought the radio kit.",
+        "radio_sin_kit": "I fixed the radio, but without the kit it took longer and cost more air."
       },
       "regreso": {
         "titulo": "The trip back",
         "rover": "We came back in the rover. It was fast.",
         "caminar": "We walked back at Itzel's pace.",
-        "sin_rover": "Without the rover, walking was the only way back."
+        "sin_rover": "Without the rover, walking was the only way back.",
+        "botiquin_si": "The first-aid kit helped Itzel get her strength back.",
+        "botiquin_no": "Without a first-aid kit, Itzel was tired and walked slower."
       },
       "viaje": {
         "titulo": "The solar alert",

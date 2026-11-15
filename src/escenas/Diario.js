@@ -176,7 +176,8 @@ export class Diario extends Phaser.Scene {
     if (m.tormenta) {
       const e = m.tormenta.eleccion;
       add({
-        clave: "tormenta", titulo: P.tormenta.titulo, frases: [P.tormenta[e] || e],
+        clave: "tormenta", titulo: P.tormenta.titulo,
+        frases: [P.tormenta[e] || e, e !== "seguir" ? (estado.lleva("comida") ? P.tormenta.comida_si : P.tormenta.comida_no) : ""].filter(Boolean),
         o2: m.tormenta.oxigeno, rad: m.tormenta.radiacion,
         sello: e === "seguir" ? "arriesgado" : porCosto(m.tormenta.oxigeno, m.tormenta.radiacion),
         ysi: P.tormenta.ysi[e],
@@ -195,11 +196,11 @@ export class Diario extends Phaser.Scene {
       });
     }
     if (r.mensajes?.length) {
-      const lista = r.mensajes.map(id => "«" + tx.rescate.mensajes[id].nombre + "»").join(` ${estado.textos.comun.y} `);
+      const lista = r.mensajes.map(id => "“" + tx.rescate.mensajes[id].nombre + "”").join(` ${estado.textos.comun.y} `);
       const falta = MENSAJES.find(id => !r.mensajes.includes(id));
       add({
         clave: "mensajes", titulo: P.mensajes.titulo,
-        frases: [r.radio ? P.mensajes.radio : "", llenar(P.mensajes.texto, { lista })].filter(Boolean),
+        frases: [r.radio ? (estado.lleva("radio") ? P.mensajes.radio_kit : P.mensajes.radio_sin_kit) : "", llenar(P.mensajes.texto, { lista })].filter(Boolean),
         o2: r.radio || 0,
         sello: r.mensajes.includes("tormenta") ? "bien" : "arriesgado",
         ysi: falta ? llenar(P.mensajes.ysi, { falta: tx.rescate.mensajes[falta].nombre, efecto: tx.rescate.mensajes[falta].efecto }) : null,
@@ -209,7 +210,8 @@ export class Diario extends Phaser.Scene {
     if (r.regreso) {
       const ef = r.regresoEfectos || {};
       add({
-        clave: "regreso", titulo: P.regreso.titulo, frases: [P.regreso[r.regreso]], o2: ef.oxigeno, rad: ef.radiacion,
+        clave: "regreso", titulo: P.regreso.titulo,
+        frases: [P.regreso[r.regreso], estado.lleva("botiquin") ? P.regreso.botiquin_si : P.regreso.botiquin_no], o2: ef.oxigeno, rad: ef.radiacion,
         sello: porCosto(ef.oxigeno, ef.radiacion), ysi: ysiCierre.regreso,
         dibujo: c => this.dibujoRegreso(c, r.regreso)
       });
@@ -457,7 +459,7 @@ export class Diario extends Phaser.Scene {
     if (!r.mensajes?.length) return c.add(this.mano(x, y, this.t.tierra.vacio, { tam: 8, ancho: w }));
     let yy = y;
     r.mensajes.forEach(id => {
-      const nombre = this.mano(x, yy, "✉ «" + tx.mensajes[id].nombre + "»", { tam: 7, color: "#3b5dc9", ancho: w });
+      const nombre = this.mano(x, yy, "✉ “" + tx.mensajes[id].nombre + "”", { tam: 7, color: "#3b5dc9", ancho: w });
       const resp = this.mano(x + 4, yy + nombre.height, tx.mensajes[id].respuesta, { tam: 7, color: TINTA, ancho: w - 4 });
       c.add([nombre, resp]);
       yy += nombre.height + resp.height + 6;

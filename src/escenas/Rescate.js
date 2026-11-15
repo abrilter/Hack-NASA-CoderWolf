@@ -200,7 +200,7 @@ export class Rescate extends Phaser.Scene {
   // Cada mensaje viaja 1.3 s a la Tierra y la respuesta 1.3 s de vuelta
   enviar(lista) {
     this.reg.mensajes = MENSAJES.filter(id => lista.includes(id));
-    estado.bitacora.push(llenar(this.t.nota_mensajes, { lista: this.reg.mensajes.map(id => "«" + this.t.mensajes[id].nombre + "»").join(` ${estado.textos.comun.y} `) }));
+    estado.bitacora.push(llenar(this.t.nota_mensajes, { lista: this.reg.mensajes.map(id => "“" + this.t.mensajes[id].nombre + "”").join(` ${estado.textos.comun.y} `) }));
     this.capa.destroy();
     this.etiqueta?.destroy(); this.etiqueta = null;
     const t = this.t.mensajes, c = this.capa = this.add.container(0, 0);
