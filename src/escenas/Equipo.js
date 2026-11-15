@@ -118,10 +118,6 @@ export class Equipo extends Phaser.Scene {
     this.input.keyboard.on("keydown-SPACE", () => this.usarZona());
   }
 
-  // Rótulo con el tamaño único de la escena
-  rotulo(x, y, s, color = "#eef1ff", profundidad = -8) {
-    return texto(this, x, y, s, { tam: TAM, color }).setDepth(profundidad);
-  }
 
   // ---------------------------------------------------------------- sala
   // Pared: paneles azules, letrero del hangar, tres monitores y ventanal con la Luna.
@@ -611,7 +607,8 @@ export class Equipo extends Phaser.Scene {
     this.bNombre.setText(info.nombre);
     this.bVentaja.setText(this.llenar(info.ventaja, zona.opcion));
     this.bCosto.setText(this.llenar(info.costo, zona.opcion));
-    this.bAccion.setText(elegida ? this.t.elegido : this.t.elegir);
+    const subir = elegida && zona.tipo === "nave" && this.listos();
+    this.bAccion.setText(subir ? this.t.abordar : elegida ? this.t.elegido : this.t.elegir);
     // trajes: debajo de la rejilla; naves: arriba, entre el título y el indicador
     const x = Phaser.Math.Clamp(zona.x, 62, ANCHO - 62);
     this.burbuja.setPosition(x, zona.tipo === "traje" ? 132 : 18).setVisible(true);
@@ -626,6 +623,8 @@ export class Equipo extends Phaser.Scene {
 
   usarZona(zona = this.activa) {
     if (!zona || !this.controlActivo) return;
+    // con traje y nave listos, la nave elegida (Enter o clic sobre ella) ya es para subir
+    if (this.listos() && zona.tipo === "nave" && zona.opcion === this.naveElegida) return this.abordar();
     if (zona.tipo === "traje") this.elegirTraje(zona.opcion);
     else if (zona.tipo === "nave") this.elegirNave(zona.opcion);
     else if (zona.tipo === "rampa") this.abordar();

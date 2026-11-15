@@ -154,6 +154,25 @@ export const DIBUJOS = {
   flecha_nav: [FLECHA, PALETA], robot_rescate: [ROBOT_RESCATE, PALETA], aviso: [AVISO, PALETA]
 };
 
+// Piloto con los colores del traje elegido (A principal, C detalle).
+// Devuelve la clave de la textura: rover_piloto_<id>.
+export function crearPiloto(escena, colores, id) {
+  const clave = `rover_piloto_${id}`;
+  dibujar(escena, clave, PILOTO, colores ? { ...PALETA, A: colores.A, C: colores.C } : PALETA);
+  return clave;
+}
+
+function dibujar(escena, clave, m, paleta) {
+  if (escena.textures.exists(clave)) return;
+  const t = escena.textures.createCanvas(clave, Math.max(...m.map(f => f.length)), m.length), ctx = t.getContext();
+  m.forEach((f, y) => [...f].forEach((l, x) => {
+    if (paleta[l] === undefined) return;
+    ctx.fillStyle = "#" + paleta[l].toString(16).padStart(6, "0");
+    ctx.fillRect(x, y, 1, 1);
+  }));
+  t.refresh();
+}
+
 export function crearTexturasExterior(escena) {
   Object.entries(DIBUJOS).forEach(([clave, [m, paleta]]) => {
     if (escena.textures.exists(clave)) return;

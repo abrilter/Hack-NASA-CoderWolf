@@ -88,7 +88,6 @@
     "letrero": "CONTROL CENTER",
     "bienvenida": "Explore the backpack area: by the door is STELLA, the monitor that analyzes the mission. Tap an object to take it or leave it. Only 10 kg fit.",
     "mochila": "BACKPACK",
-    "no_cabe": "It doesn't fit! You'd go over 10 kg. Leave something first.",
     "tomar": "{nombre} into the backpack (+{peso} kg).",
     "dejar": "You left {nombre} on the shelf.",
     "accion": "Enter or click: take / leave",
@@ -131,13 +130,6 @@
     "obligatorio_guardado": "★ REQUIRED GEAR · packed",
     "hud_o2_si": "O2: ✓ PACKED",
     "hud_o2_no": "O2: ✗ MISSING",
-    "reacciones": {
-      "linterna": "Good choice! We'll be able to light up the dark craters and look for Chispa's tracks.",
-      "radio": "Excellent! We could fix the communication with the base.",
-      "botiquin": "A good explorer is always ready for emergencies.",
-      "comida": "Supplies can be useful if our mission takes longer.",
-      "escudo": "This gear can help us boost radiation protection in a shelter."
-    },
     "omitir": "Skip ▸▸",
     "alerta": [
       "Beep, beep! Wait a moment! I'm detecting something strange...",
@@ -181,14 +173,14 @@
       "radio_si": "We can try to restore communication.",
       "radio_no": "We'll have to find another way to send the data.",
       "oxigeno_si": "Oxygen reserve confirmed! We're ready to help the explorers.",
-      "sin_oxigeno": "An essential object is missing: the oxygen tank. Tap «Change backpack» and go get it.",
+      "sin_oxigeno": "An essential object is missing: the oxygen tank. Tap “Change backpack” and go get it.",
       "exceso": "There's more than 10 kg. Remove optional objects to continue.",
       "modificar": "Change backpack",
       "continuar": "Continue ▸"
     },
     "transmision": {
       "titulo": "TRANSMISSION RECOVERED — DR. ITZEL RAMOS",
-      "mensaje": "«If anyone can hear this... Chispa went into the crater. I went to look for him, but I'm losing contact with the base...»",
+      "mensaje": "“If anyone can hear this... Chispa went into the crater. I went to look for him, but I'm losing contact with the base...”",
       "ladrido": "(You hear a faint bark...)",
       "corte": "— TRANSMISSION LOST —",
       "robot": "We can still help them! We have our oxygen and the gear you chose. Are you ready to start the rescue?",
@@ -310,7 +302,7 @@
             "especialista": "Lunar regolith is a fine, sharp dust that sticks to everything and can wear down seals and mechanisms. Crater slopes and rocks mean we have to plan the route with the map."
           },
           "recomendacion": "Look at the map and choose a safe route.",
-          "objeto": "Map in the «Signal» section",
+          "objeto": "Map in the “Signal” section",
           "icono": "stella_px",
           "fuente": "● Real data · NASA Moon / Moon Trek",
           "mas": {
@@ -393,6 +385,7 @@
     "bienvenida": "Hi, I'm Bit, the hangar robot! Choose your suit and your ship. Walk to wherever you want to start.",
     "elegir": "Enter or click: choose",
     "elegido": "✓ Chosen",
+    "abordar": "Enter or click: board ▸",
     "opciones": {
       "blindado": {
         "nombre": "Armored suit",
@@ -415,10 +408,6 @@
         "costo": "- Only {combustible} fuel"
       }
     },
-    "rotulo_naves": {
-      "grande": "BIG",
-      "pequena": "SMALL"
-    },
     "bit_traje": "The {nombre} looks great on you!",
     "bit_nave": "The {nombre} is ready!",
     "bit_listos": "All set! Board your ship up the ramp.",
@@ -435,7 +424,6 @@
     "zona_pruebas": "SUIT TEST",
     "rotulo_bascula": "SCALE",
     "rotulo_arco": "RADIATION",
-    "estacion_o2": "OXYGEN",
     "o2_si": "Your backpack has a tank! It adds +20 oxygen.",
     "o2_no": "Your backpack has no oxygen tank: the station is off.",
     "tecnicos": [
@@ -444,8 +432,7 @@
       "The Moon has almost no air: ships can only brake with their thrusters.",
       "A solar storm shoots out particles at hundreds of kilometers per second.",
       "A day on the Moon lasts almost a month on Earth."
-    ],
-    "bit_tanque": "Your backpack tank adds +20 O2!"
+    ]
   },
   "viaje": {
     "titulo": "Solar alert!",
@@ -628,12 +615,10 @@
     "pregunta": "Do we fix the radio to warn Earth now, or leave right away?",
     "herida_si": "With the first-aid kit, Itzel gets her strength back and walks better.",
     "herida_no": "Without a first-aid kit, Itzel walks slower (-{costo} O2).",
-    "reparar": "Fix radio ({costo} O2)",
     "salir": "Leave now",
     "nota_reparar": "You fixed the radio: the data reached Earth in time.",
     "nota_salir": "You left fast; the data will arrive when you get back.",
     "nota_herida": "Without a first-aid kit, Itzel walked slower because she was tired, and we used more oxygen.",
-    "planta_boton": "▸ Chispa's plant",
     "planta_titulo": "Chispa's plant!",
     "planta_texto": "Chispa took care of this little plant at the base. It's real: in 2021, scientists planted this same plant (Arabidopsis) in lunar soil brought back by the Apollo 11, 12, and 17 missions. All the seeds sprouted! But they grew slower and got stressed, because lunar soil is very tough for plants.",
     "planta_cerrar": "Tap to close",
@@ -672,16 +657,12 @@
       "evacuacion": {
         "titulo": "Evacuation",
         "texto": "An automatic ship picked everyone up. Nobody was left behind.",
-        "voz": "Chispa: What cost us the most {recurso} was «{decision}» ({valor}). Next time will go better!"
+        "voz": "Chispa: What cost us the most {recurso} was “{decision}” ({valor}). Next time will go better!"
       }
     },
     "recurso_oxigeno": "oxygen",
     "recurso_radiacion": "radiation",
     "b_bitacora": "Mission log",
-    "b_ysi": "What if…?",
-    "b_planta": "The plant",
-    "titulo_cadena": "Your mission, decision by decision",
-    "cadena_vacia": "Play the whole mission to see each decision here.",
     "c_mochila": "Backpack: {objetos}",
     "c_linterna_si": "There was light in the dark crater",
     "c_linterna_no": "No flashlight: the dark was harder",
@@ -692,20 +673,6 @@
     "c_crater": "You crossed the frozen crater",
     "c_crater_efecto": "{o2} O2 · {choques} bumps",
     "c_mensaje": "Message: {nombre}",
-    "titulo_ysi": "What if…?",
-    "ysi_explica": "The game replays the ending with the other option:",
-    "ysi_real": "You chose «{opcion}»: O2 {o2} · radiation {rad} → {final}",
-    "ysi_otra": "What if «{opcion}»? O2 {o2} · radiation {rad} → {final}",
-    "ysi_igual": "With that decision the ending would have been the same.",
-    "ysi_cambia": "With that decision the ending would have changed!",
-    "ysi_vacio": "Play the whole rescue to see what would have happened.",
-    "ysi_aire": "Air",
-    "ysi_regreso": "Trip back",
-    "ysi_mensajes": "Messages",
-    "ysi_real_m": "You sent «{a}» and «{b}»: O2 {o2} · radiation {rad} → {final}",
-    "ysi_otra_m": "What if you sent «{nuevo}» instead of «{viejo}»? O2 {o2} · radiation {rad} → {final}",
-    "titulo_planta": "Chispa's plant",
-    "planta_itzel": "Itzel: This plant grew at the base. I'm leaving it with you: take good care of it.",
     "titulo_exito": "Mission accomplished!",
     "titulo_fallo": "The mission came back",
     "sol_vivo": "☀ Your storm is real: the Sun launched it on {fecha} at {vel} km/s. It's today's Sun! ↗",
@@ -713,7 +680,7 @@
     "sol_real": "☀ Your storm is real: the Sun launched it on {fecha} at {vel} km/s. ↗",
     "resumen_fuentes": "NASA science in this game: {reales} real facts and {ejemplo} examples (not verified yet).",
     "fuentes_titulo": "Real science!",
-    "fuentes_sub": "Real things NASA discovered that we used in the mission.",
+    "fuentes_sub": "Real things NASA discovered that we used in the mission. Tap a card to open its NASA page.",
     "fuentes_real": "✓ Real",
     "fuentes_ejemplo": "⚠ Example",
     "fuentes_pagina": "{n} of {total}",
@@ -745,10 +712,6 @@
     },
     "ver_fuentes": "NASA sources",
     "otra_vez": "Play again",
-    "titulo_fuentes": "NASA sources",
-    "leyenda_fuentes": "✓ Real data: measured by NASA, with its page.  ⚠ EXAMPLE DATA: a test number we haven't verified yet. «Not live»: NASA didn't answer and we used a saved record. Tap a row to open its source.",
-    "titulo_bitacora": "Mission log",
-    "bitacora_mas": "… and {n} more decisions (tap to see them all)",
     "cerrar": "Close",
     "mi_insignia": "My badge",
     "titulo_insignia": "Design your mission badge",
@@ -1059,7 +1022,6 @@
     "blindado": "With the armored suit you use more.",
     "carga": "You carry {kg} kg. On the Moon everything weighs one sixth as much: it feels like {luna} kg.",
     "soltar": "Tap an object below to leave it.",
-    "soltado": "You leave it here",
     "elegir": "Choose",
     "continuar": "Continue",
     "resultado_rodear": "You went around the rocks in the rover. You used {o2} oxygen.",
@@ -1109,9 +1071,9 @@
     "titulo": "Mission journal",
     "de": "by {nombre}",
     "portada_final": "Ending: {final}",
-    "portada_pasa": "Turn the page ▸",
+    "portada_pasa": "Turn the page ▸ (arrows)",
     "pagina": "page {n} of {total}",
-    "volver": "◂ Back",
+    "volver": "◂ Back (Esc)",
     "otra_vez": "Play again",
     "costo_nada": "It didn't cost me any air.",
     "ysi": "What if…?",
@@ -1187,7 +1149,9 @@
           "saliente": "If I had kept going, I'd have arrived sooner, but with much more radiation.",
           "rover": "Under the rock overhang I would have been better protected.",
           "seguir": "Under the rock overhang I would have been much better protected."
-        }
+        },
+        "comida_si": "I had food, so the long wait wasn't so tiring.",
+        "comida_no": "I had no food: the long wait made me tired and I used more air."
       },
       "aire": {
         "titulo": "Itzel's air",
@@ -1202,13 +1166,28 @@
         "titulo": "The messages",
         "radio": "I fixed the radio.",
         "texto": "I sent these messages to Earth: {lista}.",
-        "ysi": "If I had sent «{falta}»: {efecto}"
+        "ysi": "If I had sent “{falta}”: {efecto}",
+        "radio_kit": "I fixed the radio fast because I brought the radio kit.",
+        "radio_sin_kit": "I fixed the radio, but without the kit it took longer and cost more air."
       },
       "regreso": {
         "titulo": "The trip back",
         "rover": "We came back in the rover. It was fast.",
         "caminar": "We walked back at Itzel's pace.",
-        "sin_rover": "Without the rover, walking was the only way back."
+        "sin_rover": "Without the rover, walking was the only way back.",
+        "botiquin_si": "The first-aid kit helped Itzel get her strength back.",
+        "botiquin_no": "Without a first-aid kit, Itzel was tired and walked slower."
+      },
+      "viaje": {
+        "titulo": "The solar alert",
+        "escudo": "A solar alert came during the trip. I charged the ship's shield.",
+        "acelerar": "A solar alert came during the trip. I sped up to land before the storm.",
+        "guardar": "A solar alert came during the trip. I saved my air for the rescue.",
+        "ysi": {
+          "escudo": "If I had saved the air, I'd have had more oxygen, but less protection.",
+          "acelerar": "With the shield charged, the storm would have hurt me less.",
+          "guardar": "With the shield charged, the storm would have hurt me less."
+        }
       }
     },
     "tierra": {

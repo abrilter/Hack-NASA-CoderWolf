@@ -44,11 +44,14 @@
 | 31 | Escena **Senal** quitada: su minijuego ya vive en el Centro de Control (STELLA). `estado.mision1` queda por compatibilidad | Senal.js (borrada), main.js ⚙️, comentarios |
 | 32 | Rocas a **pantalla completa**: la ilustración ocupa todo el ancho; la carga y el detalle van en paneles sobre el cielo y las opciones abajo (ya no repite el formato de la Tormenta) | Rocas.js |
 | 33 | Escena **Viaje** rehecha: «¡Alerta solar!» en pleno vuelo con la nube real (DONKI o famosa), entre Equipo y Aterrizaje. Tres opciones: cargar el escudo (+30 escudo, −6 O2), acelerar (aterrizas 3 h antes, con 70 % del combustible) o guardar el aire. La mejor depende del Sol del día: con 1700 km/s conviene el escudo. Desde aquí la tormenta de la partida queda fija. Balance (CME 1332): 94 de 104 equipos ganables; las tres opciones entre 38 % y 47 % | Viaje.js, simulacion.js, Aterrizaje (combustible), datos.json, textos.json, config.js ⚙️ (`ORDEN`), Final, balance.html |
+| 34 | Juego completo en **inglés** (textos, datos NASA, fechas «May 10, 2024», letreros, barra de pruebas); la estructura no cambió | textos.json, datos.json, diario.json, ui.js, sol.js, index.html |
+| 35 | Pantalla «Real science!» (fuentes): cada tarjeta vuelve a mostrar **su fuente NASA**, se puede tocar para abrir la página, y la tormenta dice «not live» cuando no vino en vivo | Final.js |
+| 36 | Diario: página nueva para la **alerta solar del Viaje** y **teclado** (Esc vuelve al Final; Enter/Espacio pasan la página) | Diario.js, textos.json |
+| 37 | Limpieza: `Final.panel()` sin uso, 30 textos sin uso, `Equipo.rotulo()`, import `ALTO` en Tormenta, campos de Rocas que no existen en el Diario, y campos reservados del estado (`hielo_kg`, `chispaEncontrado`, `estacionDSN`, `mensajeEnviado`, `combustibleRestante`, `carga`, `mision1`) | Final, Diario, Equipo, Tormenta, CentroControl, Carga, estado.js ⚙️, textos.json |
 
 ### Pendiente
 - Datos que siguen de ejemplo (son valores de juego): rutas y radiación (puntos de juego). Agregar más tormentas famosas verificadas a `cme_historicas` con `pruebas/tormentas.html`.
 - Posición dibujada redondeada al pixel (P2): obliga a separar la posición lógica de la dibujada en Equipo, CentroControl y Exterior; mucho riesgo para un temblor de 1 pixel.
-- Los campos reservados del estado (`hielo_kg`, `chispaEncontrado`, …) siguen sin uso.
 - TODO de arte (Rol 3): fuente pixel y PNG.
 
 ### Lista de verificación final
