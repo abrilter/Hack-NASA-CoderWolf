@@ -15,6 +15,7 @@ import { ANCHO, ALTO, COLOR, TRAJES, NAVES, siguienteEscena } from "../config.js
 import { estado } from "../estado.js";
 import { texto } from "../ui.js";
 import { crearTexturasEquipo } from "../pixelart.js";
+import { soltarTormenta } from "../nasa/sol.js";
 
 // Los números de trajes y naves están en config.js (balance compartido con el
 // modelo y el modo prueba). Se verifican con pruebas/balance.html.
@@ -76,6 +77,7 @@ export class Equipo extends Phaser.Scene {
   constructor() { super("Equipo"); }
 
   create() {
+    soltarTormenta();                 // nueva partida: puede usar el dato en vivo que llegó tarde
     this.t = estado.textos.equipo;
     this.trajeElegido = null;
     this.naveElegida = null;

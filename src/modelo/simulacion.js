@@ -8,6 +8,8 @@
 // ===========================================================================
 import { LIMITES, LIMITE_RADIACION } from "../estado.js";
 import { llenar } from "../ui.js";
+import { velocidadDeJuego } from "../nasa/sol.js";
+import { OBJETOS } from "../config.js";
 
 const KM_SOL_TIERRA = 149_600_000;
 
@@ -17,9 +19,10 @@ export function horasDeLlegada(velocidadKms) {
 }
 
 // Horas que faltan para la tormenta cuando ya aterrizaste: a la llegada de la
+// (la velocidad real de DONKI, limitada a un rango jugable: velocidadDeJuego)
 // CME se le restan las horas de vuelo de la nave (la grande es más lenta).
 export function horasTormentaAlAterrizar(datos, estado) {
-  return horasDeLlegada(datos.cme.velocidad_kms) - (estado.nave?.horasViaje ?? 0);
+  return horasDeLlegada(velocidadDeJuego(datos)) - (estado.nave?.horasViaje ?? 0);
 }
 
 // Qué parte de la radiación se bloquea (0 = nada, 0.9 = casi todo)
@@ -69,13 +72,33 @@ export function opcionesDeRuta(datos, estado) {
 // Fuerza de la tormenta (puntos de radiación por hora sin protección): la dosis
 // de juego, más fuerte si la nube (CME) de DONKI viene más rápida.
 export function fuerzaTormenta(datos) {
-  const T = datos.tormenta, v = datos.cme?.velocidad_kms || T.vel_referencia_kms;
+  const T = datos.tormenta, v = velocidadDeJuego(datos);
   return datos.radiacion.dosis_juego_por_hora * Math.min(T.factor_max, Math.max(T.factor_min, v / T.vel_referencia_kms));
 }
 
 // ¿Sigue el rover? Lo deja la escena Rocas si el niño cruza a pie
 // (estado.misiones.rocas.dejoRover). Si esa escena no se jugó, el rover sigue.
 export const tieneRover = estado => estado.misiones?.rocas?.dejoRover !== true;
+
+// ---------------------------------------------------------------- rocas
+// Opciones de la escena Rocas. Rodear: horas de camino con el rover (gasto del
+// traje por hora). A pie: un tramo corto, pero el oxígeno sube con los kg que se
+// cargan (mochila sin lo que se suelta + traje) y más con el traje blindado; y el
+// rover se queda (sin refugio en la tormenta y regreso caminando).
+export function pesoMochila(estado, soltados = []) {
+  return (estado.mochila || []).filter(id => !soltados.includes(id))
+    .reduce((kg, id) => kg + (OBJETOS.find(o => o.id === id)?.peso || 0), 0);
+}
+export function opcionesRocas(datos, estado, soltados = []) {
+  const J = datos.rocas.juego, gasto = estado.traje?.gastoO2 || 2;
+  const kg = pesoMochila(estado, soltados) + (estado.traje?.peso || 0);
+  const blindado = estado.traje?.id === "blindado";
+  const pie = (J.pie_base_o2 + kg * J.pie_o2_por_kg) * (blindado ? J.blindado_factor : 1);
+  return {
+    rodear: { efectos: { oxigeno: -Math.round(J.rodear_h * gasto) }, dejaRover: false },
+    pie: { efectos: { oxigeno: -Math.round(pie) }, dejaRover: true, kg, blindado }
+  };
+}
 
 // Opciones de la escena Tormenta. Radiación = fuerza × horas × (1 − protección),
 // donde la protección junta el refugio con el traje y el escudo.

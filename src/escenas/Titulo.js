@@ -1,5 +1,5 @@
 // Pantalla de título, como el inicio de una película. Dueño: Rol 5 (textos) y Rol 3 (arte).
-// Lee: textos.pantalla_titulo · Escribe: nada · Sigue: Intro.
+// Lee: textos.pantalla_titulo y el estado del Sol (nasa/sol.js) · Escribe: nada · Sigue: Intro.
 // Cielo con estrellas, el borde de la Luna y un rover que cruza el horizonte.
 // Primero "… presenta", luego el nombre del juego en letras pixel amarillas
 // (fuente de 5×7 dibujada con mapas de letras, como el resto del arte) y al
@@ -7,7 +7,8 @@
 // segundo empieza la historia.
 import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { texto } from "../ui.js";
+import { texto, llenar } from "../ui.js";
+import { sol, fechaLarga } from "../nasa/sol.js";
 import { crearTextura } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
 import { estrellas } from "./Intro.js";
@@ -84,7 +85,8 @@ export class Titulo extends Phaser.Scene {
     this.brillo = this.add.image(ANCHO / 2, 52, clave).setScale(this.px).setAlpha(0).setDepth(21).setBlendMode(Phaser.BlendModes.ADD);
     this.presenta = texto(this, ANCHO / 2, ALTO / 2 - 6, t.presenta, { tam: 8, color: COLOR.tenue }).setAlpha(0).setDepth(20);
     this.sub = texto(this, ANCHO / 2, 52 + this.titulo.displayHeight / 2 + 6, t.subtitulo, { tam: 8, color: "#eef1ff" }).setAlpha(0).setDepth(20);
-    this.empezar = texto(this, ANCHO / 2, 98, t.empezar, { tam: 7, color: COLOR.titulo }).setAlpha(0).setDepth(20);
+    this.solTxt = texto(this, ANCHO / 2, 91, t.sol_consultando, { tam: 6, ancho: 280, color: "#ffcd75" }).setAlpha(0).setDepth(20);
+    this.empezar = texto(this, ANCHO / 2, 104, t.empezar, { tam: 7, color: COLOR.titulo }).setAlpha(0).setDepth(20);
 
     // la película: presenta → nombre con destello → subtítulo → "empezar"
     this.tweens.chain({ targets: this.presenta, tweens: [
@@ -95,7 +97,7 @@ export class Titulo extends Phaser.Scene {
       this.tweens.add({ targets: this.titulo, alpha: 1, scale: this.px, duration: 900, ease: "Cubic.easeOut",
         onComplete: () => { this.cameras.main.flash(250, 255, 212, 92); this.destello(); } });
     });
-    this.time.delayedCall(4200, () => this.tweens.add({ targets: this.sub, alpha: 1, duration: 700 }));
+    this.time.delayedCall(4200, () => this.tweens.add({ targets: [this.sub, this.solTxt], alpha: 1, duration: 700 }));
     this.time.delayedCall(5000, () => this.mostrarEmpezar());
 
     const tocar = () => (this.listo ? this.seguir() : this.saltar());
@@ -104,14 +106,24 @@ export class Titulo extends Phaser.Scene {
     this.cameras.main.fadeIn(600);
   }
 
+  // la línea del Sol cambia sola cuando contesta la NASA (sin esperar)
+  update() {
+    const t = estado.textos.pantalla_titulo, c = estado.datos.cme;
+    const msg = sol.estado === "en_vivo" && estado.donkiEnVivo ? llenar(t.sol_en_vivo, { fecha: fechaLarga(c.fecha), vel: c.velocidad_kms })
+      : sol.estado === "tranquilo" ? llenar(t.sol_tranquilo, { nombre: c.nombre || fechaLarga(c.fecha) })
+      : sol.estado === "sin_red" ? llenar(t.sol_sin_red, { fecha: fechaLarga(c.fecha) })
+      : t.sol_consultando;
+    if (this.solTxt.text !== msg) this.solTxt.setText(msg);
+  }
+
   // borde de la Luna abajo, con cráteres y la Tierra arriba a la derecha
   dibujarLuna() {
     const g = this.add.graphics().setDepth(5);
-    const cx = ANCHO / 2, cy = ALTO + 112, r = 182;
+    const cx = ANCHO / 2, cy = ALTO + 138, r = 182;
     g.fillStyle(0x29366f).fillCircle(cx, cy, r + 2);
     g.fillStyle(0x566c86).fillCircle(cx, cy, r);
     g.fillStyle(0x94b0c2).fillCircle(cx - 6, cy + 4, r - 4);
-    [[96, 140, 8], [130, 128, 6], [196, 132, 8], [236, 146, 7], [160, 150, 11], [70, 158, 7], [260, 160, 6]].forEach(([x, y, rr]) => {
+    [[104, 160, 8], [138, 150, 6], [196, 152, 8], [232, 160, 7], [162, 162, 9]].forEach(([x, y, rr]) => {
       g.fillStyle(0x566c86).fillEllipse(x, y, rr * 2, rr * 0.8);
       g.fillStyle(0xc2c3c7).fillEllipse(x + 1, y + 1, rr * 1.6, rr * 0.5);
     });
@@ -162,10 +174,11 @@ export class Titulo extends Phaser.Scene {
   // primer toque: saltar la animación y dejar todo en su lugar
   saltar() {
     this.time.removeAllEvents();
-    this.tweens.killTweensOf([this.presenta, this.titulo, this.sub]);
+    this.tweens.killTweensOf([this.presenta, this.titulo, this.sub, this.solTxt]);
     this.presenta.setAlpha(0);
     this.titulo.setScale(this.px).setAlpha(1);
     this.sub.setAlpha(1);
+    this.solTxt.setAlpha(1);
     this.destello();
     this.time.addEvent({ delay: 2600, loop: true, callback: () => this.estrellaFugaz() });
     this.mostrarEmpezar();

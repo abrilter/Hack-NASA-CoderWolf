@@ -36,14 +36,15 @@
 | 23 | Código muerto quitado: la opción "refugio" (modelo, textos y datos), `costosRescate`, `ui.paginas()` | simulacion.js, Ruta, ui.js, datos, textos |
 | 24 | Datos verificados con fuente NASA: velocidad del rover (VIPER, 0.36–0.72 km/h; el juego usa 0.5), luz del polo sur (NASA Science), polvo lunar (Gaier 2005, NTRS). El polvo ahora aparece en "Fuentes NASA" | datos.json, Final, LEEME |
 | 25 | Pantalla de inicio de película: «STELLA'S RIDE» en letras pixel amarillas (fuente 5×7 hecha con mapas de letras), estrellas, la Luna y un rover que la recorre; «CoderWolf presenta», subtítulo y «Toca o presiona Enter». El primer toque salta la animación. El nombre se cambia en `textos.json → pantalla_titulo` | src/escenas/Titulo.js (nueva), main.js ⚙️, config.js ⚙️ (`ORDEN`), Carga.js ⚙️, index.html |
+| 26 | **El Sol de hoy sin esperar a la NASA**: el juego arranca al instante con un respaldo real (última consulta buena guardada o la tormenta de mayo de 2024, 1332 km/s según DONKI) y consulta DONKI en segundo plano; el dato en vivo se usa si llega antes de la Ruta (si no, en la siguiente partida). Distingue nube rápida / Sol tranquilo / sin conexión, y la pantalla de título lo anuncia. El modelo limita el efecto entre 1000 y 1700 km/s (antes, 2500 km/s dejaba ganar al 18 %). La CME de respaldo ya no es un dato de ejemplo | src/nasa/sol.js (nuevo), donki.js, Carga.js ⚙️, simulacion.js, Titulo, Ruta, Tormenta, Equipo, ui.js ⚙️, datos.json, textos.json, pruebas/tormentas.html (nuevo) |
+| 27 | Clave propia de api.nasa.gov (1000 consultas por hora) y **5 tormentas reales verificadas en DONKI** que iban hacia la Tierra: San Patricio 2015 (1000 km/s), Halloween 2021 (1109), mayo 2024 (1332), octubre 2024 (1509) y septiembre 2017 (1636). Sin dato en vivo se elige una al azar: cada partida puede tocar una distinta, de fácil a muy difícil | donki.js, datos.json |
+| 28 | El Final cierra la historia del Sol: «☀ Tu tormenta es real: …» (en vivo, famosa o guardada), con enlace a DONKI | Final.js, textos.json |
+| 29 | **Escena Rocas** (entre Huellas y Tormenta): rodear con el rover (más oxígeno, el rover sigue) o cruzar a pie (el oxígeno sube con los kg de mochila + traje y con el traje blindado; el rover se queda, así que no hay refugio bajo el rover en la Tormenta y el regreso es caminando). Se ve el peso que se carga («en la Luna todo pesa la sexta parte») y se pueden soltar objetos antes de cruzar. Dato real: gravedad lunar 1.62 m/s² (NASA Moon Fact Sheet). Escribe `estado.misiones.rocas`; también entra en la bitácora del Final y en `pruebas/balance.html` (CME 1332 km/s: 90 de 104 equipos ganables; rodear 49 %, a pie 38 %) | src/escenas/Rocas.js (nueva), simulacion.js, datos.json, textos.json, main.js ⚙️, config.js ⚙️ (`ORDEN`), Final.js |
 
 ### Pendiente
-- **CME en vivo muy rápida**: si DONKI trae una CME de 2500 km/s, solo el 18 % de los equipos puede ganar (con 1000 km/s, el 100 %). Opción: aceptar en vivo solo CME entre 1000 y 2000 km/s, o limitar su efecto en el modelo.
-- Clave propia de api.nasa.gov en `src/nasa/donki.js` en lugar de `DEMO_KEY` (la tiene que pedir alguien del equipo; es gratis).
-- Datos que siguen de ejemplo (son valores de juego): rutas, radiación (puntos de juego) y la CME guardada.
+- Datos que siguen de ejemplo (son valores de juego): rutas y radiación (puntos de juego). Agregar más tormentas famosas verificadas a `cme_historicas` con `pruebas/tormentas.html`.
 - Posición dibujada redondeada al pixel (P2): obliga a separar la posición lógica de la dibujada en Equipo, CentroControl y Exterior; mucho riesgo para un temblor de 1 pixel.
 - Viaje y Senal siguen fuera del recorrido, y los campos reservados del estado (`hielo_kg`, `chispaEncontrado`, …) siguen sin uso: son de otras personas del equipo, no se borraron.
-- Escena Rocas (Shadia): debe escribir `estado.misiones.rocas = { dejoRover: true }`.
 - TODO de arte (Rol 3): fuente pixel y PNG.
 
 ### Lista de verificación final

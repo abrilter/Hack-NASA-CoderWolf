@@ -1,10 +1,10 @@
 // Carga dibujos, datos y textos. Dueño: Rol 1.
-// Lee: datos.json, textos.json, DONKI y la dirección (?escena=) · Escribe: datos, textos, datos.cme.en_vivo, donkiEnVivo.
+// Lee: datos.json, textos.json y la dirección (?escena=) · Escribe: datos, textos; la tormenta la elige nasa/sol.js.
 // También tiene el MODO PRUEBA: index.html?escena=NombreEscena abre esa escena
 // directo con un estado de prueba (ver ESTADO_PRUEBA en config.js).
 import { ASSETS, ANCHO, ALTO, MISIONES_JSON, ESTADO_PRUEBA, TRAJES, NAVES, OBJETOS, ORDEN } from "../config.js";
 import { estado } from "../estado.js";
-import { cmeReciente } from "../nasa/donki.js";
+import { iniciarSol } from "../nasa/sol.js";
 import { texto } from "../ui.js";
 
 const RECURSOS = ["oxigeno", "escudo", "radiacion", "energia", "hielo_kg", "combustibleRestante"];
@@ -13,7 +13,7 @@ export class Carga extends Phaser.Scene {
   constructor() { super("Carga"); }
 
   preload() {
-    texto(this, ANCHO / 2, ALTO / 2, "Contactando a la NASA...");
+    texto(this, ANCHO / 2, ALTO / 2, "Cargando…");
     // Si un PNG no existe todavía, no pasa nada: se crea un cuadro de color.
     this.load.on("loaderror", archivo => console.info("[assets] falta", archivo.src, "→ se usa cuadro provisional"));
     ASSETS.forEach(a => this.load.image(a.clave, "assets/" + a.archivo));
@@ -23,7 +23,7 @@ export class Carga extends Phaser.Scene {
     Object.values(MISIONES_JSON).forEach(id => this.load.json("m_" + id, `datos/misiones/${id}.json`));
   }
 
-  async create() {
+  create() {
     this.crearProvisionales();
     estado.datos = this.cache.json.get("datos");
     estado.textos = this.cache.json.get("textos");
@@ -31,15 +31,9 @@ export class Carga extends Phaser.Scene {
     const params = new URLSearchParams(location.search);
     const prueba = params.get("escena");
 
-    estado.datos.cme.en_vivo = false;        // la guardada: se ve "no en vivo"
-    if (!params.has("sinred")) {
-      const cme = await cmeReciente(30);
-      // Una CME lenta llegaría en días y la tormenta dejaría de importar:
-      // en ese caso se usa la CME real guardada en datos.json.
-      const minima = estado.datos.modelo?.cme_min_kms ?? 0;
-      if (cme && cme.velocidad_kms >= minima) { estado.datos.cme = { ...cme, en_vivo: true }; estado.donkiEnVivo = true; }
-      else if (cme) console.info(`[DONKI] la CME más rápida del mes va a ${cme.velocidad_kms} km/s (< ${minima}): se usa la guardada`);
-    }
+    // La tormenta del Sol: empieza con un respaldo real y consulta DONKI en
+    // segundo plano (el juego no espera a la NASA). Ver src/nasa/sol.js.
+    iniciarSol(params.has("sinred"));
 
     if (prueba) return this.modoPrueba(prueba, params);
     this.scene.start(ORDEN[0]);

@@ -18,16 +18,19 @@ import { titulo, texto, boton, barras, datoReal, navegarConTeclado, llenar } fro
 import { opcionesTormenta, aplicar } from "../modelo/simulacion.js";
 import { crearTexturasEquipo } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
+import { fijarTormenta, fechaLarga } from "../nasa/sol.js";
 
 const SUELO = 136;                 // donde pisa el astronauta
 const ASTRO = { x: 80, alto: 24 };
 const ZONA = { x1: 0, x2: 176, y1: 34 };   // recuadro de la ilustración
-const REFUGIO_Y = { saliente: 96, rover: 92 };   // donde el refugio frena partículas
+const ROVER_ESCALA = 1.5;          // rover 60×32 junto al astronauta de 24 px de alto
+const REFUGIO_Y = { saliente: 96, rover: SUELO - Math.round(19 * ROVER_ESCALA) };   // donde el refugio frena partículas (rover: su techo)
 
 export class Tormenta extends Phaser.Scene {
   constructor() { super("Tormenta"); }
 
   create() {
+    fijarTormenta();                  // desde aquí la tormenta de la partida ya no cambia
     navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
     this.t = estado.textos.tormenta;
     if (estado.modoPrueba && new URLSearchParams(location.search).has("sinrover")) estado.misiones.rocas = { dejoRover: true };
@@ -45,7 +48,7 @@ export class Tormenta extends Phaser.Scene {
     titulo(this, this.t.titulo, 4);
     // si en la Ruta ya pasó parte de la tormenta, aquí queda menos
     const queda = this.opciones[0].queda;
-    texto(this, ANCHO / 2 + 20, 21, llenar(this.t.info, { vel: cme.velocidad_kms, horas: T.opciones.seguir.espera_h }) +
+    texto(this, ANCHO / 2 + 20, 21, llenar(this.t.info, { fecha: fechaLarga(cme.fecha), vel: cme.velocidad_kms, horas: T.opciones.seguir.espera_h }) +
       (queda < 1 ? " " + llenar(this.t.ya_paso, { pct: Math.round((1 - queda) * 100) }) : ""),
       { tam: 6, ancho: 240, color: "#ff8a5c" });
 
@@ -98,8 +101,9 @@ export class Tormenta extends Phaser.Scene {
       this.refugio.add(g);
       this.astro.setX(ASTRO.x);
     } else if (id === "rover") {
-      // el rover apoyado en el suelo y el astronauta agachado debajo
-      const c = this.add.container(ASTRO.x + 2, SUELO).setScale(2);
+      // el rover apoyado en el suelo y el astronauta agachado pegado a él.
+      // Con ROVER_ESCALA el hueco bajo el chasis (~12 px) deja caber al astronauta agachado.
+      const c = this.add.container(ASTRO.x + 2, SUELO).setScale(ROVER_ESCALA);
       c.add([this.add.image(-20, -21, "rover_cuerpo").setOrigin(0), this.add.image(-13, -6, "rover_rueda"), this.add.image(11, -6, "rover_rueda")]);
       this.refugio.add(c);
       this.astro.setScale(1, 0.5);

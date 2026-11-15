@@ -9,6 +9,10 @@
 // ejemplo como real) y se puede tocar para abrir su página.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
+import { titulo, texto, boton, etiquetaDato, navegarConTeclado, llenar } from "../ui.js";
+import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
+import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
+import { fechaLarga } from "../nasa/sol.js";
 import { titulo, texto, boton, navegarConTeclado, llenar } from "../ui.js";
 import { crearTexturasMochila, crearTextura } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
@@ -143,7 +147,10 @@ export class Final extends Phaser.Scene {
     const cuerpo = texto(this, 126, 24, `${estado.nombreClave || t.sin_nombre}: ${f.texto}`, { tam: 6, ancho: 186, origenX: 0, align: "left" });
     const voz = this.final === "evacuacion" ? this.porQueEvacuacion() : f.voz;
     if (this.final === "evacuacion" || this.final === "completa") this.add.image(132, cuerpo.y + cuerpo.height + 8, "chispa_px");
-    texto(this, 142, cuerpo.y + cuerpo.height + 3, voz, { tam: 6, ancho: 170, origenX: 0, align: "left", color: "#ffcd75" });
+    const dice = texto(this, 142, cuerpo.y + cuerpo.height + 3, voz, { tam: 6, ancho: 170, origenX: 0, align: "left", color: "#ffcd75" });
+
+    // El Sol de verdad: la tormenta de la partida salió del Sol real (DONKI en vivo o una famosa)
+    this.lineaSol(Math.max(dice.y + dice.height + 5, 96));
 
     // Resumen honesto de las fuentes: cuántas son reales y cuántas de ejemplo
     const fuentes = fuentesNASA(estado.datos);
@@ -157,6 +164,28 @@ export class Final extends Phaser.Scene {
     this.miniInsignia();
     boton(this, 264, 145, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
     boton(this, 160, 167, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
+  }
+
+  lineaSol(y) {
+    const t = this.t, c = estado.datos.cme;
+    if (!c?.fecha) return;
+    const plantilla = c.en_vivo ? t.sol_vivo : c.nombre ? t.sol_famosa : t.sol_real;
+    // columna derecha, debajo de lo que dice Chispa (a la izquierda está la ilustración)
+    const linea = texto(this, 126, Math.min(y, 112), llenar(plantilla, { fecha: fechaLarga(c.fecha), vel: c.velocidad_kms, nombre: c.nombre }),
+      { tam: 5, ancho: 186, origenX: 0, align: "left", color: "#ff8a5c" });
+    if (c.link) linea.setInteractive({ useHandCursor: true })
+      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(c.link, "_blank", "noopener"); });
+  }
+
+  lineaSol(y) {
+    const t = this.t, c = estado.datos.cme;
+    if (!c?.fecha) return;
+    const plantilla = c.en_vivo ? t.sol_vivo : c.nombre ? t.sol_famosa : t.sol_real;
+    // columna derecha, debajo de lo que dice Chispa (a la izquierda está la ilustración)
+    const linea = texto(this, 126, Math.min(y, 112), llenar(plantilla, { fecha: fechaLarga(c.fecha), vel: c.velocidad_kms, nombre: c.nombre }),
+      { tam: 5, ancho: 186, origenX: 0, align: "left", color: "#ff8a5c" });
+    if (c.link) linea.setInteractive({ useHandCursor: true })
+      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(c.link, "_blank", "noopener"); });
   }
 
   miniInsignia() {
@@ -243,6 +272,7 @@ export class Final extends Phaser.Scene {
     if (m.crater) add(t.c_crater, llenar(t.c_crater_efecto, { o2: m.crater.oxigeno, choques: m.crater.choques }), m.crater.oxigeno);
     const huellas = estado.bitacora.find(b => b.startsWith("Huellas"));
     if (huellas) add(huellas, "");
+    if (m.rocas) add(tx.rocas.opciones[m.rocas.eleccion].nombre, efectos(m.rocas.oxigeno, 0), m.rocas.oxigeno || 0);
     if (m.tormenta) add(tx.tormenta.opciones[m.tormenta.eleccion].nombre, efectos(m.tormenta.oxigeno, m.tormenta.radiacion), m.tormenta.oxigeno, m.tormenta.radiacion);
     const r = m.rescate;
     if (r?.aire) add(tx.rescate.aire[r.aire].nombre, efectos(r.aireEfectos.oxigeno, r.aireEfectos.radiacion), r.aireEfectos.oxigeno, r.aireEfectos.radiacion);

@@ -3,6 +3,7 @@
 // TODO(Rol 3): cambiar la fuente por una fuente pixel (ej. desde Google Fonts).
 import { ANCHO, COLOR, ZOOM } from "./config.js";
 import { estado, LIMITES, LIMITE_RADIACION } from "./estado.js";
+import { fechaLarga } from "./nasa/sol.js";
 
 const FUENTE = "monospace";
 const ALTO_BOTON = 18;
@@ -51,7 +52,9 @@ export function boton(escena, x, y, contenido, alPresionar, ancho = 120) {
 export function etiquetaDato(registro) {
   const t = estado.textos?.comun || {};
   const base = registro.ejemplo ? (t.dato_ejemplo || "DATO DE EJEMPLO") : (t.dato_real || "Dato real");
-  const vivo = registro.en_vivo === true ? t.en_vivo : registro.en_vivo === false ? t.no_en_vivo : null;
+  const vivo = registro.en_vivo === true ? t.en_vivo
+    : registro.en_vivo === false ? t.no_en_vivo + (registro.consultado ? " " + llenar(t.consultado, { fecha: fechaLarga(registro.consultado) }) : "")
+    : null;
   return vivo ? `${base} · ${vivo}` : base;
 }
 
