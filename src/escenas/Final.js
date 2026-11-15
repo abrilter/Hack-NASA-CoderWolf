@@ -13,10 +13,8 @@ import { titulo, texto, boton, etiquetaDato, navegarConTeclado, llenar } from ".
 import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
 import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
 import { fechaLarga } from "../nasa/sol.js";
-import { titulo, texto, boton, navegarConTeclado, llenar } from "../ui.js";
-import { crearTexturasMochila, crearTextura } from "../pixelart.js";
+import { crearTexturasMochila} from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
-import { finalDeMision, proteccion } from "../modelo/simulacion.js";
 
 
 // ---------------------------------------------------------------- insignia (A-10)
