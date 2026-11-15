@@ -8,6 +8,7 @@ export const estado = {
   mochila: [],        // ids de OBJETOS
   traje: null,
   nave: null,
+  mision2: null,      // registro de decisiones de la Misión 2 (mapa de consecuencias)
 
   oxigeno: 100,
   escudo: 40,
@@ -16,7 +17,7 @@ export const estado = {
 
   nuevaPartida() {
     Object.assign(this, {
-      mochila: [], traje: null, nave: null,
+      mochila: [], traje: null, nave: null, mision2: null,
       oxigeno: 100, escudo: 40, radiacion: 0, bitacora: []
     });
   },

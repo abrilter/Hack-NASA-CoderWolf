@@ -21,9 +21,19 @@
   },
 
   "centro_control": {
-    "titulo": "Centro de Control",
-    "instruccion": "Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
-    "no_cabe": "No cabe en la mochila!",
+    "titulo": "Misión 2 · La mochila",
+    "letrero": "CENTRO DE CONTROL",
+    "bienvenida": "¡Prepara tu mochila! Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
+    "mochila": "MOCHILA",
+    "no_cabe": "¡No cabe! Pasarías de 10 kg. Deja algo primero.",
+    "tomar": "{nombre} a la mochila (+{peso} kg).",
+    "dejar": "Dejaste {nombre} en la repisa.",
+    "accion": "Enter o clic: tomar / dejar",
+    "puerta": "SALIDA",
+    "nombres": {
+      "oxigeno": "Tanque de oxígeno", "escudo": "Escudo de radiación", "radio": "Kit de radio",
+      "botiquin": "Botiquín", "comida": "Comida", "linterna": "Linterna"
+    },
     "objetos": {
       "oxigeno":  "Tanque de oxígeno: +20 de oxígeno.",
       "escudo":   "Escudo portátil: protege de la radiación.",
@@ -31,6 +41,90 @@
       "radio":    "Kit de radio: repara la radio de Itzel.",
       "botiquin": "Botiquín: por si alguien se lastima.",
       "comida":   "Comida: energía para el viaje."
+    },
+    "tarjeta": {
+      "titulo": "Dato NASA · Linterna",
+      "texto": "En el polo sur de la Luna hay cráteres donde nunca llega la luz del Sol. Allá abajo todo está oscuro y helado.",
+      "fuente": "Dato real · NASA Lunar Reconnaissance Orbiter (LRO)",
+      "cerrar": "Clic para cerrar"
+    },
+    "tarjeta_mapa": {
+      "titulo": "DATO NASA",
+      "texto": "En el polo sur de la Luna existen regiones de cráteres que permanecen en sombra permanente. Sin luz del Sol, una linterna es clave para explorar.",
+      "fuente": "Dato real · NASA Lunar Reconnaissance Orbiter (LRO)",
+      "cerrar": "Clic para cerrar"
+    },
+    "inicial": "¡Antes de salir, hay algo muy importante! Necesitamos llevar un tanque de oxígeno adicional para ayudar a Itzel y Chispa. ¡No podemos iniciar el rescate sin él!",
+    "oxigeno_ok": "¡Excelente! Tenemos nuestra reserva de oxígeno. Ahora contamos con 6 kg para elegir el resto del equipo.",
+    "oxigeno_fijo": "El tanque de oxígeno es EQUIPO OBLIGATORIO: se queda en la mochila. Si necesitas espacio, deja un objeto opcional.",
+    "falta_oxigeno": "¡Espera, astronauta! Nos falta el tanque de oxígeno. Itzel y Chispa podrían necesitar esa reserva para regresar a salvo. ¡Vamos por él!",
+    "exceso": "¡Es demasiado peso! Tenemos que elegir bien. Recuerda que el tanque de oxígeno es obligatorio. Para llevar {nombre}, libera {kg} kg de objetos opcionales.",
+    "obligatorio": "★ EQUIPO OBLIGATORIO",
+    "obligatorio_guardado": "★ EQUIPO OBLIGATORIO · guardado",
+    "hud_o2_si": "O2: ✓ GUARDADO",
+    "hud_o2_no": "O2: ✗ FALTA",
+    "reacciones": {
+      "linterna": "¡Buena elección! Podremos iluminar los cráteres oscuros y buscar las huellas de Chispa.",
+      "radio": "¡Excelente! Podríamos reparar la comunicación con la base.",
+      "botiquin": "Un buen explorador siempre está preparado para atender emergencias.",
+      "comida": "Las provisiones pueden ser útiles si nuestra misión se prolonga.",
+      "escudo": "Este equipo puede ayudarnos a reforzar la protección contra la radiación en un refugio."
+    },
+    "omitir": "Omitir ▸▸",
+    "alerta": [
+      "¡Bip, bip! ¡Un momento! Estoy detectando algo extraño...",
+      "(Se escucha interferencia... y un ladrido débil)",
+      "¡Es Chispa! Su collar sigue funcionando. ¡Tenemos que localizarlo!",
+      "La radio principal de la base está averiada, pero mi receptor de emergencia de corto alcance captó la señal. ¡Toca el monitor para analizarla!"
+    ],
+    "indicador": "NUEVA SEÑAL DETECTADA",
+    "localizada": "SEÑAL LOCALIZADA",
+    "mini": {
+      "titulo": "CENTRO DE COMUNICACIONES — IDENTIFICA LA SEÑAL",
+      "corto": "= corto",
+      "largo": "= largo",
+      "senal": "Señal {l}",
+      "explica": "El collar de Chispa transmite una señal especial: corto, corto, largo. ¿Puedes identificarla? (♪ = escuchar)",
+      "mal": "¡Buen intento! Esa señal no coincide. Observa nuevamente el patrón.",
+      "bien": "¡Lo lograste! ¡Encontraste la señal de Chispa!",
+      "ver_mapa": "Ver ubicación ▸",
+      "volver": "Volver"
+    },
+    "mapa": {
+      "titulo": "MAPA DEL POLO SUR LUNAR",
+      "base": "Base lunar",
+      "polo": "Polo sur",
+      "crateres": "Cráteres en sombra",
+      "senal": "Señal de Chispa (aprox.)",
+      "ruta": "Ruta provisional",
+      "robot": "La señal viene de una zona de cráteres que casi nunca recibe luz solar. ¡Tenemos que prepararnos muy bien!",
+      "dato": "Dato NASA",
+      "volver": "Volver"
+    },
+    "revision": {
+      "titulo": "REVISIÓN DEL EQUIPO",
+      "objetos": "Objetos:",
+      "peso": "Peso total: {kg} kg",
+      "libre": "Disponible: {kg} kg",
+      "o2_si": "✓ Oxígeno incluido",
+      "o2_no": "✗ Falta el oxígeno",
+      "linterna_si": "Tenemos iluminación para explorar las zonas oscuras.",
+      "linterna_no": "Quizás necesitemos encontrar otra forma de iluminar el camino.",
+      "radio_si": "Podremos intentar recuperar la comunicación.",
+      "radio_no": "Tendremos que encontrar otra forma de transmitir los datos.",
+      "oxigeno_si": "¡Reserva de oxígeno confirmada! Estamos preparados para ayudar a los exploradores.",
+      "sin_oxigeno": "Falta un objeto esencial: el tanque de oxígeno. Toca «Modificar mochila» y ve por él.",
+      "exceso": "Hay más de 10 kg. Retira objetos opcionales para continuar.",
+      "modificar": "Modificar mochila",
+      "continuar": "Continuar ▸"
+    },
+    "transmision": {
+      "titulo": "TRANSMISIÓN RECUPERADA — DRA. ITZEL RAMOS",
+      "mensaje": "«Si alguien escucha esto... Chispa entró en el cráter. Fui a buscarlo, pero estoy perdiendo comunicación con la base...»",
+      "ladrido": "(Se escucha un ladrido débil...)",
+      "corte": "— TRANSMISIÓN INTERRUMPIDA —",
+      "robot": "¡Todavía podemos ayudarlos! Ya tenemos nuestro oxígeno y el equipo que elegiste. ¿Estás listo para comenzar el rescate?",
+      "boton": "COMENZAR EL RESCATE"
     }
   },
 
