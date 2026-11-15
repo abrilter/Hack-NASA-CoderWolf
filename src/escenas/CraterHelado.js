@@ -2,10 +2,10 @@
 // Interior oscuro de un cráter en sombra permanente; el niño avanza con el rover
 // (mantener → / D o el clic). Solo se juega si la ruta elegida fue el cráter.
 //
-// IMPORTANTE (contrato): se usa estado.ruta, una clave PROPUESTA que todavía
-// ninguna escena escribe. La escribiría la escena Ruta al elegir ("crater",
-// "cresta" o "refugio"). Mientras no exista, la escena se salta en el juego
-// normal; en modo prueba se juega como si fuera el cráter
+// Va justo después de Ruta en ORDEN. Lee la ruta que la escena Ruta guarda en
+// estado.misiones.ruta.id ("crater" o "cresta"): con el cráter se juega; con
+// la cresta se salta sola a la escena siguiente. En modo prueba, sin ruta
+// guardada, se juega como si fuera el cráter
 // (index.html?escena=CraterHelado, o &ruta=cresta para probar el salto).
 //
 // Decisiones (ninguna es gratis):
@@ -41,9 +41,9 @@ export class CraterHelado extends Phaser.Scene {
     this.J = this.d.juego;
     this.sig = ORDEN.includes(this.scene.key) ? siguienteEscena(this.scene.key) : "Final";
 
-    // Solo se entra por la ruta del cráter (ver nota arriba sobre estado.ruta)
+    // Solo se entra por la ruta del cráter (la elige la escena Ruta)
     const prueba = new URLSearchParams(location.search).get("ruta");
-    const ruta = estado.ruta ?? (estado.modoPrueba ? (prueba || "crater") : undefined);
+    const ruta = estado.misiones?.ruta?.id ?? (estado.modoPrueba ? (prueba || "crater") : undefined);
     if (ruta !== "crater") { this.scene.start(this.sig); return; }
 
     const J = this.J;

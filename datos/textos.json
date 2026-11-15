@@ -650,7 +650,6 @@
       "reinicio_stella": "Un equipo de rescate nos llevó a la última baliza segura. Tu progreso se conserva: ¡sigamos!"
     }
   },
-<<<<<<< HEAD
 
   "crater_helado": {
     "_nota": "Escena CraterHelado (Rol 5). El traje aísla: el frío afecta al rover, no al astronauta.",
@@ -678,7 +677,7 @@
     "consejo_bien": "¡Muy bien! Equilibraste luz, calor y tiempo.",
     "continuar": "Continuar",
     "bitacora": "Cruzaste el cráter helado: gastaste {o2} de oxígeno, chocaste con {choques} rocas y limpiaste el polvo {limpiezas} veces."
-=======
+  },
   "huellas": {
     "intro": "Mira: hay dos rastros de ruedas. Uno es del rover de Itzel. El otro es de un rover de carga de la base.",
     "ficha": "El rover de Itzel es ligero y de ruedas delgadas. El de carga es pesado y de ruedas anchas. Acerca la lupa a los círculos ?.",
@@ -720,6 +719,5 @@
     "continuar": "Continuar",
     "bitacora_bien": "Huellas: seguiste el rastro de Itzel a la primera ({pistas} pistas revisadas).",
     "bitacora_mal": "Huellas: primero seguiste el rastro del rover de carga y perdiste {o2} de oxígeno ({pistas} pistas revisadas)."
->>>>>>> 201ef206b170a72b89e61ea4908e8c483a615164
   }
 }

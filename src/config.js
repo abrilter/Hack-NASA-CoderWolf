@@ -30,11 +30,14 @@ export const COLOR = {
 // en main.js y ponerla aquí. Las escenas nuevas usan siguienteEscena(this.scene.key)
 // en lugar de escribir el nombre de la siguiente escena a mano.
 export const ORDEN = [
-  "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior", "Huellas", "Final"
+  "Intro", "Carta", "Equipo", "Aterrizaje", "CentroControl", "Exterior",
+  "Ruta", "CraterHelado", "Huellas", "Final"
 ];
-// Senal, Viaje, Ruta y Rescate siguen registradas en main.js (se pueden abrir
+// CraterHelado se salta sola si en la Ruta se eligió la cresta.
+// Senal, Viaje y Rescate siguen registradas en main.js (se pueden abrir
 // con ?escena=...) pero por ahora no forman parte del recorrido.
-export const siguienteEscena = clave => ORDEN[ORDEN.indexOf(clave) + 1] ?? "Final";
+// Una escena que no está en ORDEN va al Final (antes volvía a la Intro).
+export const siguienteEscena = clave => (ORDEN.includes(clave) ? ORDEN[ORDEN.indexOf(clave) + 1] : null) ?? "Final";
 
 // Archivo de datos y textos propio de cada misión nueva: datos/misiones/<archivo>.json
 // Ejemplo: { Crater: "crater" }. Se carga como "m_crater" y su bloque "prueba"

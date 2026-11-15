@@ -54,9 +54,5 @@ new Phaser.Game({
   physics: { default: "arcade" },
   plugins: { scene: [{ key: "ZoomPixel", plugin: ZoomPixel, mapping: "zoomPixel" }] },
   // Orden de la historia (ver Guía de arranque)
-<<<<<<< HEAD
-  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, CraterHelado, Senal, Viaje, Ruta, Rescate, Final]
-=======
-  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, Senal, Viaje, Ruta, Rescate, Final]
->>>>>>> 201ef206b170a72b89e61ea4908e8c483a615164
+  scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Senal, Viaje, Ruta, Rescate, Final]
 });

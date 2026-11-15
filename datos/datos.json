@@ -83,7 +83,6 @@
     "ejemplo": false
   },
 
-<<<<<<< HEAD
   "crater_helado": {
     "_nota": "Escena CraterHelado (Rol 5). 'juego' son valores de juego para balancear; los datos NASA llevan fuente y enlace.",
     "temperatura": {
@@ -119,7 +118,7 @@
       "choque_o2": 3,
       "choque_pausa": 1
     }
-=======
+  },
   "huellas": {
     "_nota": "Números de juego de la escena Huellas (Rol 4): oxígeno por pista revisada y por seguir el rastro equivocado.",
     "o2_pista": 1,
@@ -128,6 +127,5 @@
     "fuente": "NASA LRO · sitio de aterrizaje del Apolo 17",
     "link": "https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/",
     "ejemplo": false
->>>>>>> 201ef206b170a72b89e61ea4908e8c483a615164
   }
 }
