@@ -8,7 +8,7 @@
 // Fondo, nave y fuego en pixel art hechos con código (src/pixelart.js).
 import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { texto, titulo, boton, barras, datoReal } from "../ui.js";
+import { texto, titulo, boton, barras } from "../ui.js";
 import { crearTextura, crearTexturasEquipo } from "../pixelart.js";
 
 // ---------------------------------------------------------------- física
@@ -89,10 +89,6 @@ export class Aterrizaje extends Phaser.Scene {
     this.crearNave();
     barras(this, estado);
     this.crearIndicadores();
-
-    // D-9: dato real de la zona de aterrizaje (Moon Trek)
-    const z = estado.datos.zona_aterrizaje;
-    if (z) datoReal(this, { ...z, fuente: `${z.fuente} · ${z.nombre} (${Math.abs(z.lat)}°S, ${z.lon}°E)` });
 
     // Controles: clic/toque en cualquier parte, ↑ o ESPACIO
     this.input.on("pointerdown", () => (this.presionado = true));
