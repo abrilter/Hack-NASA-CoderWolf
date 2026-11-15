@@ -130,6 +130,20 @@
       "choque_pausa": 1
     }
   },
+  "rocas": {
+    "_nota": "Escena Rocas (Rol 2). 'juego' son valores de juego. A pie, el oxígeno sube con los kg que carga (mochila + traje) y más con el traje blindado.",
+    "texto": "En la Luna la gravedad es de 1.62 m/s²: la sexta parte que en la Tierra. Por eso todo pesa la sexta parte.",
+    "fuente": "NASA Moon Fact Sheet",
+    "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+    "ejemplo": false,
+    "juego": {
+      "rodear_h": 4,
+      "pie_base_o2": 1,
+      "pie_o2_por_kg": 0.2,
+      "blindado_factor": 1.4
+    }
+  },
+
   "huellas": {
     "_nota": "Números de juego de la escena Huellas (Rol 4): oxígeno por pista revisada y por seguir el rastro equivocado.",
     "o2_pista": 1,

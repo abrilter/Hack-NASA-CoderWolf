@@ -614,6 +614,9 @@
     "planta_itzel": "Itzel: Esta planta creció en la base. Te la dejo a ti: cuídala mucho.",
     "titulo_exito": "¡Misión cumplida!",
     "titulo_fallo": "La misión regresó",
+    "sol_vivo": "☀ Tu tormenta es real: el Sol la lanzó el {fecha} a {vel} km/s. ¡Es el Sol de estos días! ↗",
+    "sol_famosa": "☀ Tu tormenta es real: {nombre} ({fecha}, {vel} km/s). ↗",
+    "sol_real": "☀ Tu tormenta es real: el Sol la lanzó el {fecha} a {vel} km/s. ↗",
     "resumen_fuentes": "Ciencia de la NASA en este juego: {reales} datos reales y {ejemplo} de ejemplo (todavía no verificados).",
     "ver_fuentes": "Fuentes NASA",
     "otra_vez": "Jugar otra vez",
@@ -884,6 +887,28 @@
     "continuar": "Continuar",
     "bitacora_bien": "Huellas: seguiste el rastro de Itzel a la primera ({pistas} pistas revisadas).",
     "bitacora_mal": "Huellas: primero seguiste el rastro del rover de carga y perdiste {o2} de oxígeno ({pistas} pistas revisadas)."
+  },
+
+  "rocas": {
+    "titulo": "Un campo de rocas",
+    "intro": "Rocas enormes bloquean el camino. El rover no puede pasar por encima.",
+    "opciones": {
+      "rodear": { "nombre": "Rodear con el rover", "gana": "Sigues con el rover: refugio y regreso fácil.", "cuesta": "El camino es largo: gastas más oxígeno." },
+      "pie": { "nombre": "Cruzar a pie", "gana": "Corto: gastas menos si cargas poco.", "cuesta": "El rover se queda: sin refugio en la tormenta." }
+    },
+    "toca": "Toca una opción para ver cuánto oxígeno cuesta.",
+    "detalle": "Oxígeno {o2}",
+    "blindado": "Con traje blindado gastas más.",
+    "carga": "Cargas {kg} kg. En la Luna todo pesa la sexta parte: se sienten como {luna} kg.",
+    "soltar": "Toca abajo un objeto para dejarlo.",
+    "soltado": "Lo dejas aquí",
+    "elegir": "Elegir",
+    "continuar": "Continuar",
+    "resultado_rodear": "Rodeaste las rocas con el rover. Gastaste {o2} de oxígeno.",
+    "resultado_pie": "Cruzaste a saltitos. Gastaste {o2} de oxígeno. El rover se queda aquí.",
+    "bitacora_rodear": "Rocas: rodeaste con el rover ({o2} O2).",
+    "bitacora_pie": "Rocas: cruzaste a pie con {kg} kg ({o2} O2) y dejaste el rover.",
+    "bitacora_soltar": "Dejaste en las rocas: {lista}."
   },
 
   "tormenta": {

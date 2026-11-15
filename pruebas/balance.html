@@ -19,7 +19,7 @@
 <h1>Prueba de balance: ninguna opción gratis, ninguna trampa</h1>
 <p>Juega <b>todas</b> las partidas posibles con el <b>modelo real del juego</b> (<code>src/modelo/simulacion.js</code>,
 <code>src/config.js</code>, <code>datos/datos.json</code>), en el orden de la historia:
-Equipo → CentroControl → Ruta → CraterHelado → Huellas → Tormenta → Rescate (aire, radio, 2 mensajes, regreso) → Final.</p>
+Equipo → CentroControl → Ruta → CraterHelado → Huellas → Rocas (sin soltar objetos) → Tormenta → Rescate (aire, radio, 2 mensajes, regreso) → Final.</p>
 <p>Supuestos: aterrizaje al primer intento; el cráter cuesta lo que estima <code>estimarCruceCrater</code> (calefacción encendida, sin choques);
 en Huellas se revisan 3 pistas y se acierta. Velocidad de la CME: <code>?vel=1500</code> (por defecto, la guardada).
 Si cambian un número de balance, recarguen esta página con Live Server.</p>
@@ -29,7 +29,7 @@ Si cambian un número de balance, recarguen esta página con Live Server.</p>
 import { TRAJES, NAVES, OBJETOS, CAPACIDAD_MOCHILA, O2_TANQUE } from "../src/config.js";
 import { LIMITE_RADIACION } from "../src/estado.js";
 import { opcionesDeRuta, opcionesTormenta, opcionesRescate, costoRadio, efectosRegreso, estimarCruceCrater,
-         finalDeMision, copiaEstado, aplicar, tieneRover, MENSAJES } from "../src/modelo/simulacion.js";
+         finalDeMision, copiaEstado, aplicar, tieneRover, MENSAJES, opcionesRocas } from "../src/modelo/simulacion.js";
 
 const base = await (await fetch("../datos/datos.json")).json();
 const vel = Number(new URLSearchParams(location.search).get("vel")) || base.cme.velocidad_kms;
@@ -48,7 +48,7 @@ const PARES = [["tormenta", "hielo"], ["tormenta", "ayuda"], ["ayuda", "hielo"]]
 const perdio = e => e.oxigeno <= 0 || e.radiacion >= LIMITE_RADIACION;
 
 // Una partida completa; devuelve el estado final y el final de la misión
-function jugar(traje, nave, mochila, rutaId, torId, aire, mensajes, regreso) {
+function jugar(traje, nave, mochila, rutaId, rocaId, torId, aire, mensajes, regreso) {
   const e = copiaEstado({ oxigeno: 100, radiacion: 0, escudo: 40, traje, nave, mochila, misiones: {} });
   e.misiones = {};
   aplicar(e, { oxigeno: nave.oxigenoExtra + O2_TANQUE });                      // Equipo + tanque
@@ -57,6 +57,9 @@ function jugar(traje, nave, mochila, rutaId, torId, aire, mensajes, regreso) {
   e.misiones.ruta = { id: rutaId, horas: Math.round(ruta.hR) };
   if (rutaId === "crater") aplicar(e, { oxigeno: -estimarCruceCrater(datos, e) });
   aplicar(e, { oxigeno: -3 * datos.huellas.o2_pista });
+  const roca = opcionesRocas(datos, e)[rocaId];
+  aplicar(e, roca.efectos);
+  if (roca.dejaRover) e.misiones.rocas = { dejoRover: true };
   const tor = opcionesTormenta(datos, e).find(o => o.id === torId);
   if (!tor.disponible) return null;
   aplicar(e, tor.efectos);
@@ -70,15 +73,15 @@ function jugar(traje, nave, mochila, rutaId, torId, aire, mensajes, regreso) {
 const partidas = [], equipos = [];
 for (const traje of TRAJES) for (const nave of NAVES) for (const mochila of mochilas()) for (const rutaId of datos.rutas.map(r => r.id)) {
   const eq = { traje: traje.id, nave: nave.id, mochila, ruta: rutaId, total: 0, ganan: 0, completa: 0 };
-  for (const tor of Object.keys(datos.tormenta.opciones)) for (const aire of ["manguera", "reserva"])
+  for (const roca of ["rodear", "pie"]) for (const tor of Object.keys(datos.tormenta.opciones)) for (const aire of ["manguera", "reserva"])
     for (const m of PARES) for (const reg of ["rover", "caminar"]) {
-      const r = jugar(traje, nave, mochila, rutaId, tor, aire, m, reg);
+      const r = jugar(traje, nave, mochila, rutaId, roca, tor, aire, m, reg);
       if (!r) continue;
       eq.total++; eq.hR = r.ruta.hR; eq.hT = r.ruta.hT;
       const gana = r.final !== "evacuacion";
       if (gana) eq.ganan++;
       if (r.final === "completa") eq.completa++;
-      partidas.push({ traje: traje.id, nave: nave.id, mochila, ruta: rutaId, tor, aire, regreso: reg, mensajes: m.join("+"), gana });
+      partidas.push({ traje: traje.id, nave: nave.id, mochila, ruta: rutaId, roca, tor, aire, regreso: reg, mensajes: m.join("+"), gana });
     }
   equipos.push(eq);
 }
@@ -89,7 +92,7 @@ const clase = p => p >= 60 ? "ok" : p >= 30 ? "medio" : "mal";
 const ganables = equipos.filter(q => q.ganan > 0).length;
 // Cada opción de cada decisión: ¿cuántas veces gana cuando se elige?
 const decisiones = {
-  traje: TRAJES.map(t => t.id), nave: NAVES.map(n => n.id), ruta: datos.rutas.map(r => r.id),
+  traje: TRAJES.map(t => t.id), nave: NAVES.map(n => n.id), ruta: datos.rutas.map(r => r.id), roca: ["rodear", "pie"],
   tor: Object.keys(datos.tormenta.opciones), aire: ["manguera", "reserva"], regreso: ["rover", "caminar"], mensajes: PARES.map(m => m.join("+"))
 };
 let filasDec = "";

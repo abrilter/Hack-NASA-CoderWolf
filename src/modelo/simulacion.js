@@ -9,6 +9,7 @@
 import { LIMITES, LIMITE_RADIACION } from "../estado.js";
 import { llenar } from "../ui.js";
 import { velocidadDeJuego } from "../nasa/sol.js";
+import { OBJETOS } from "../config.js";
 
 const KM_SOL_TIERRA = 149_600_000;
 
@@ -78,6 +79,26 @@ export function fuerzaTormenta(datos) {
 // ¿Sigue el rover? Lo deja la escena Rocas si el niño cruza a pie
 // (estado.misiones.rocas.dejoRover). Si esa escena no se jugó, el rover sigue.
 export const tieneRover = estado => estado.misiones?.rocas?.dejoRover !== true;
+
+// ---------------------------------------------------------------- rocas
+// Opciones de la escena Rocas. Rodear: horas de camino con el rover (gasto del
+// traje por hora). A pie: un tramo corto, pero el oxígeno sube con los kg que se
+// cargan (mochila sin lo que se suelta + traje) y más con el traje blindado; y el
+// rover se queda (sin refugio en la tormenta y regreso caminando).
+export function pesoMochila(estado, soltados = []) {
+  return (estado.mochila || []).filter(id => !soltados.includes(id))
+    .reduce((kg, id) => kg + (OBJETOS.find(o => o.id === id)?.peso || 0), 0);
+}
+export function opcionesRocas(datos, estado, soltados = []) {
+  const J = datos.rocas.juego, gasto = estado.traje?.gastoO2 || 2;
+  const kg = pesoMochila(estado, soltados) + (estado.traje?.peso || 0);
+  const blindado = estado.traje?.id === "blindado";
+  const pie = (J.pie_base_o2 + kg * J.pie_o2_por_kg) * (blindado ? J.blindado_factor : 1);
+  return {
+    rodear: { efectos: { oxigeno: -Math.round(J.rodear_h * gasto) }, dejaRover: false },
+    pie: { efectos: { oxigeno: -Math.round(pie) }, dejaRover: true, kg, blindado }
+  };
+}
 
 // Opciones de la escena Tormenta. Radiación = fuerza × horas × (1 − protección),
 // donde la protección junta el refugio con el traje y el escudo.

@@ -23,7 +23,7 @@ La clave de api.nasa.gov del equipo está en `src/nasa/donki.js` (1000 consultas
 - **Teclado:** flechas y Enter en todas las escenas. Donde se camina, las flechas o WASD mueven al astronauta. En las escenas de botones, las flechas mueven un marco amarillo, Enter elige y Esc cierra una tarjeta.
 
 ## Orden de la historia
-Carga → Titulo (pantalla de inicio) → Intro → Carta → Equipo (traje y nave) → Aterrizaje → CentroControl (mochila) → Exterior (rover) → Ruta → CraterHelado (solo si se eligió el cráter) → Huellas → Tormenta → Rescate → Final
+Carga → Titulo (pantalla de inicio) → Intro → Carta → Equipo (traje y nave) → Aterrizaje → CentroControl (mochila) → Exterior (rover) → Ruta → CraterHelado (solo si se eligió el cráter) → Huellas → Rocas → Tormenta → Rescate → Final
 
 El orden está en `ORDEN` (`src/config.js`). Si el oxígeno llega a 0 o la radiación a 100, el siguiente cambio de escena va al Final, donde Chispa explica por qué. "Jugar otra vez" empieza en Equipo.
 
