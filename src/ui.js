@@ -8,7 +8,8 @@ const FUENTE = "monospace";
 const ALTO_BOTON = 18;
 
 // Llena una plantilla de textos.json: llenar("Gastas {o2} O2", { o2: 5 }) → "Gastas 5 O2"
-export const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
+// Si falta un valor no escribe "undefined": deja el hueco vacío y avisa en la consola
+export const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k] ?? (console.warn(`[textos] falta {${k}} en: ${s}`), ""));
 
 export function texto(escena, x, y, contenido, opciones = {}) {
   return escena.add.text(x, y, contenido, {

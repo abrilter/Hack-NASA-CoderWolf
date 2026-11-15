@@ -213,7 +213,9 @@ export class Final extends Phaser.Scene {
       traje: tx.equipo?.opciones?.[estado.traje.id]?.nombre || estado.traje.id,
       nave: tx.equipo?.opciones?.[estado.nave.id]?.nombre || estado.nave.id
     }), llenar(t.c_equipo_efecto, { n: Math.round(proteccion(estado) * 10) }));
-    if (m.ruta) add(tx.ruta?.rutas?.[m.ruta.id]?.nombre || m.ruta.id, efectos(m.ruta.oxigeno, m.ruta.radiacion), m.ruta.oxigeno, m.ruta.radiacion);
+    // la barra de pruebas puede dejar una ruta sin números: entonces solo se nombra
+    if (m.ruta) add(tx.ruta?.rutas?.[m.ruta.id]?.nombre || m.ruta.id,
+      m.ruta.oxigeno === undefined ? "" : efectos(m.ruta.oxigeno, m.ruta.radiacion), m.ruta.oxigeno || 0, m.ruta.radiacion || 0);
     if (m.crater) add(t.c_crater, llenar(t.c_crater_efecto, { o2: m.crater.oxigeno, choques: m.crater.choques }), m.crater.oxigeno);
     const huellas = estado.bitacora.find(b => b.startsWith("Huellas"));
     if (huellas) add(huellas, "");
