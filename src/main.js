@@ -12,6 +12,23 @@ import { Ruta } from "./escenas/Ruta.js";
 import { Rescate } from "./escenas/Rescate.js";
 import { Final } from "./escenas/Final.js";
 
+import { estado } from "./estado.js";
+import { ORDEN } from "./config.js";
+
+// Derrota a mitad de partida: si el oxígeno llegó a 0 o la radiación a 100,
+// cualquier cambio de escena después del Centro de Control va directo al Final
+// (donde Chispa explica por qué). Así ninguna escena tiene que revisarlo.
+// CentroControl no se redirige porque ahí empieza una partida nueva.
+const iniciarEscena = Phaser.Scenes.ScenePlugin.prototype.start;
+Phaser.Scenes.ScenePlugin.prototype.start = function (clave, datos) {
+  const i = ORDEN.indexOf(clave);
+  if (i > ORDEN.indexOf("CentroControl") && clave !== "Final" && estado.causaDerrota()) {
+    console.info(`[derrota] ${estado.causaDerrota()}: ${clave} → Final`);
+    clave = "Final";
+  }
+  return iniciarEscena.call(this, clave, datos);
+};
+
 // Agranda la cámara de cada escena por ZOOM para que el lienzo tenga más
 // resolución, sin cambiar las coordenadas (0..320, 0..180) de las escenas.
 class ZoomPixel extends Phaser.Plugins.ScenePlugin {
