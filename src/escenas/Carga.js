@@ -55,9 +55,9 @@ export class Carga extends Phaser.Scene {
 
     estado.nuevaPartida();
     const base = structuredClone(ESTADO_PRUEBA);
-    // El tanque (+20) y el oxígeno extra de la nave se suman en Equipo: antes de
-    // esa escena (y en ella) se empieza con el oxígeno de una partida nueva.
-    if (ORDEN.indexOf(escena) <= ORDEN.indexOf("Equipo")) base.oxigeno = estado.oxigeno;
+    // El tanque (+20) se suma al salir del Centro de Control: antes de esa
+    // escena (y en ella) se empieza con el oxígeno de una partida nueva.
+    if (ORDEN.indexOf(escena) <= ORDEN.indexOf("CentroControl")) base.oxigeno = estado.oxigeno;
 
     // Bloque "prueba" del JSON de la misión (si tiene)
     const archivo = MISIONES_JSON[escena];

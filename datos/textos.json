@@ -61,6 +61,7 @@
     "inicial": "¡Antes de salir, hay algo muy importante! Necesitamos llevar un tanque de oxígeno adicional para ayudar a Itzel y Chispa. ¡No podemos iniciar el rescate sin él!",
     "oxigeno_ok": "¡Excelente! Tenemos nuestra reserva de oxígeno. Ahora contamos con 6 kg para elegir el resto del equipo.",
     "oxigeno_fijo": "El tanque de oxígeno es EQUIPO OBLIGATORIO: se queda en la mochila. Si necesitas espacio, deja un objeto opcional.",
+    "falta_traje_nave": "¡Alto, astronauta! La puerta no abre: todavía no tienes traje y cohete. Primero elígelos en el hangar.",
     "falta_oxigeno": "¡Espera, astronauta! Nos falta el tanque de oxígeno. Itzel y Chispa podrían necesitar esa reserva para regresar a salvo. ¡Vamos por él!",
     "exceso": "¡Es demasiado peso! Tenemos que elegir bien. Recuerda que el tanque de oxígeno es obligatorio. Para llevar {nombre}, libera {kg} kg de objetos opcionales.",
     "obligatorio": "★ EQUIPO OBLIGATORIO",

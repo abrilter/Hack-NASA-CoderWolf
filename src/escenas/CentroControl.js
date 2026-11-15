@@ -7,12 +7,13 @@
 //    guardado, no se puede quitar.
 // Historia: la señal de Chispa ya se identificó en la Misión 1 (Senal.js);
 // el monitor muestra el mapa del polo sur. Revisión del equipo y
-// última transmisión de Itzel → puerta → Misión 3 (Equipo).
+// última transmisión de Itzel → puerta → Final. Va después de Equipo y
+// Aterrizaje: la puerta no abre si falta el traje o la nave.
 // STELLA: monitor-asistente junto a la puerta con 5 apartados (misión, entorno,
 // señal, equipo y evaluación de mochila). Orienta, nunca elige por el jugador.
 // Las decisiones se guardan en estado.mochila (inventario único, se usa en
 // vivo) y estado.mision2.
-import { ANCHO, ALTO, COLOR, OBJETOS, CAPACIDAD_MOCHILA } from "../config.js";
+import { ANCHO, ALTO, COLOR, OBJETOS, CAPACIDAD_MOCHILA, O2_TANQUE, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { texto, boton } from "../ui.js";
 import { crearTexturasMochila, crearTextura } from "../pixelart.js";
@@ -56,7 +57,8 @@ export class CentroControl extends Phaser.Scene {
   set mochila(v) { estado.mochila = v; }
 
   create() {
-    estado.nuevaPartida();
+    // La partida empieza en la Carta; aquí solo se arma la mochila
+    estado.mochila = [];
     this.t = estado.textos.centro_control;
     this.activa = null;
     this.saliendo = false;
@@ -424,8 +426,8 @@ export class CentroControl extends Phaser.Scene {
     this.textoO2.setText(o2 ? this.t.hud_o2_si : this.t.hud_o2_no).setColor(o2 ? "#5cff8a" : "#ff8a5c");
     this.iconosHud.forEach(i => i.destroy());
     this.iconosHud = this.mochila.map((id, i) => this.add.image(234 + i * 14, HUD + 9, "px_obj_" + id).setScale(0.75).setDepth(901));
-    this.luzPuerta.setFillStyle(o2 ? 0x5cff8a : 0xff5c5c);
-    this.candadoPuerta.setVisible(!o2);
+    this.luzPuerta.setFillStyle(o2 && estado.traje && estado.nave ? 0x5cff8a : 0xff5c5c);
+    this.candadoPuerta.setVisible(!o2 || !estado.traje || !estado.nave);   // cerrada sin oxígeno, traje o cohete
     this.candadoTanque.setVisible(o2);
   }
 
@@ -978,6 +980,11 @@ export class CentroControl extends Phaser.Scene {
   // ---------------------------------------------------------------- revisión
   salir() {
     if (this.saliendo || !this.controlActivo) return;
+    if (!estado.traje || !estado.nave) {
+      this.decir(this.t.falta_traje_nave, 5500);
+      this.tweens.add({ targets: this.candadoPuerta, x: "+=2", duration: 50, yoyo: true, repeat: 3 });
+      return;
+    }
     if (!this.lleva(OBLIGATORIO)) {
       this.decir(this.t.falta_oxigeno, 5500);
       this.tweens.add({ targets: this.candadoPuerta, x: "+=2", duration: 50, yoyo: true, repeat: 3 });
@@ -1083,6 +1090,7 @@ export class CentroControl extends Phaser.Scene {
 
     // Se guarda la decisión para las siguientes misiones
     estado.mochila = [...this.mochila];
+    if (this.lleva(OBLIGATORIO)) estado.oxigeno += O2_TANQUE;   // el tanque suma oxígeno al salir
     Object.assign(this.reg, { salidaConfirmada: true, objetos: [...this.mochila], pesoTotal: this.peso(), oxigenoIncluido: this.lleva(OBLIGATORIO) });
     estado.mision2 = this.reg;
     estado.bitacora.push(`Mochila: ${this.mochila.map(id => this.t.nombres[id]).join(", ")} (${this.peso()} kg).`);
@@ -1093,7 +1101,7 @@ export class CentroControl extends Phaser.Scene {
     this.tweens.add({ targets: [this.astro, this.sombra, this.chispa, this.sombraChispa], alpha: 0, duration: 300, delay: 900 });
     this.time.delayedCall(1200, () => {
       this.cameras.main.fadeOut(400, 0, 0, 0);
-      this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("Equipo"));
+      this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start(siguienteEscena(this.scene.key)));
     });
   }
 

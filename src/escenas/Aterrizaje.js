@@ -3,7 +3,7 @@
 // (clic, ↑ o ESPACIO) = propulsor: frena y gasta combustible. En la Luna casi
 // no hay aire, así que solo el propulsor puede frenar.
 // Fondo, nave y fuego en pixel art hechos con código (src/pixelart.js).
-import { ANCHO, ALTO, COLOR } from "../config.js";
+import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { texto, titulo, boton, barras, datoReal } from "../ui.js";
 import { crearTextura, crearTexturasEquipo } from "../pixelart.js";
@@ -362,7 +362,7 @@ export class Aterrizaje extends Phaser.Scene {
 
     if (ok) {
       estado.bitacora.push(`Aterrizaste en el polo sur lunar a ${vel.toFixed(1)} m/s.`);
-      boton(this, cx, 108, "Buscar a Itzel", () => this.scene.start("Ruta"));
+      boton(this, cx, 108, "Continuar", () => this.scene.start(siguienteEscena(this.scene.key)));
     } else {
       estado.oxigeno -= 5;
       boton(this, cx - 52, 108, "Reintentar (-5 O2)", () => this.scene.restart({ dificultad: this.dificultad }), 100);

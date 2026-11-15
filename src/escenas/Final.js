@@ -123,7 +123,7 @@ export class Final extends Phaser.Scene {
     boton(this, 56, 165, "   " + t.mi_insignia, () => this.abrirInsignia(), 98);
     this.miniInsignia();
     boton(this, 160, 165, t.ver_fuentes, () => this.panelFuentes(fuentes), 98);
-    boton(this, 264, 165, t.otra_vez, () => this.scene.start("CentroControl"), 98);
+    boton(this, 264, 165, t.otra_vez, () => { estado.nuevaPartida(); this.scene.start("Equipo"); }, 98);
   }
 
   miniInsignia() {

@@ -6,11 +6,11 @@
 // con el blindado camina más lento) y el arco de radiación (ve cuántos
 // puntitos atraviesan el traje). El radar muestra un dato real del polo sur.
 // Bit, el robot del hangar, lo acompaña (Chispa está en la Luna con Itzel).
-// Con traje y nave elegidos, la nave baja una rampa y el niño sube para
-// despegar → Misión 4.
+// Va justo después de la Carta. Con traje y nave elegidos, la nave baja una
+// rampa y el niño sube para despegar → Aterrizaje.
 // Figuras en pixel art hechas con mapas de letras (src/pixelart.js).
 // TODO(Rol 3): reemplazar por PNG cuando estén listos.
-import { ANCHO, ALTO, COLOR, TRAJES, NAVES, O2_TANQUE } from "../config.js";
+import { ANCHO, ALTO, COLOR, TRAJES, NAVES, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { texto } from "../ui.js";
 import { crearTexturasEquipo } from "../pixelart.js";
@@ -478,9 +478,10 @@ export class Equipo extends Phaser.Scene {
     this.hudO2 = texto(this, H.x + 51, H.y + 4, String(this.o2Mostrado), { tam: TAM, color: "#eef1ff" }).setDepth(prof + 1);
   }
 
-  // Oxígeno con el que saldrá: el actual + tanque de la mochila + extra de la nave
+  // Oxígeno con el que saldrá: el actual + extra de la nave (el tanque de la
+  // mochila se suma después, al salir del Centro de Control)
   oxigenoAlSalir() {
-    return estado.oxigeno + (estado.lleva("oxigeno") ? O2_TANQUE : 0) + (this.naveElegida ? this.naveElegida.oxigenoExtra : 0);
+    return estado.oxigeno + (this.naveElegida ? this.naveElegida.oxigenoExtra : 0);
   }
 
   actualizarIndicador() {
@@ -693,7 +694,7 @@ export class Equipo extends Phaser.Scene {
     if (primera) this.time.delayedCall(1200, () => this.decir(this.t.bit_listos));
   }
 
-  // Subir a la nave y despegar → Misión 4
+  // Subir a la nave y despegar → Aterrizaje
   abordar() {
     if (!this.listos() || this.saliendo) return;
     this.saliendo = true;
@@ -705,16 +706,14 @@ export class Equipo extends Phaser.Scene {
     estado.traje = this.trajeElegido;
     estado.nave = this.naveElegida;
     estado.oxigeno += this.naveElegida.oxigenoExtra;
-    const tanque = estado.lleva("oxigeno");
-    if (tanque) { estado.oxigeno += O2_TANQUE; this.decir(this.t.bit_tanque); }
     estado.bitacora.push(`Equipo: ${this.t.opciones[this.trajeElegido.id].nombre} y ${this.t.opciones[this.naveElegida.id].nombre}.`);
 
     const n = this.naves[this.naveElegida.id];
     // sube por la rampa y entra
-    this.tweens.add({ targets: this.astro, x: n.x, y: LUGAR.pies + 2, duration: 900, delay: tanque ? 900 : 200 });
-    this.tweens.add({ targets: [this.astro, this.sombra, this.bit, this.sombraBit], alpha: 0, duration: 300, delay: tanque ? 1700 : 1000 });
+    this.tweens.add({ targets: this.astro, x: n.x, y: LUGAR.pies + 2, duration: 900, delay: 200 });
+    this.tweens.add({ targets: [this.astro, this.sombra, this.bit, this.sombraBit], alpha: 0, duration: 300, delay: 1000 });
     // la rampa se recoge, se encienden los motores y la nave despega
-    this.time.delayedCall(tanque ? 2100 : 1400, () => {
+    this.time.delayedCall(1400, () => {
       this.tweens.add({ targets: this.rampa.g, scaleY: 0, duration: 400 });
       const fuego = this.add.rectangle(n.x, LUGAR.pies, 8, 6, 0xffa300).setOrigin(0.5, 0).setDepth(n.sprite.depth - 0.1);
       this.time.addEvent({ delay: 60, loop: true, callback: () => fuego.setFillStyle(Math.random() < 0.5 ? 0xffa300 : 0xfff27a).setScale(0.8 + Math.random() * 0.5, 0.8 + Math.random()) });
@@ -722,7 +721,7 @@ export class Equipo extends Phaser.Scene {
       this.tweens.add({ targets: [n.sprite, fuego, ...n.luces], y: "-=170", duration: 1800, delay: 500, ease: "Cubic.easeIn" });
       this.time.delayedCall(1900, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0);
-        this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("Viaje"));
+        this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start(siguienteEscena(this.scene.key)));
       });
     });
   }
