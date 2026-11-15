@@ -396,9 +396,10 @@ export class Exterior extends Phaser.Scene {
 
     // cartel final
     this.cartel = this.add.container(0, 0).setVisible(false);
-    this.cartelSub = texto(this, 160, 88, this.t.continuar, { tam: 6, color: "#a7b0d8" }).setVisible(false);
-    this.cartel.add([this.add.rectangle(160, 74, 236, 34, OSCURO, 0.9).setStrokeStyle(2, 0xffcd75),
-      texto(this, 160, 64, this.t.punto, { tam: 9, color: "#ffd45c" }), this.cartelSub]);
+    // el aviso de "continuar" va dentro del cuadro (cuadro de y 55 a 93)
+    this.cartelSub = texto(this, 160, 79, this.t.continuar, { tam: 6, color: "#a7b0d8" }).setVisible(false);
+    this.cartel.add([this.add.rectangle(160, 74, 236, 38, OSCURO, 0.9).setStrokeStyle(2, 0xffcd75),
+      texto(this, 160, 61, this.t.punto, { tam: 9, color: "#ffd45c" }), this.cartelSub]);
 
     this.hud.add([this.objetivo, this.panelRover, this.comm, this.cartel]);
   }
