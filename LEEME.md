@@ -9,7 +9,14 @@ Juego web en pixel art (Phaser 3) para el reto **Junior Astronaut Mission Traine
 
 No abran `index.html` con doble clic: el navegador bloquea la lectura de los datos.
 
-**Sin internet también funciona.** Phaser está copiado en `lib/phaser.min.js` (versión 3.80.1; si falta, se usa el CDN). Sin red, el juego usa la tormenta solar guardada y la etiqueta dice **"no en vivo"**.
+**Sin internet también funciona.** Phaser está copiado en `lib/phaser.min.js` (versión 3.80.1; si falta, se usa el CDN).
+
+**El Sol de hoy.** La tormenta del juego es la nube del Sol (CME) más rápida de los últimos 30 días según NASA DONKI. El juego **nunca espera** a la NASA (`src/nasa/sol.js`):
+1. Arranca al instante con un respaldo real: la última consulta buena guardada en ese navegador o, al azar, una de 5 tormentas famosas verificadas en DONKI (`datos.json → cme_historicas`: San Patricio 2015, Halloween 2021, mayo 2024, octubre 2024 y septiembre 2017).
+2. Consulta DONKI en segundo plano (máximo 8 s). Si el dato llega antes de la Ruta, la partida usa la nube real más reciente ("Dato real · en vivo"); si llega después, la usa la siguiente partida.
+3. Si el Sol estuvo tranquilo, se entrena con una tormenta real del pasado. Sin red, la etiqueta dice "no en vivo".
+4. En pantalla se ve la velocidad real; el modelo la limita entre 1000 y 1700 km/s (`modelo.cme_max_juego_kms`) para que siempre se pueda jugar.
+La clave de api.nasa.gov del equipo está en `src/nasa/donki.js` (1000 consultas por hora). Para agregar tormentas famosas verificadas: `pruebas/tormentas.html`.
 
 **Controles:**
 - **Ratón o dedo:** todas las escenas.
@@ -31,13 +38,15 @@ El orden está en `ORDEN` (`src/config.js`). Si el oxígeno llega a 0 o la radia
 | `src/ui.js` | Piezas comunes: `texto`, `boton`, `barras`, `datoReal`, `etiquetaDato`, `llenar`, `navegarConTeclado` |
 | `src/sonidos.js` | Sonidos con Web Audio (sin archivos) |
 | `src/modelo/simulacion.js` | Modelo de decisiones: calcula los costos con los datos NASA y las elecciones previas |
-| `src/nasa/donki.js` | Consulta a NASA DONKI (máximo 8 s; si falla, usa el dato guardado) |
+| `src/nasa/donki.js` | Consulta a NASA DONKI (máximo 8 s) |
+| `src/nasa/sol.js` | Elige la tormenta de la partida: en vivo, guardada o famosa (sin hacer esperar) |
 | `src/escenas/` | Una escena por archivo; cada una dice en su cabecera qué lee y qué escribe |
 | `src/pixelart.js`, `src/arte*.js`, `src/stella.js` | Dibujos hechos con código (mapas de letras) |
 | `src/pruebas.js` | Barra para saltar escenas (solo con `?dev=1`) |
 | `datos/datos.json` | Datos NASA (con fuente y enlace) y números de juego |
 | `datos/textos.json` | Todos los textos del juego |
 | `pruebas/balance.html` | Juega todas las partidas posibles con el modelo real |
+| `pruebas/tormentas.html` | Busca tormentas reales en DONKI para agregarlas a `cme_historicas` |
 | `REVISION.md` | Revisión técnica final |
 
 ## Para probar

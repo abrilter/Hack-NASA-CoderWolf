@@ -2,12 +2,23 @@
   "_nota": "Dueño: Rol 4. Todo lo que tenga \"ejemplo\": true es de prueba y se ve en pantalla como DATO DE EJEMPLO. Reemplazar por datos reales con su enlace y cambiar a false.",
 
   "cme": {
+    "_nota": "Tormenta de respaldo del modo prueba (la misma que en cme_historicas).",
+    "nombre": "la gran tormenta de mayo de 2024",
     "fecha": "2024-05-10",
-    "velocidad_kms": 1500,
-    "fuente": "NASA DONKI – CMEAnalysis",
-    "link": "https://ccmc.gsfc.nasa.gov/tools/DONKI/",
-    "ejemplo": true
+    "velocidad_kms": 1332,
+    "fuente": "NASA DONKI (CMEAnalysis)",
+    "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/30672/-1",
+    "ejemplo": false
   },
+
+  "cme_historicas": [
+    {"_nota": "Tormentas reales que iban hacia la Tierra, verificadas en NASA DONKI (CMEAnalysis), para cuando DONKI no contesta o el Sol está tranquilo. Se elige una al azar. Agreguen solo valores vistos en DONKI, con su enlace (pruebas/tormentas.html)."},
+    {"nombre": "la tormenta de San Patricio de 2015", "fecha": "2015-03-15", "velocidad_kms": 1000, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/8839/-1", "ejemplo": false},
+    {"nombre": "la tormenta de Halloween de 2021", "fecha": "2021-10-28", "velocidad_kms": 1109, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/18107/-1", "ejemplo": false},
+    {"nombre": "la gran tormenta de mayo de 2024", "fecha": "2024-05-10", "velocidad_kms": 1332, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/30672/-1", "ejemplo": false},
+    {"nombre": "la tormenta de octubre de 2024", "fecha": "2024-10-09", "velocidad_kms": 1509, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/33877/-1", "ejemplo": false},
+    {"nombre": "la tormenta de la gran llamarada de septiembre de 2017", "fecha": "2017-09-06", "velocidad_kms": 1636, "fuente": "NASA DONKI (CMEAnalysis)", "link": "https://ccmc.gsfc.nasa.gov/DONKI/view/CMEAnalysis/27283/-1", "ejemplo": false}
+  ],
 
   "modelo": {
     "_nota": "Números del modelo de decisiones (Rol 4). Verificados con pruebas/balance.html; si cambian alguno, vuelvan a abrir esa página. Ver ANALISIS.md, sección 2.3.",
@@ -17,7 +28,8 @@
     "sin_botiquin_o2": 8,
     "radio_con_kit_o2": 5,
     "radio_sin_kit_o2": 15,
-    "cme_min_kms": 1000
+    "cme_min_kms": 1000,
+    "cme_max_juego_kms": 1700
   },
 
   "radiacion": {

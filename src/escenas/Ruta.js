@@ -16,6 +16,7 @@ import { estado } from "../estado.js";
 import { titulo, texto, boton, barras, datoReal, llenar } from "../ui.js";
 import { opcionesDeRuta, aplicar, explicar, estimarCruceCrater } from "../modelo/simulacion.js";
 import { crearTextura, crearTexturasEquipo } from "../pixelart.js";
+import { fijarTormenta } from "../nasa/sol.js";
 
 
 // ---------------------------------------------------------------- mapa (coordenadas de 320×180)
@@ -53,6 +54,7 @@ export class Ruta extends Phaser.Scene {
   constructor() { super("Ruta"); }
 
   create() {
+    fijarTormenta();                  // desde aquí la tormenta de la partida ya no cambia
     this.t = estado.textos.ruta;
     this.angSol = -2.4;                       // el Sol empieza arriba a la izquierda
     this.marcada = null;                      // ruta bajo el cursor o tocada

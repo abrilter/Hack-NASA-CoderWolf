@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tormentas de DONKI</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0b1026; color: #eef1ff; margin: 0; padding: 16px; }
+  h1 { color: #ffd45c; font-weight: 600; }
+  p { color: #a7b0d8; max-width: 75ch; }
+  label { display: inline-block; margin: 4px 12px 4px 0; }
+  input, button { font: inherit; background: #1d2650; color: #eef1ff; border: 1px solid #4fd1ff; border-radius: 3px; padding: 3px 6px; }
+  table { border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { border: 1px solid #29366f; padding: 3px 8px; text-align: left; }
+  th { background: #1d2650; }
+  pre { background: #1d2650; padding: 8px; white-space: pre-wrap; }
+  a { color: #7ee6ff; }
+</style>
+</head>
+<body>
+<h1>Tormentas reales de DONKI (para el equipo)</h1>
+<p>Busca las nubes del Sol (CME) de unas fechas en NASA DONKI y arma la entrada para
+<code>datos/datos.json → cme_historicas</code>. Copien solo valores que vean aquí, con su enlace.
+La clave es gratis en <a href="https://api.nasa.gov" target="_blank" rel="noopener">api.nasa.gov</a> (DEMO_KEY se agota rápido).</p>
+<label>Desde <input id="desde" type="date" value="2024-05-08"></label>
+<label>Hasta <input id="hasta" type="date" value="2024-05-12"></label>
+<label>Clave <input id="clave" value="DEMO_KEY" size="14"></label>
+<button id="buscar">Buscar</button>
+<div id="res"></div>
+<script>
+const $ = id => document.getElementById(id);
+$("buscar").onclick = async () => {
+  const url = `https://api.nasa.gov/DONKI/CMEAnalysis?startDate=${$("desde").value}&endDate=${$("hasta").value}&mostAccurateOnly=true&api_key=${encodeURIComponent($("clave").value)}`;
+  $("res").textContent = "Consultando…";
+  try {
+    const r = await fetch(url), json = await r.json();
+    if (!Array.isArray(json)) throw new Error(JSON.stringify(json).slice(0, 200));
+    const lista = json.filter(c => c.speed > 0).sort((a, b) => b.speed - a.speed);
+    if (!lista.length) { $("res").textContent = "No hay nubes con velocidad en esas fechas."; return; }
+    const top = lista[0];
+    const entrada = { nombre: "PONER NOMBRE (ej. la tormenta de mayo de 2024)", fecha: (top.time21_5 || "").slice(0, 10),
+      velocidad_kms: Math.round(top.speed), fuente: "NASA DONKI (CMEAnalysis)",
+      link: top.link, ejemplo: false };
+    $("res").innerHTML = `<table><tr><th>Hora (21.5 radios solares)</th><th>Velocidad</th><th>Tipo</th><th>CME</th><th>Enlace</th></tr>` +
+      lista.map(c => `<tr><td>${c.time21_5}</td><td>${Math.round(c.speed)} km/s</td><td>${c.type}</td><td>${c.associatedCMEID}</td><td><a href="${c.link}" target="_blank" rel="noopener">ver</a></td></tr>`).join("") +
+      `</table><p>Entrada de la más rápida (revisen el nombre):</p><pre>${JSON.stringify(entrada, null, 2)}</pre>`;
+  } catch (e) { $("res").textContent = "No se pudo consultar: " + e.message; }
+};
+</script>
+</body>
+</html>

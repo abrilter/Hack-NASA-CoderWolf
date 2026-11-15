@@ -20,6 +20,7 @@ import { texto, boton, etiquetaDato, llenar } from "../ui.js";
 import { crearTexturasMochila, crearTextura, crearAstro32 } from "../pixelart.js";
 import { Stella } from "../stella.js";
 import { tono, sonar } from "../sonidos.js";
+import { fechaLarga } from "../nasa/sol.js";
 
 const PARED = 88;            // donde termina la pared y empieza el piso
 const HUD = 162;             // barra de la mochila (abajo)
@@ -838,7 +839,7 @@ export class CentroControl extends Phaser.Scene {
     let tj = d.mas;
     if (k === "C") {   // registro de DONKI que ya usa el juego (real o de ejemplo)
       const cme = estado.datos.cme;
-      tj = { ...tj, texto: this.llenar(tj.texto, { fecha: cme.fecha, vel: cme.velocidad_kms }),
+      tj = { ...tj, texto: this.llenar(tj.texto, { fecha: fechaLarga(cme.fecha), vel: cme.velocidad_kms }),
         fuente: etiquetaDato(cme) + " · " + cme.fuente + " — ccmc.gsfc.nasa.gov/tools/DONKI" };
     }
     this.mostrarTarjeta({ ...tj, icono: d.icono, cerrar: this.t.tarjeta.cerrar });
