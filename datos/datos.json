@@ -25,6 +25,15 @@
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
 
+  "zona_aterrizaje": {
+    "nombre": "borde del cráter Shackleton",
+    "lat": -89.67,
+    "lon": 129.78,
+    "fuente": "NASA Moon Trek",
+    "link": "https://trek.nasa.gov/moon/",
+    "ejemplo": false
+  },
+
   "polo_sur": {
     "texto": "En el polo sur de la Luna hay cráteres donde nunca da el Sol. Son de los lugares más fríos del sistema solar (unos -240 °C) y guardan hielo de agua.",
     "fuente": "NASA LRO (Lunar Reconnaissance Orbiter)",
