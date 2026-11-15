@@ -389,7 +389,11 @@ export class Final extends Phaser.Scene {
 
   tarjetaFuente(f, x, y) {
     const t = this.t, W = 92, H = 56, c = this.add.container(x, y);
-    c.add(this.add.rectangle(0, 0, W, H, 0x0b1026).setOrigin(0).setStrokeStyle(1, f.ejemplo ? 0xef7d57 : 0x38b764));
+    const fondo = this.add.rectangle(0, 0, W, H, 0x0b1026).setOrigin(0).setStrokeStyle(1, f.ejemplo ? 0xef7d57 : 0x38b764);
+    c.add(fondo);
+    // tocar la tarjeta abre la página de la NASA (también con flechas + Enter)
+    if (f.link) fondo.setInteractive({ useHandCursor: true })
+      .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(f.link, "_blank", "noopener"); });
     // dibujo según el tema, al doble de tamaño
     const clave = iconoFuente(f.tema);
     const img = this.textures.get(clave).getSourceImage();
@@ -397,43 +401,18 @@ export class Final extends Phaser.Scene {
     c.add(this.add.image(16, 13, clave).setScale(v >= 1 ? Math.floor(v) : v));
     // tema y sello (real o de ejemplo) al lado del dibujo
     const tema = texto(this, 32, 3, t.fuentes_cortos?.[f.tema] || f.tema, { tam: 5, ancho: W - 35, origenX: 0, align: "left", color: COLOR.titulo });
-    const sello = texto(this, 32, tema.y + tema.height + 1, f.ejemplo ? t.fuentes_ejemplo : t.fuentes_real,
+    // sello real/ejemplo; la tormenta dice además si vino en vivo o no
+    const vivo = f.en_vivo === true ? " · " + estado.textos.comun.en_vivo : f.en_vivo === false ? " · " + estado.textos.comun.no_en_vivo : "";
+    const sello = texto(this, 32, tema.y + tema.height + 1, (f.ejemplo ? t.fuentes_ejemplo : t.fuentes_real) + vivo,
       { tam: 5, origenX: 0, color: f.ejemplo ? "#ef7d57" : "#5cff8a" });
     // la idea, en palabras de niño
-    const idea = texto(this, 4, 27, t.fuentes_ideas?.[f.tema] || f.tema, { tam: 6, ancho: W - 8, origenX: 0, align: "left" });
-    if (idea.height > H - 29) idea.setFontSize("5px");
-    c.add([tema, sello, idea]);
+    const idea = texto(this, 4, 26, t.fuentes_ideas?.[f.tema] || f.tema, { tam: 6, ancho: W - 8, origenX: 0, align: "left" });
+    if (idea.height > H - 36) idea.setFontSize("5px");
+    // de dónde viene el dato (la fuente NASA), abajo de la tarjeta
+    const corta = f.fuente.length > 25 ? f.fuente.slice(0, 24) + "…" : f.fuente;
+    const fuente = texto(this, 4, H - 8, corta + (f.link ? " ↗" : ""), { tam: 5, ancho: W - 6, origenX: 0, align: "left", color: COLOR.tenue });
+    c.add([tema, sello, idea, fuente]);
     return c;
   }
 
-  // Panel encima de todo con una lista; las filas con link se pueden tocar
-  panel(tituloPanel, filas, nota) {
-    const capa = this.add.container(0, 0).setDepth(1000);
-    capa.add([
-      this.add.rectangle(0, 0, ANCHO, ALTO, 0x0b1026, 0.85).setOrigin(0).setInteractive(),   // bloquea lo de atrás
-      this.add.rectangle(8, 6, ANCHO - 16, ALTO - 12, COLOR.panel).setOrigin(0).setStrokeStyle(1, COLOR.borde),
-      texto(this, ANCHO / 2, 10, tituloPanel, { tam: 8, color: COLOR.titulo })
-    ]);
-    let y = 26;
-    if (nota) {
-      const n = texto(this, ANCHO / 2, y, nota, { tam: 5, color: COLOR.tenue, ancho: 290 });
-      capa.add(n);
-      y += n.height + 4;
-    }
-    // con muchas filas, letra un poco más chica para que quepan todas
-    const tam = filas.length > 9 ? 5 : 6, espacio = tam === 5 ? 1 : 3;
-    for (const f of filas) {
-      if (y > ALTO - 32) break;
-      const fila = texto(this, 16, y, f.texto, { tam, ancho: 288, origenX: 0, align: "left", color: f.color || COLOR.texto });
-      if (f.link) {
-        fila.setInteractive({ useHandCursor: true })
-          .on("pointerdown", (p, lx, ly, ev) => { ev?.stopPropagation(); window.open(f.link, "_blank", "noopener"); });
-      }
-      capa.add(fila);
-      y += fila.height + espacio;
-    }
-    const cerrar = boton(this, ANCHO / 2, ALTO - 18, this.t.cerrar, () => capa.destroy(), 90);
-    capa.add([cerrar.caja, cerrar.etiqueta]);
-    return capa;
-  }
 }

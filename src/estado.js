@@ -11,8 +11,7 @@ export const LIMITES = {
   oxigeno:   [0, 150],
   escudo:    [0, 100],
   energia:   [0, 100],
-  radiacion: [0, Infinity],
-  hielo_kg:  [0, Infinity]
+  radiacion: [0, Infinity]
 };
 
 // Valores de una partida nueva (los usa nuevaPartida)
@@ -28,15 +27,7 @@ function partidaNueva() {
     escudo: 40,
     radiacion: 0,
     energia: 60,        // batería (la usan las misiones nuevas)
-    bitacora: [],
-
-    // Misiones nuevas (ver ANALISIS.md, sección 3.3)
-    hielo_kg: 0,
-    chispaEncontrado: false,
-    estacionDSN: null,
-    mensajeEnviado: false,
-    combustibleRestante: null,   // lo escribe Aterrizaje; lo lee Regreso
-    carga: []
+    bitacora: []
   };
 }
 
@@ -48,9 +39,6 @@ export const estado = {
 
   nombreClave: "",
   insignia: null,     // { forma, color, simbolo } diseñada en el Final; se conserva entre partidas
-  // Registro de una versión vieja (la escena Senal se quitó). Se deja porque
-  // CentroControl lo lee justo después de empezar la partida.
-  mision1: null,
 
   ...partidaNueva(),
 

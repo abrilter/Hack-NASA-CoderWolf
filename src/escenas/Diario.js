@@ -57,6 +57,10 @@ export class Diario extends Phaser.Scene {
     // navegación: flechas, clic en las esquinas o en el borde de cada hoja
     this.input.keyboard?.on("keydown-RIGHT", () => this.pasar(1));
     this.input.keyboard?.on("keydown-LEFT", () => this.pasar(-1));
+    // Esc vuelve al Final; Enter/Espacio pasan la página (en la última, vuelven al Final)
+    this.input.keyboard?.on("keydown-ESC", () => this.scene.start("Final"));
+    ["ENTER", "SPACE"].forEach(k => this.input.keyboard?.on("keydown-" + k, () =>
+      (this.actual < this.paginas.length - 1 ? this.pasar(1) : this.scene.start("Final"))));
     this.esquinaDer = this.esquina(LIBRO.x + LIBRO.w - 2, 1);
     this.esquinaIzq = this.esquina(LIBRO.x + 2, -1);
 
@@ -106,6 +110,16 @@ export class Diario extends Phaser.Scene {
       });
     }
 
+    // alerta solar en el viaje
+    if (m.viaje) {
+      const e = m.viaje.eleccion;
+      add({
+        clave: "viaje", titulo: P.viaje.titulo, frases: [P.viaje[e] || e], o2: m.viaje.oxigeno || 0,
+        sello: porCosto(m.viaje.oxigeno), ysi: P.viaje.ysi[e],
+        dibujo: c => this.dibujoViaje(c, e)
+      });
+    }
+
     // ruta
     if (m.ruta) {
       const oscuro = m.ruta.id === "crater" && !estado.lleva("linterna");
@@ -149,8 +163,8 @@ export class Diario extends Phaser.Scene {
 
     // rocas (si existe esa escena): dejar el rover o rodear
     if (m.rocas) {
-      const pie = m.rocas.dejoRover === true || m.rocas.sinRover === true;
-      const o2 = m.rocas.o2 ? -Math.abs(m.rocas.o2) : m.rocas.oxigeno || 0;
+      const pie = m.rocas.dejoRover === true;
+      const o2 = m.rocas.oxigeno || 0;
       add({
         clave: "rocas", titulo: P.rocas.titulo, frases: [pie ? P.rocas.pie : P.rocas.rodear], o2,
         sello: pie ? "arriesgado" : porCosto(o2), ysi: P.rocas.ysi[pie ? "pie" : "rodear"],
@@ -225,7 +239,7 @@ export class Diario extends Phaser.Scene {
     };
     const otroAire = r.aire === "manguera" ? "reserva" : "manguera";
     out.aire = frase({ aire: otroAire }, this.t.decisiones[otroAire]) || P.aire.ysi?.[r.aire];
-    const conRover = estado.misiones?.rocas?.dejoRover !== true && estado.misiones?.rocas?.sinRover !== true;
+    const conRover = estado.misiones?.rocas?.dejoRover !== true;
     const otroRegreso = r.regreso === "rover" ? "caminar" : "rover";
     out.regreso = conRover ? frase({ regreso: otroRegreso }, this.t.decisiones[otroRegreso]) : this.t.paginas.regreso.sin_rover;
     return out;
@@ -493,6 +507,26 @@ export class Diario extends Phaser.Scene {
     g.fillStyle(0x29366f).fillRoundedRect(x - 6, y + 18, 12, 10, 2);                      // bolsillo
     g.fillStyle(0x41a6f6).fillRect(x - 4, y + 20, 8, 1);
     lista.forEach((id, i) => c.add(this.add.image(x + (i - (lista.length - 1) / 2) * 17, FOTO.y + 52, "px_obj_" + id).setScale(0.9)));
+  }
+
+  // el espacio camino a la Luna: el Sol lanza la nube y la nave según lo que se eligió
+  dibujoViaje(c, eleccion) {
+    const g = this.g(c), cy = FOTO.y + FOTO.h / 2;
+    g.fillStyle(0x0b1026).fillRect(FOTO.x, FOTO.y, FOTO.w, FOTO.h);
+    for (let i = 0; i < 20; i++) g.fillStyle(0xc2c3c7).fillRect(FOTO.x + (i * 37) % FOTO.w, FOTO.y + (i * 23) % FOTO.h, 1, 1);
+    // el Sol en la esquina y la nube en ondas (cuartos de círculo, dentro del dibujo)
+    const sol = { x: FOTO.x + 11, y: FOTO.y + 11 };
+    g.fillStyle(ORO).fillCircle(sol.x, sol.y, 8);
+    g.lineStyle(1, 0xef7d57);
+    [20, 33, 46].forEach(r => { g.beginPath(); g.arc(sol.x, sol.y, r, 0, Math.PI / 2); g.strokePath(); });
+    // la Luna adelante
+    g.fillStyle(0xc2c3c7).fillCircle(FOTO.x + FOTO.w - 12, cy + 12, 9);
+    g.fillStyle(0x94b0c2).fillCircle(FOTO.x + FOTO.w - 15, cy + 10, 2).fillCircle(FOTO.x + FOTO.w - 9, cy + 15, 2);
+    const x = this.cx + 6;
+    if (eleccion === "acelerar") g.fillStyle(0xffa300).fillRect(x - 30, cy - 2, 18, 4).fillStyle(0xfff27a).fillRect(x - 22, cy - 1, 10, 2);
+    else g.fillStyle(0xffa300).fillRect(x - 18, cy - 1, 6, 3);
+    c.add(this.add.image(x, cy, "nave_" + (estado.nave?.id || "pequena")).setAngle(90).setScale(0.5));
+    if (eleccion === "escudo") { g.lineStyle(1, 0x7ee6ff).strokeCircle(x, cy, 15); g.fillStyle(0x4fd1ff, 0.18).fillCircle(x, cy, 15); }
   }
 
   dibujoEquipo(c) {

@@ -12,7 +12,7 @@
 // Partículas cayendo: se cuentan las que se detienen y las que pasan.
 // Escribe: oxigeno, radiacion, bitacora y estado.misiones.tormenta (lo lee Rescate).
 // Modo prueba: index.html?escena=Tormenta (&sinrover=1 para probar sin rover).
-import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
+import { ANCHO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { titulo, texto, boton, barras, datoReal, navegarConTeclado, llenar } from "../ui.js";
 import { opcionesTormenta, aplicar } from "../modelo/simulacion.js";

@@ -1,5 +1,5 @@
 // Misión 2: preparar la mochila. Dueño: Rol 2 (pantalla) y Rol 4 (pesos).
-// Lee: traje, nave, mision1, datos.cme · Escribe: mochila, oxigeno (+tanque), mision2, bitacora · Sigue: Exterior.
+// Lee: traje, nave, datos.cme · Escribe: mochila, oxigeno (+tanque), mision2, bitacora · Sigue: Exterior.
 // Sala de control con repisas, 6 objetos y la puerta. El astronauta camina
 // (clic en el piso o flechas). Clic en un objeto = lo toma o lo deja sin mover
 // al astronauta (también Enter/Espacio al estar cerca). Reglas:
@@ -98,8 +98,8 @@ export class CentroControl extends Phaser.Scene {
     this.btnOmitir = [om.caja.setDepth(1500), om.etiqueta.setDepth(1501)];
     this.btnOmitir.forEach(o => o.setVisible(false));
     this.actualizarHud();
-    // estado.mision1 queda de una versión vieja (la escena Senal se quitó): la señal se identifica aquí, con STELLA
-    Object.assign(this.reg, estado.mision1 || { alertaVista: true });
+    // la señal de Chispa se identifica aquí, con el minijuego de STELLA
+    Object.assign(this.reg, { alertaVista: true });
     if (this.reg.senalIdentificada) this.marcarLocalizada();
 
     // Entrada: camina desde abajo; luego el robot explica el oxígeno

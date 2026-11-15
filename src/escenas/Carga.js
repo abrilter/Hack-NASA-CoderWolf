@@ -7,7 +7,7 @@ import { estado } from "../estado.js";
 import { iniciarSol } from "../nasa/sol.js";
 import { texto } from "../ui.js";
 
-const RECURSOS = ["oxigeno", "escudo", "radiacion", "energia", "hielo_kg", "combustibleRestante"];
+const RECURSOS = ["oxigeno", "escudo", "radiacion", "energia"];
 
 export class Carga extends Phaser.Scene {
   constructor() { super("Carga"); }
