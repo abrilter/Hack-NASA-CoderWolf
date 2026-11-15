@@ -10,8 +10,8 @@
 import { ALTO, ANCHO, ZOOM, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { texto, llenar } from "../ui.js";
-import { crearTexturasMochila } from "../pixelart.js";
-import { crearTexturasExterior } from "../arteExterior.js";
+import { crearTexturasMochila, crearAstro32, COLORES_TRAJE } from "../pixelart.js";
+import { crearTexturasExterior, crearPiloto } from "../arteExterior.js";
 import { Stella } from "../stella.js";
 import { SistemasRover, SIM, SUELTO, BLANDO } from "./sistemasRover.js";
 import { tono, sonar } from "../sonidos.js";
@@ -323,7 +323,8 @@ export class Exterior extends Phaser.Scene {
 
   crearAstronauta() {
     this.sombra = this.add.ellipse(ESCLUSA.x, ESCLUSA.y, 14, 4, 0x1a1c2c, 0.4).setAlpha(0);
-    this.astro = this.add.image(ESCLUSA.x, ESCLUSA.y, "astro32_0").setOrigin(0.5, 1).setAlpha(0).setDepth(95);
+    this.astroClave = crearAstro32(this, estado.traje?.id);   // con el traje que eligió en Equipo
+    this.astro = this.add.image(ESCLUSA.x, ESCLUSA.y, `${this.astroClave}_0`).setOrigin(0.5, 1).setAlpha(0).setDepth(95);
   }
 
   crearRover() {
@@ -331,7 +332,7 @@ export class Exterior extends Phaser.Scene {
     const sombra = this.add.ellipse(0, 0, 40, 6, 0x1a1c2c, 0.45);
     this.ruedas = [-13, 11].map(x => this.add.image(x, -6, "rover_rueda"));
     this.carro = this.add.container(0, 0);
-    this.piloto = this.add.image(-3.5, -13, "rover_piloto").setOrigin(0.5, 1).setVisible(false);
+    this.piloto = this.add.image(-3.5, -13, crearPiloto(this, COLORES_TRAJE[estado.traje?.id], estado.traje?.id || "base")).setOrigin(0.5, 1).setVisible(false);
     const antena = this.add.rectangle(-17.5, -20.5, 1, 1, 0xfff27a);
     this.tweens.add({ targets: antena, alpha: 0.1, duration: 300, yoyo: true, repeat: -1 });
     this.carro.add([this.add.image(-20, -21, "rover_cuerpo").setOrigin(0), this.piloto, antena]);
@@ -611,7 +612,7 @@ export class Exterior extends Phaser.Scene {
       this.tiempoPaso += delta;
       if (camina && this.tiempoPaso > 160) { this.tiempoPaso = 0; this.paso = 1 - this.paso; }
       if (!camina) this.paso = 0;
-      this.astro.setTexture(`astro32_${this.paso}`);
+      this.astro.setTexture(`${this.astroClave}_${this.paso}`);
       if (this.modo === "pie") this.astro.setDepth(this.astro.y);
       this.sombra.setPosition(this.astro.x, this.astro.y).setDepth(this.astro.y - 0.5);
     }

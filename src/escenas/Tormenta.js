@@ -90,7 +90,8 @@ export class Tormenta extends Phaser.Scene {
   dibujarRefugio(id) {
     this.refugio.removeAll(true);
     this.tweens.killTweensOf(this.astro);
-    this.astro.setPosition(ASTRO.x, SUELO).setAngle(0).setScale(1);
+    this.astro.setOrigin(0.5, 1).setPosition(ASTRO.x, SUELO).setAngle(0).setScale(1);
+    this.altoAstro = ASTRO.alto;       // alto que ocupa el astronauta (las partículas le pegan arriba)
     if (id === "saliente") {
       const g = this.add.graphics();
       g.fillStyle(0x1a1c2c).fillRect(30, 60, 26, SUELO - 60);         // pared de roca
@@ -101,12 +102,14 @@ export class Tormenta extends Phaser.Scene {
       this.refugio.add(g);
       this.astro.setX(ASTRO.x);
     } else if (id === "rover") {
-      // el rover apoyado en el suelo y el astronauta agachado pegado a él.
-      // Con ROVER_ESCALA el hueco bajo el chasis (~12 px) deja caber al astronauta agachado.
+      // el rover apoyado en el suelo y el astronauta acostado debajo, entre las ruedas.
+      // Con ROVER_ESCALA el hueco bajo el chasis (~12 px) deja caber al astronauta acostado
+      // (el dibujo mide 16 de ancho: girado 90° queda de 16 de alto, con ~12 visibles).
       const c = this.add.container(ASTRO.x + 2, SUELO).setScale(ROVER_ESCALA);
       c.add([this.add.image(-20, -21, "rover_cuerpo").setOrigin(0), this.add.image(-13, -6, "rover_rueda"), this.add.image(11, -6, "rover_rueda")]);
       this.refugio.add(c);
-      this.astro.setScale(1, 0.5);
+      this.astro.setOrigin(0.5).setAngle(-90).setPosition(ASTRO.x, SUELO - this.astro.width / 2);
+      this.altoAstro = 12;
     } else if (id === "seguir") {
       this.tweens.add({ targets: this.astro, x: ASTRO.x + 8, duration: 900, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
     }
@@ -125,7 +128,7 @@ export class Tormenta extends Phaser.Scene {
     const dt = Math.min(ms, 50) / 1000, g = this.gPart.clear();
     const op = this.marcada && this.opciones.find(o => o.id === this.marcada);
     const lineaRefugio = op ? REFUGIO_Y[op.id] : null;
-    const cabeza = SUELO - this.astro.displayHeight;   // agachado bajo el rover, la cabeza queda más abajo
+    const cabeza = SUELO - (this.altoAstro || ASTRO.alto);   // acostado bajo el rover, queda más abajo
     this.particulas = this.particulas.filter(p => {
       const yAntes = p.y;
       p.x += p.vx * dt; p.y += p.vy * dt;
