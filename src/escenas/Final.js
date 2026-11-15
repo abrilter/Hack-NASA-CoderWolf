@@ -74,6 +74,7 @@ export function fuentesNASA(d) {
   const lista = [
     { tema: "Tormenta solar (CME)", ...d.cme },
     z && { tema: "Zona de aterrizaje", ...z, fuente: `${z.fuente} · ${z.nombre}` },
+    d.polo_sur && { tema: "Cráteres donde nunca llega el Sol", ...d.polo_sur },
     { tema: "Rutas del rescate", fuente: d.rutas_fuente, link: d.rutas_link, ejemplo: d.rutas.some(r => r.ejemplo) },
     { tema: "Velocidad del rover", ...d.rover },
     { tema: "Radiación de la tormenta", ...d.radiacion },

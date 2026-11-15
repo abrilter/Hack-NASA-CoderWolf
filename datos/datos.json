@@ -42,8 +42,7 @@
 
   "fuentes_extra": [
     { "_nota": "Datos NASA que se muestran en el juego y no están en otra parte de este archivo. Si su misión muestra un dato nuevo, agréguenlo aquí para que salga en la pantalla final." },
-    { "tema": "Gravedad de la Luna (1.62 m/s²)", "fuente": "NASA Moon Fact Sheet", "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "ejemplo": false },
-    { "tema": "Cráteres donde nunca llega el Sol", "fuente": "NASA Lunar Reconnaissance Orbiter (LRO)", "link": "https://lunar.gsfc.nasa.gov/", "ejemplo": false }
+    { "tema": "Gravedad de la Luna (1.62 m/s²)", "fuente": "NASA Moon Fact Sheet", "link": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "ejemplo": false }
   ],
 
   "zona_aterrizaje": {

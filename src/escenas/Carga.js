@@ -1,7 +1,7 @@
 // Carga dibujos, datos y textos. Dueño: Rol 1.
 // También tiene el MODO PRUEBA: index.html?escena=NombreEscena abre esa escena
 // directo con un estado de prueba (ver ESTADO_PRUEBA en config.js).
-import { ASSETS, ANCHO, ALTO, MISIONES_JSON, ESTADO_PRUEBA, TRAJES, NAVES, OBJETOS } from "../config.js";
+import { ASSETS, ANCHO, ALTO, MISIONES_JSON, ESTADO_PRUEBA, TRAJES, NAVES, OBJETOS, ORDEN } from "../config.js";
 import { estado } from "../estado.js";
 import { cmeReciente } from "../nasa/donki.js";
 import { texto } from "../ui.js";
@@ -55,6 +55,9 @@ export class Carga extends Phaser.Scene {
 
     estado.nuevaPartida();
     const base = structuredClone(ESTADO_PRUEBA);
+    // El tanque (+20) y el oxígeno extra de la nave se suman en Equipo: antes de
+    // esa escena (y en ella) se empieza con el oxígeno de una partida nueva.
+    if (ORDEN.indexOf(escena) <= ORDEN.indexOf("Equipo")) base.oxigeno = estado.oxigeno;
 
     // Bloque "prueba" del JSON de la misión (si tiene)
     const archivo = MISIONES_JSON[escena];

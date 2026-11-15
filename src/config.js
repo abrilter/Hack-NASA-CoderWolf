@@ -51,7 +51,7 @@ export const ESTADO_PRUEBA = {
   traje: "ligero",
   nave: "pequena",
   mochila: ["oxigeno", "escudo"],
-  oxigeno: 120,          // 100 + 20 del tanque
+  oxigeno: 120,          // 100 + 20 del tanque (escenas después de Equipo; antes, 100)
   escudo: 40,
   radiacion: 0,
   energia: 60
