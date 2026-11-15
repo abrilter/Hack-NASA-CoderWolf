@@ -18,6 +18,7 @@ import { titulo, texto, boton, barras, datoReal, navegarConTeclado, llenar } fro
 import { opcionesTormenta, aplicar } from "../modelo/simulacion.js";
 import { crearTexturasEquipo } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
+import { fijarTormenta, fechaLarga } from "../nasa/sol.js";
 
 const SUELO = 136;                 // donde pisa el astronauta
 const ASTRO = { x: 80, alto: 24 };
@@ -29,6 +30,7 @@ export class Tormenta extends Phaser.Scene {
   constructor() { super("Tormenta"); }
 
   create() {
+    fijarTormenta();                  // desde aquí la tormenta de la partida ya no cambia
     navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
     this.t = estado.textos.tormenta;
     if (estado.modoPrueba && new URLSearchParams(location.search).has("sinrover")) estado.misiones.rocas = { dejoRover: true };
@@ -46,7 +48,7 @@ export class Tormenta extends Phaser.Scene {
     titulo(this, this.t.titulo, 4);
     // si en la Ruta ya pasó parte de la tormenta, aquí queda menos
     const queda = this.opciones[0].queda;
-    texto(this, ANCHO / 2 + 20, 21, llenar(this.t.info, { vel: cme.velocidad_kms, horas: T.opciones.seguir.espera_h }) +
+    texto(this, ANCHO / 2 + 20, 21, llenar(this.t.info, { fecha: fechaLarga(cme.fecha), vel: cme.velocidad_kms, horas: T.opciones.seguir.espera_h }) +
       (queda < 1 ? " " + llenar(this.t.ya_paso, { pct: Math.round((1 - queda) * 100) }) : ""),
       { tam: 6, ancho: 240, color: "#ff8a5c" });
 

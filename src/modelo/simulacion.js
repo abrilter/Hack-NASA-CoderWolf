@@ -8,6 +8,7 @@
 // ===========================================================================
 import { LIMITES, LIMITE_RADIACION } from "../estado.js";
 import { llenar } from "../ui.js";
+import { velocidadDeJuego } from "../nasa/sol.js";
 
 const KM_SOL_TIERRA = 149_600_000;
 
@@ -17,9 +18,10 @@ export function horasDeLlegada(velocidadKms) {
 }
 
 // Horas que faltan para la tormenta cuando ya aterrizaste: a la llegada de la
+// (la velocidad real de DONKI, limitada a un rango jugable: velocidadDeJuego)
 // CME se le restan las horas de vuelo de la nave (la grande es más lenta).
 export function horasTormentaAlAterrizar(datos, estado) {
-  return horasDeLlegada(datos.cme.velocidad_kms) - (estado.nave?.horasViaje ?? 0);
+  return horasDeLlegada(velocidadDeJuego(datos)) - (estado.nave?.horasViaje ?? 0);
 }
 
 // Qué parte de la radiación se bloquea (0 = nada, 0.9 = casi todo)
@@ -69,7 +71,7 @@ export function opcionesDeRuta(datos, estado) {
 // Fuerza de la tormenta (puntos de radiación por hora sin protección): la dosis
 // de juego, más fuerte si la nube (CME) de DONKI viene más rápida.
 export function fuerzaTormenta(datos) {
-  const T = datos.tormenta, v = datos.cme?.velocidad_kms || T.vel_referencia_kms;
+  const T = datos.tormenta, v = velocidadDeJuego(datos);
   return datos.radiacion.dosis_juego_por_hora * Math.min(T.factor_max, Math.max(T.factor_min, v / T.vel_referencia_kms));
 }
 
