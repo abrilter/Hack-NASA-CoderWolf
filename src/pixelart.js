@@ -581,6 +581,19 @@ const PALETA_OBJ = {
   O: 0xffa300, L: 0xfff27a
 };
 
+// Astronauta de 32×32 con el traje elegido (base, ligero o blindado).
+// Crea astro32_<id>_0 y astro32_<id>_1 y devuelve el prefijo "astro32_<id>".
+export function crearAstro32(escena, id = "base") {
+  if (!COLORES_TRAJE[id]) id = "base";
+  const vacia = ".".repeat(32);
+  ASTRO_PIERNAS.forEach((piernas, f) => {
+    const filas = [...cuerpoDe(id), ...piernas].map(fila => "........" + fila.padEnd(16, ".") + "........");
+    crearTextura(escena, `astro32_${id}_${f}`,
+      [...Array(Math.max(0, 32 - filas.length)).fill(vacia), ...filas], paletaAstro(COLORES_TRAJE[id], false, id));
+  });
+  return `astro32_${id}`;
+}
+
 export function crearTexturasMochila(escena) {
   crearTexturasEquipo(escena);                       // Chispa y decorado
   Object.entries(OBJ_MAPAS).forEach(([clave, mapa]) => crearTextura(escena, "px_" + clave, mapa, PALETA_OBJ));

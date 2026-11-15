@@ -7,7 +7,6 @@ import { Senal } from "./escenas/Senal.js";
 import { CentroControl } from "./escenas/CentroControl.js";
 import { Exterior } from "./escenas/Exterior.js";
 import { Equipo } from "./escenas/Equipo.js";
-import { Viaje } from "./escenas/Viaje.js";
 import { Aterrizaje } from "./escenas/Aterrizaje.js";
 import { Ruta } from "./escenas/Ruta.js";
 import { Rescate } from "./escenas/Rescate.js";

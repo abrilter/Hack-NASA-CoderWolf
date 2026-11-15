@@ -1,7 +1,7 @@
 // Misión 4: alerta solar con dato real de DONKI. Dueño: Rol 2 + Rol 4.
 import { ANCHO } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, barras, datoReal } from "../ui.js";
+import { titulo, texto, boton, barras } from "../ui.js";
 import { horasDeLlegada, aplicar } from "../modelo/simulacion.js";
 
 export class Viaje extends Phaser.Scene {
@@ -22,7 +22,6 @@ export class Viaje extends Phaser.Scene {
 
     boton(this, 85, 125, "Cargar escudo (-10 O2)", () => this.decidir({ escudo: 30, oxigeno: -10 }, "Cargaste el escudo."), 140);
     boton(this, 235, 125, "Ahorrar energía", () => this.decidir({}, "Ahorraste energía."), 140);
-    datoReal(this, cme);
   }
 
   decidir(efectos, nota) {

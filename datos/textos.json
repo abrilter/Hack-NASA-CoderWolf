@@ -385,7 +385,11 @@
     "titulo_exito": "¡Aterrizaje!",
     "titulo_fallo": "¡Ups!",
     "exito": "Tocaste el suelo a {vel} m/s. ¡Perfecto! En la Luna no hay aire: solo los propulsores frenan.",
-    "fallo": "Aterrizaje brusco: llegaste a {vel} m/s y lo seguro era {segura} m/s. Empieza a frenar antes y en pulsos."
+    "fallo": "Aterrizaje brusco: llegaste a {vel} m/s y lo seguro era {segura} m/s. Empieza a frenar antes y en pulsos.",
+    "base": "BASE LUNAR",
+    "entrando_base": "Entrando a la base lunar...",
+    "base_titulo": "Base Lunar · Polo Sur",
+    "base_texto": "¡Bienvenido a la base! La esclusa se cerró y ya estás a salvo. Antes de buscar a Itzel, prepara tu equipo."
   },
 
   "ruta": {
