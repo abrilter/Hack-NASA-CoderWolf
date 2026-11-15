@@ -30,7 +30,8 @@ const BORDE = 44;             // arriba de esta línea se ve el borde del cráte
 const OSCURO = 0x05070f;
 const KMH = 0.25;             // misma escala que Exterior: 40 px/s ≈ 10 km/h
 // Rocas del camino: [x en el mundo, desfase vertical]
-const ROCAS = [[230, 0], [380, 2], [500, -1], [640, 1], [760, 0], [880, 2], [990, -1], [1080, 1]];
+// Rocas del camino: [parte del recorrido (0 a 1), desnivel]. Se acomodan solas si cambia largo_px.
+const ROCAS = [[0.2, 0], [0.33, 2], [0.435, -1], [0.557, 1], [0.661, 0], [0.765, 2], [0.861, -1], [0.939, 1]];
 
 export class CraterHelado extends Phaser.Scene {
   constructor() { super("CraterHelado"); }
@@ -131,7 +132,8 @@ export class CraterHelado extends Phaser.Scene {
       this.tweens.add({ targets: hielo, alpha: 0.15, duration: 500 + (x % 7) * 120, yoyo: true, repeat: -1 });
     }
     // rocas del camino
-    this.rocas = ROCAS.map(([x, dy]) => {
+    this.rocas = ROCAS.map(([parte, dy]) => {
+      const x = Math.round(parte * this.J.largo_px);
       const r = this.add.graphics();
       r.fillStyle(0x1a1c2c).fillEllipse(x, SUELO - 2 + dy, 14, 9);
       r.fillStyle(0x566c86).fillEllipse(x, SUELO - 3 + dy, 12, 7);
