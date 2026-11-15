@@ -1,4 +1,5 @@
 // Misión 2b: exterior de la estación lunar. Dueño: Rol 2 (pantalla), Rol 3 (arte).
+// Lee: textos.exterior · Escribe: misiones.exterior, bitacora · Sigue: Ruta.
 // Empieza al salir del Centro de Control con la mochila lista. El astronauta
 // camina (WASD / flechas / clic en el suelo) de la esclusa a la zona de
 // vehículos, aborda el rover con E y lo CONDUCE siguiendo las balizas hasta el
@@ -8,11 +9,12 @@
 // Tutorial holográfico, análisis del terreno y emergencias: sistemasRover.js.
 import { ALTO, ANCHO, ZOOM, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { texto } from "../ui.js";
+import { texto, llenar } from "../ui.js";
 import { crearTexturasMochila } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
 import { Stella } from "../stella.js";
 import { SistemasRover, SIM, SUELTO, BLANDO } from "./sistemasRover.js";
+import { tono, sonar } from "../sonidos.js";
 
 const MUNDO = 2000;
 const HORIZONTE = 58;
@@ -38,7 +40,6 @@ const PENDIENTES = [{ x1: 940, x2: 1000, p: 1, g: 12 }, { x1: 1000, x2: 1050, p:
 const SOMBRAS = [[1370, 112, 92, 36], [1950, 96, 64, 24]];
 const LETREROS = [[574, 118], [998, 82], [1402, 156], [1702, 98]];
 const OSCURO = 0x0b1026;
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 const dentro = (x, y, r) => x >= r.x1 && x <= r.x2 && y >= (r.y1 ?? 0) && y <= (r.y2 ?? ALTO);
 const enElipse = (x, y, [cx, cy, rx, ry], m = 1) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 < m * m;
 
@@ -51,6 +52,9 @@ export class Exterior extends Phaser.Scene {
     this.t = estado.textos.exterior;
     estado.misiones ??= {};
     this.reg = estado.misiones.exterior = { completada: false, choques: 0, balizas: 0, abordajes: 0, bajadas: 0, segundos: 0 };
+    // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
+    this.saliendo = false; this.listo = false; this.stellaVisible = false; this.trasEmergencia = false;
+    this.finLinea = null; this.osc = null; this.destino = null; this.irRover = false; this.punteroRover = false; this.puedeAuto = false;
     this.modo = "intro";            // intro · pie · abordando · rover · bajando · final
     this.inicio = this.time.now;
     this.energia = 100;
@@ -246,7 +250,7 @@ export class Exterior extends Phaser.Scene {
     g.fillStyle(0x0b1026).fillRect(142, 74, 16, 24);
     this.puerta = this.add.rectangle(142, 74, 16, 24, 0x566c86).setOrigin(0).setDepth(91);
     this.puertaLinea = this.add.rectangle(150, 74, 1, 24, 0x333c57).setOrigin(0.5, 0).setDepth(91);
-    texto(this, 76, 54, "BASE POLO SUR", { tam: 6, color: "#29366f" }).setDepth(91);
+    texto(this, 76, 54, this.t.letrero_base, { tam: 6, color: "#29366f" }).setDepth(91);
     // paneles solares casi verticales (el Sol queda muy bajo en el polo sur)
     [[304, 46], [326, 50]].forEach(([x, y]) => {
       g.fillStyle(0x566c86).fillRect(x + 7, y + 30, 3, 98 - y - 30);
@@ -274,7 +278,7 @@ export class Exterior extends Phaser.Scene {
     }
     g.lineStyle(1, 0xe8ecf4).strokeRect(412, 132, 56, 26);     // lugar del rover
     texto(this, 440, 160, "R-1", { tam: 6, color: "#ffcd75" }).setDepth(-139);
-    texto(this, 442, 106, "ZONA DE VEHÍCULOS", { tam: 6, color: "#ffcd75" }).setDepth(-139);
+    texto(this, 442, 106, this.t.letrero_vehiculos, { tam: 6, color: "#ffcd75" }).setDepth(-139);
     // balizas de las esquinas
     [[p.x1 + 3, p.y1 + 4], [p.x2 - 3, p.y1 + 4], [p.x1 + 3, p.y2], [p.x2 - 3, p.y2]].forEach(([x, y], i) => this.baliza(x, y, 0xffcd75, 600 + i * 70));
     // vehículos estacionados
@@ -795,27 +799,8 @@ export class Exterior extends Phaser.Scene {
   }
 
   // ================================================================ sonido (Web Audio, sin archivos)
-  tono(f, ini, dur, forma = "square", vol = 0.04) {
-    const ctx = this.sound.context;
-    if (!ctx) return null;
-    if (ctx.state === "suspended") ctx.resume();
-    const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + ini;
-    o.type = forma;
-    o.frequency.setValueAtTime(f, t0);
-    g.gain.setValueAtTime(vol, t0);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    o.connect(g).connect(ctx.destination);
-    o.start(t0);
-    o.stop(t0 + dur + 0.02);
-    return { o, t0 };
-  }
-
-  sonar(tipo) {
-    if (tipo === "bien") [660, 880, 1100].forEach((f, i) => this.tono(f, i * 0.1, 0.15));
-    if (tipo === "choque") [180, 120].forEach((f, i) => this.tono(f, i * 0.08, 0.12, "sawtooth", 0.05));
-    if (tipo === "puerta") { const s = this.tono(220, 0, 0.5, "triangle", 0.04); s?.o.frequency.exponentialRampToValueAtTime(440, s.t0 + 0.5); }
-    if (tipo === "arranque") [110, 165, 220].forEach((f, i) => this.tono(f, i * 0.12, 0.18, "sawtooth", 0.03));
-  }
+  tono(...a) { return tono(this, ...a); }      // src/sonidos.js
+  sonar(tipo) { sonar(this, tipo); }
 
   // Zumbido del motor: sube con la velocidad
   motor(encender) {

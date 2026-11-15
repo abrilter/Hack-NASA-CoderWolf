@@ -1,4 +1,5 @@
 // Pixel art hecho con texto: cada letra es un pixel de un color de la paleta.
+// Lee: nada · Escribe: nada (crea texturas de Phaser).
 // "." = transparente. Así se pueden dibujar figuras sin esperar los PNG.
 // TODO(Rol 3): cuando existan los PNG, estas figuras sirven de guía de tamaño.
 

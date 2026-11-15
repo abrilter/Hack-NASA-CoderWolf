@@ -1,4 +1,5 @@
 // Misión 2: preparar la mochila. Dueño: Rol 2 (pantalla) y Rol 4 (pesos).
+// Lee: traje, nave, mision1, datos.cme · Escribe: mochila, oxigeno (+tanque), mision2, bitacora · Sigue: Exterior.
 // Sala de control con repisas, 6 objetos y la puerta. El astronauta camina
 // (clic en el piso o flechas). Clic en un objeto = lo toma o lo deja sin mover
 // al astronauta (también Enter/Espacio al estar cerca). Reglas:
@@ -7,7 +8,7 @@
 //    guardado, no se puede quitar.
 // Historia: la señal de Chispa ya se identificó en la Misión 1 (Senal.js);
 // el monitor muestra el mapa del polo sur. Revisión del equipo y
-// última transmisión de Itzel → puerta → Final. Va después de Equipo y
+// última transmisión de Itzel → puerta → Exterior. Va después de Equipo y
 // Aterrizaje: la puerta no abre si falta el traje o la nave.
 // STELLA: monitor-asistente junto a la puerta con 5 apartados (misión, entorno,
 // señal, equipo y evaluación de mochila). Orienta, nunca elige por el jugador.
@@ -15,18 +16,19 @@
 // vivo) y estado.mision2.
 import { ANCHO, ALTO, COLOR, OBJETOS, CAPACIDAD_MOCHILA, O2_TANQUE, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { texto, boton } from "../ui.js";
+import { texto, boton, etiquetaDato, llenar } from "../ui.js";
 import { crearTexturasMochila, crearTextura, crearAstro32 } from "../pixelart.js";
 import { Stella } from "../stella.js";
+import { tono, sonar } from "../sonidos.js";
 
 const PARED = 88;            // donde termina la pared y empieza el piso
 const HUD = 162;             // barra de la mochila (abajo)
-const LIMITES = { x1: 12, x2: ANCHO - 12, y1: 100, y2: HUD - 6 };
+const PISO = { x1: 12, x2: ANCHO - 12, y1: 100, y2: HUD - 6 };
 const VELOCIDAD = 70;
 const CERCA = 10;
 const REPISAS = [70, 130, 190];          // centro de cada mueble
 const TABLAS = [52, 80];                 // altura de las dos tablas
-const ORDEN = ["oxigeno", "escudo", "radio", "botiquin", "comida", "linterna"];
+const ORDEN_REPISA = ["oxigeno", "escudo", "radio", "botiquin", "comida", "linterna"];
 const OBLIGATORIO = "oxigeno";
 const PUERTA = { x: 280, y: 104 };
 const MONITOR = { x: 10, y: 24, w: 36, h: 30 };
@@ -64,6 +66,7 @@ export class CentroControl extends Phaser.Scene {
     this.saliendo = false;
     this.entro = false;
     this.modal = null;
+    this.stellaPanel = null; this.cerrandoStella = false;   // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     this.cola = null;
     this.pulsos = null;
     this.eventosPanel = [];
@@ -287,12 +290,12 @@ export class CentroControl extends Phaser.Scene {
   crearObjetos() {
     this.zonas = [];
     this.iconos = {};
-    ORDEN.forEach((id, i) => {
+    ORDEN_REPISA.forEach((id, i) => {
       const o = OBJETOS.find(x => x.id === id);
       const x = REPISAS[Math.floor(i / 2)] + (i % 2 ? 10 : -10), y = TABLAS[i % 2];
       const s = this.add.image(x, y, "px_" + o.clave).setOrigin(0.5, 1).setDepth(-5).setInteractive({ useHandCursor: true });
       texto(this, x, y + 2, o.peso + " kg" + (id === OBLIGATORIO ? " ★" : ""), { tam: 5, color: "#ffcd75" }).setDepth(-5);
-      const zona = { tipo: "objeto", o, x, y: LIMITES.y1 + 4 };
+      const zona = { tipo: "objeto", o, x, y: PISO.y1 + 4 };
       // Tocar un objeto lo toma o lo deja sin mover al astronauta
       s.on("pointerdown", (p, lx, ly, ev) => {
         ev.stopPropagation();
@@ -435,7 +438,7 @@ export class CentroControl extends Phaser.Scene {
 
   lleva(id) { return this.mochila.includes(id); }
   peso(lista = this.mochila) { return lista.reduce((s, id) => s + OBJETOS.find(o => o.id === id).peso, 0); }
-  llenar(plantilla, o) { return plantilla.replace(/\{(\w+)\}/g, (_, k) => o[k]); }
+  llenar(plantilla, o) { return llenar(plantilla, o); }
 
   alternar(o) {
     const nombre = this.t.nombres[o.id];
@@ -443,7 +446,7 @@ export class CentroControl extends Phaser.Scene {
       // el tanque obligatorio no se puede quitar
       if (o.id === OBLIGATORIO) { this.stellaSala.reaccionar("alerta"); return this.decir(this.t.oxigeno_fijo); }
       this.mochila = this.mochila.filter(id => id !== o.id);
-      this.decir("STELLA: " + this.t.stella.consejos.dejar[o.id]);
+      this.decir(this.t.prefijo_stella + this.t.stella.consejos.dejar[o.id]);
     } else {
       const exceso = this.peso() + o.peso - CAPACIDAD_MOCHILA;
       if (exceso > 0) {
@@ -453,7 +456,7 @@ export class CentroControl extends Phaser.Scene {
         return;
       }
       if (o.id === OBLIGATORIO) { this.mochila.unshift(o.id); this.decir(this.t.oxigeno_ok); }
-      else { this.mochila.push(o.id); this.decir("STELLA: " + this.t.stella.consejos.tomar[o.id]); }
+      else { this.mochila.push(o.id); this.decir(this.t.prefijo_stella + this.t.stella.consejos.tomar[o.id]); }
       if (o.id === "linterna") this.mostrarTarjeta("tarjeta");
     }
     this.iconos[o.id].setAlpha(this.lleva(o.id) ? 0.25 : 1);
@@ -717,7 +720,7 @@ export class CentroControl extends Phaser.Scene {
       if (this.controlActivo) this.abrirStella(undefined, true);
     };
     this.add.zone(X, 50, 46, 54).setInteractive({ useHandCursor: true }).on("pointerdown", abrir);
-    this.zonas.push({ tipo: "stella", x: X, y: LIMITES.y1 + 4, r: 12 });
+    this.zonas.push({ tipo: "stella", x: X, y: PISO.y1 + 4, r: 12 });
   }
 
   // Pequeña animación cuando STELLA detecta información nueva
@@ -773,6 +776,7 @@ export class CentroControl extends Phaser.Scene {
   }
 
   limpiarContenido() {
+    if (this.tarjeta.visible) this.cerrarTarjeta();   // la tarjeta "Saber más" es de la sección anterior
     this.eventosSeccion.forEach(e => e.remove());
     this.eventosSeccion = [];
     [this.sub, this.contenido].forEach(c => { if (c) { this.tweens.killTweensOf(c.list); c.destroy(); } });
@@ -805,6 +809,7 @@ export class CentroControl extends Phaser.Scene {
   categoria(k) {
     const t = this.t.stella.entorno, d = t[k], r = this.reg.stella;
     this.catActual = k;
+    if (this.tarjeta.visible) this.cerrarTarjeta();   // la tarjeta "Saber más" era de otra categoría
     if (!r.entorno.includes(k)) r.entorno.push(k);
     this.botonesCat.forEach(([kk, b]) => b.caja.setStrokeStyle(kk === k ? 2 : 1, kk === k ? 0x7ee6ff : COLOR.borde));
     if (this.sub) { this.tweens.killTweensOf(this.sub.list); this.sub.destroy(); }
@@ -834,7 +839,7 @@ export class CentroControl extends Phaser.Scene {
     if (k === "C") {   // registro de DONKI que ya usa el juego (real o de ejemplo)
       const cme = estado.datos.cme;
       tj = { ...tj, texto: this.llenar(tj.texto, { fecha: cme.fecha, vel: cme.velocidad_kms }),
-        fuente: (cme.ejemplo ? "DATO DE EJEMPLO · " : "● Dato real · ") + cme.fuente + " — ccmc.gsfc.nasa.gov/tools/DONKI" };
+        fuente: etiquetaDato(cme) + " · " + cme.fuente + " — ccmc.gsfc.nasa.gov/tools/DONKI" };
     }
     this.mostrarTarjeta({ ...tj, icono: d.icono, cerrar: this.t.tarjeta.cerrar });
   }
@@ -849,7 +854,7 @@ export class CentroControl extends Phaser.Scene {
     g.fillStyle(0xffcd75).fillCircle(98, 76, 4);
     const haz = s(this.add.triangle(0, 0, 100, 76, 116, 84, 112, 92, 0xfff27a, 0.35).setOrigin(0));
     this.tweens.add({ targets: haz, alpha: 0.1, duration: 900, yoyo: true, repeat: -1 });
-    s(texto(this, 134, 97, "sombra", { tam: 5, color: COLOR.tenue }));
+    s(texto(this, 134, 97, this.t.sombra, { tam: 5, color: COLOR.tenue }));
   }
 
   ilustrarB(g, s) {      // termómetro que baja y cráter frío
@@ -920,7 +925,7 @@ export class CentroControl extends Phaser.Scene {
   stella_equipo() {
     const t = this.t.stella.equipo, filas = [];
     this.encabezado(t.titulo);
-    ORDEN.forEach((id, i) => {
+    ORDEN_REPISA.forEach((id, i) => {
       const o = OBJETOS.find(x => x.id === id), y = 40 + i * 12, lleva = this.lleva(id), obl = id === OBLIGATORIO;
       const fila = this.add.rectangle(92, y - 6, 212, 11, 0x0b1026, 0.5).setOrigin(0).setStrokeStyle(1, 0x333c57).setInteractive({ useHandCursor: true });
       fila.on("pointerdown", (p, lx, ly, ev) => {
@@ -932,7 +937,7 @@ export class CentroControl extends Phaser.Scene {
         if (!this.reg.stella.recomendaciones.includes(id)) this.reg.stella.recomendaciones.push(id);
       });
       filas.push(fila);
-      this.c(fila, this.add.image(100, y, "px_obj_" + id).setScale(0.625),
+      this.c(fila, this.add.image(100, y, "px_obj_" + id).setScale(0.75),
         texto(this, 108, y - 4, this.t.nombres[id], { tam: 6, origenX: 0 }),
         texto(this, 200, y - 4, o.peso + " kg", { tam: 6, origenX: 0 }),
         texto(this, 226, y - 4, obl ? t.obligatorio : t.opcional, { tam: 6, origenX: 0, color: obl ? COLOR.titulo : COLOR.tenue }),
@@ -956,7 +961,7 @@ export class CentroControl extends Phaser.Scene {
     for (let i = 0; i < CAPACIDAD_MOCHILA; i++)
       this.c(this.add.rectangle(96 + i * 9, 52, 8, 6, i < p ? 0x5cff8a : 0x0a0f24).setOrigin(0).setStrokeStyle(1, 0x333c57));
     const cubre = this.mochila.map(id => t.cubre_obj[id]);
-    const limita = ORDEN.filter(id => !this.lleva(id)).map(id => t.limita_obj[id]);
+    const limita = ORDEN_REPISA.filter(id => !this.lleva(id)).map(id => t.limita_obj[id]);
     this.c(texto(this, 96, 63, t.cubre, { tam: 6, origenX: 0, color: "#7ee6ff" }),
       texto(this, 200, 63, t.limita, { tam: 6, origenX: 0, color: "#7ee6ff" }),
       texto(this, 96, 72, cubre.join("\n") || "—", { tam: 6, origenX: 0, align: "left", ancho: 100 }),
@@ -1003,7 +1008,7 @@ export class CentroControl extends Phaser.Scene {
     this.mochila.forEach((id, i) => {
       const o = OBJETOS.find(x => x.id === id), y = 37 + i * 12;
       m.add([
-        this.add.image(26, y, "px_obj_" + id).setScale(0.625),
+        this.add.image(26, y, "px_obj_" + id).setScale(0.75),
         texto(this, 36, y - 4, `${this.t.nombres[id]} · ${o.peso} kg${id === OBLIGATORIO ? " ★" : ""}`, { tam: 6, origenX: 0, align: "left", ancho: 130 })
       ]);
     });
@@ -1092,10 +1097,10 @@ export class CentroControl extends Phaser.Scene {
 
     // Se guarda la decisión para las siguientes misiones
     estado.mochila = [...this.mochila];
-    if (this.lleva(OBLIGATORIO)) estado.oxigeno += O2_TANQUE;   // el tanque suma oxígeno al salir
+    if (this.lleva(OBLIGATORIO)) estado.cambiar("oxigeno", O2_TANQUE);   // el tanque suma oxígeno al salir
     Object.assign(this.reg, { salidaConfirmada: true, objetos: [...this.mochila], pesoTotal: this.peso(), oxigenoIncluido: this.lleva(OBLIGATORIO) });
     estado.mision2 = this.reg;
-    estado.bitacora.push(`Mochila: ${this.mochila.map(id => this.t.nombres[id]).join(", ")} (${this.peso()} kg).`);
+    estado.bitacora.push(llenar(this.t.bitacora, { lista: this.mochila.map(id => this.t.nombres[id]).join(", "), kg: this.peso() }));
 
     this.sonar("bien");
     this.tweens.add({ targets: this.hojas, scaleX: 0, duration: 400 });
@@ -1108,42 +1113,8 @@ export class CentroControl extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- sonidos (Web Audio, sin archivos)
-  tono(f, ini, dur, forma = "square", vol = 0.04) {
-    const ctx = this.sound.context;
-    if (!ctx) return null;
-    if (ctx.state === "suspended") ctx.resume();
-    const t0 = ctx.currentTime + ini, o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = forma;
-    o.frequency.setValueAtTime(f, t0);
-    g.gain.setValueAtTime(vol, t0);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    o.connect(g).connect(ctx.destination);
-    o.start(t0);
-    o.stop(t0 + dur + 0.02);
-    return { o, t0 };
-  }
-
-  sonar(tipo) {
-    const ctx = this.sound.context;
-    if (!ctx) return;
-    if (tipo === "alerta") [0, 0.18, 0.36].forEach(i => this.tono(1200, i, 0.12));
-    if (tipo === "bien") [660, 880, 1100].forEach((f, i) => this.tono(f, i * 0.1, 0.15));
-    if (tipo === "mal") [300, 200].forEach((f, i) => this.tono(f, i * 0.15, 0.15));
-    if (tipo === "ladrido") [0, 0.28].forEach(i => {
-      const s = this.tono(520, i, 0.16, "sawtooth", 0.025);
-      s?.o.frequency.exponentialRampToValueAtTime(240, s.t0 + 0.16);
-    });
-    if (tipo === "estatica") {
-      if (ctx.state === "suspended") ctx.resume();
-      const b = ctx.createBuffer(1, ctx.sampleRate * 0.8, ctx.sampleRate), d = b.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      const s = ctx.createBufferSource(), g = ctx.createGain();
-      s.buffer = b;
-      g.gain.value = 0.02;
-      s.connect(g).connect(ctx.destination);
-      s.start();
-    }
-  }
+  tono(...a) { return tono(this, ...a); }      // src/sonidos.js
+  sonar(tipo) { sonar(this, tipo); }
 
   sonarPatron(patron) {
     let t = 0;
@@ -1153,13 +1124,14 @@ export class CentroControl extends Phaser.Scene {
   // ---------------------------------------------------------------- movimiento
   caminarA(x, y, alLlegar) {
     this.destino = {
-      x: Phaser.Math.Clamp(x, LIMITES.x1, LIMITES.x2),
-      y: Phaser.Math.Clamp(y, LIMITES.y1, LIMITES.y2)
+      x: Phaser.Math.Clamp(x, PISO.x1, PISO.x2),
+      y: Phaser.Math.Clamp(y, PISO.y1, PISO.y2)
     };
     this.alLlegar = alLlegar;
   }
 
   update(tiempo, delta) {
+    delta = Math.min(delta, 50);              // tope, igual que las demás escenas
     const dt = delta / 1000;
     const camina = this.controlActivo ? this.mover(dt) : !this.entro;
 
@@ -1207,8 +1179,8 @@ export class CentroControl extends Phaser.Scene {
     }
     if (!dx && !dy) return false;
     const n = Math.hypot(dx, dy);
-    this.astro.x = Phaser.Math.Clamp(this.astro.x + (dx / n) * VELOCIDAD * dt, LIMITES.x1, LIMITES.x2);
-    this.astro.y = Phaser.Math.Clamp(this.astro.y + (dy / n) * VELOCIDAD * dt, LIMITES.y1, LIMITES.y2);
+    this.astro.x = Phaser.Math.Clamp(this.astro.x + (dx / n) * VELOCIDAD * dt, PISO.x1, PISO.x2);
+    this.astro.y = Phaser.Math.Clamp(this.astro.y + (dy / n) * VELOCIDAD * dt, PISO.y1, PISO.y2);
     if (dx) this.astro.setFlipX(dx < 0);
     return true;
   }

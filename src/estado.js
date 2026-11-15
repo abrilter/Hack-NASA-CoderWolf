@@ -1,4 +1,5 @@
 // Estado compartido entre escenas. Dueño: Rol 1 (los números iniciales: Rol 4).
+// Lee: nada · Escribe: el estado compartido (recursos, equipo, mochila, bitácora, misiones).
 // Contrato: las escenas no se llaman entre sí; solo leen y escriben aquí.
 // Para cambiar un recurso usen estado.cambiar("oxigeno", -5): así todos
 // respetan los mismos límites.

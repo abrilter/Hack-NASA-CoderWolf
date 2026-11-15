@@ -1,4 +1,5 @@
 // Barra de pruebas para el equipo (los niños no la ven). Dueño: Rol 1.
+// Lee: estado · Escribe: traje, nave, mochila, oxígeno y radiación de prueba al saltar (solo con ?dev=1).
 // Aparece solo si la dirección lleva ?dev=1, o en modo prueba (?escena=...):
 //   index.html?dev=1&sinred=1
 // Botones: ◀ escena anterior · Saltar ▶ (siguen el orden de la historia, ORDEN

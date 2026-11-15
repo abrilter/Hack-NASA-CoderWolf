@@ -1,4 +1,5 @@
 // Dibujos de la escena Huellas (vista desde arriba). Dueño: Rol 3.
+// Lee: nada · Escribe: nada (crea texturas de Phaser).
 // Mismo método que src/pixelart.js: mapas de letras, "." = transparente.
 // Los rovers miran hacia arriba. TODO(Rol 3): si se cambian por PNG, respetar tamaños.
 import { crearTextura } from "./pixelart.js";

@@ -1,4 +1,5 @@
 // Misión: la tormenta en campo abierto. Dueño: Rol 5.
+// Lee: datos.tormenta, cme, misiones.ruta, misiones.rocas, traje, escudo, mochila · Escribe: oxigeno, radiacion, misiones.tormenta, bitacora · Sigue: Rescate.
 // Llega la tormenta solar anunciada: la nube (CME) guardada en estado.datos.cme
 // (DONKI en vivo, o la guardada con su etiqueta "Dato de ejemplo").
 // Tres opciones, cada una gana algo y cuesta algo:
@@ -13,12 +14,11 @@
 // Modo prueba: index.html?escena=Tormenta (&sinrover=1 para probar sin rover).
 import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, barras, datoReal } from "../ui.js";
+import { titulo, texto, boton, barras, datoReal, navegarConTeclado, llenar } from "../ui.js";
 import { opcionesTormenta, aplicar } from "../modelo/simulacion.js";
 import { crearTexturasEquipo } from "../pixelart.js";
 import { crearTexturasExterior } from "../arteExterior.js";
 
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 const SUELO = 136;                 // donde pisa el astronauta
 const ASTRO = { x: 80, alto: 24 };
 const ZONA = { x1: 0, x2: 176, y1: 34 };   // recuadro de la ilustración
@@ -28,10 +28,12 @@ export class Tormenta extends Phaser.Scene {
   constructor() { super("Tormenta"); }
 
   create() {
+    navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
     this.t = estado.textos.tormenta;
     if (estado.modoPrueba && new URLSearchParams(location.search).has("sinrover")) estado.misiones.rocas = { dejoRover: true };
     this.opciones = opcionesTormenta(estado.datos, estado);
     this.elegida = null;
+    this.marcada = null;               // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     this.listo = false;
     this.particulas = [];
     this.det = 0; this.pasan = 0;
@@ -97,10 +99,10 @@ export class Tormenta extends Phaser.Scene {
       this.astro.setX(ASTRO.x);
     } else if (id === "rover") {
       // el rover apoyado en el suelo y el astronauta agachado debajo
-      const c = this.add.container(ASTRO.x + 2, SUELO).setScale(2.2);
+      const c = this.add.container(ASTRO.x + 2, SUELO).setScale(2);
       c.add([this.add.image(-20, -21, "rover_cuerpo").setOrigin(0), this.add.image(-13, -6, "rover_rueda"), this.add.image(11, -6, "rover_rueda")]);
       this.refugio.add(c);
-      this.astro.setScale(1, 0.55);
+      this.astro.setScale(1, 0.5);
     } else if (id === "seguir") {
       this.tweens.add({ targets: this.astro, x: ASTRO.x + 8, duration: 900, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
     }

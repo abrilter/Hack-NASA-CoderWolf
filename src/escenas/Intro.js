@@ -1,8 +1,9 @@
 // Misión 1a: la historia inicial como cuento animado. Dueño: Rol 5 (textos) y Rol 3 (fondos).
+// Lee: textos.intro · Escribe: nada · Sigue: Carta.
 // Cada página tiene su dibujo en pixel art (misma paleta y figuras que la Misión 3)
 // y un cuadro de diálogo abajo que escribe el texto letra por letra.
 // Clic, Enter o Espacio: completa el texto o pasa a la siguiente página.
-import { ANCHO, ALTO, COLOR } from "../config.js";
+import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
 import { texto } from "../ui.js";
 import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
@@ -61,7 +62,7 @@ export class Intro extends Phaser.Scene {
   alTerminar() {
     this.avanzar = null;
     this.cameras.main.fadeOut(400);
-    this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("Carta"));
+    this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start(siguienteEscena("Intro")));
   }
 
   // Tramado pixel: pinta en g un rectángulo con puntos alternados

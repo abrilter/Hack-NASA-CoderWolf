@@ -1,4 +1,5 @@
 // Misión 3: traje y nave. Dueño: Rol 2 (pantalla) y Rol 4 (números).
+// Lee: TRAJES, NAVES, oxigeno · Escribe: traje, nave, oxigeno (+nave), bitacora · Sigue: Aterrizaje.
 // Una sola sala, el hangar, vista 3/4. El astronauta camina (clic en el piso o
 // flechas). Al acercarse a un traje o a una nave aparece una burbuja con su
 // ventaja (verde) y su costo (rojo); clic o Enter lo elige. Se puede cambiar.
@@ -26,7 +27,7 @@ const BLOQUEO = { base: 0, ligero: 0.35, blindado: 0.85 };
 const VERDE = 0x5cff8a, ROJO = 0xff5c5c, AMARILLO = 0xffcd75;
 const TAM = 6;               // un solo tamaño de letra para todos los rótulos
 const PARED = 56;            // donde termina la pared del fondo y empieza el piso
-const LIMITES = { x1: 12, x2: ANCHO - 14, y1: 100, y2: 172 };  // pies del astronauta
+const PISO = { x1: 12, x2: ANCHO - 14, y1: 100, y2: 172 };  // pies del astronauta
 const VELOCIDAD = 70;        // px por segundo
 const CERCA = 14;            // radio normal de la zona de proximidad
 
@@ -80,6 +81,7 @@ export class Equipo extends Phaser.Scene {
     this.naveElegida = null;
     this.activa = null;          // zona en la que está parado el astronauta
     this.saliendo = false;
+    this.rampa = null;               // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     this.zonas = [];
 
     crearTexturasEquipo(this);
@@ -372,7 +374,7 @@ export class Equipo extends Phaser.Scene {
     // radar del polo sur: al acercarse, burbuja con un dato real
     const Rd = LUGAR.radar;
     this.marcoRadar = this.add.rectangle(Rd.cx, Rd.y + Rd.h / 2, Rd.w, Rd.h).setStrokeStyle(1, AMARILLO).setDepth(-5).setVisible(false);
-    this.zonas.push({ tipo: "pantalla", x: Rd.cx + 2, y: LIMITES.y1, r: 13 });
+    this.zonas.push({ tipo: "pantalla", x: Rd.cx + 2, y: PISO.y1, r: 13 });
   }
 
   // Flecha verde hacia la rampa, apagada hasta tener traje y nave
@@ -692,8 +694,8 @@ export class Equipo extends Phaser.Scene {
 
     estado.traje = this.trajeElegido;
     estado.nave = this.naveElegida;
-    estado.oxigeno += this.naveElegida.oxigenoExtra;
-    estado.bitacora.push(`Equipo: ${this.t.opciones[this.trajeElegido.id].nombre} y ${this.t.opciones[this.naveElegida.id].nombre}.`);
+    estado.cambiar("oxigeno", this.naveElegida.oxigenoExtra);
+    estado.bitacora.push(this.llenar(this.t.bitacora, { traje: this.t.opciones[this.trajeElegido.id].nombre, nave: this.t.opciones[this.naveElegida.id].nombre }));
 
     const n = this.naves[this.naveElegida.id];
     // sube por la rampa y entra
@@ -716,7 +718,7 @@ export class Equipo extends Phaser.Scene {
   // ---------------------------------------------------------------- movimiento
   // ¿Se puede pararse aquí sin atravesar nada?
   libre(x, y) {
-    if (x < LIMITES.x1 || x > LIMITES.x2 || y < LIMITES.y1 || y > LIMITES.y2) return false;
+    if (x < PISO.x1 || x > PISO.x2 || y < PISO.y1 || y > PISO.y2) return false;
     return !OBSTACULOS.some(([a, b, c, d]) =>
       x > a - MARGEN.x && x < c + MARGEN.x && y > b - MARGEN.arriba && y < d + MARGEN.abajo);
   }
@@ -780,13 +782,14 @@ export class Equipo extends Phaser.Scene {
   }
 
   caminarA(x, y, alLlegar) {
-    const [fx, fy] = this.puntoLibre(Phaser.Math.Clamp(x, LIMITES.x1, LIMITES.x2), Phaser.Math.Clamp(y, LIMITES.y1, LIMITES.y2));
+    const [fx, fy] = this.puntoLibre(Phaser.Math.Clamp(x, PISO.x1, PISO.x2), Phaser.Math.Clamp(y, PISO.y1, PISO.y2));
     this.ruta = this.buscarCamino(this.astro.x, this.astro.y, fx, fy) || [[fx, fy]];
     this.destino = { x: fx, y: fy };
     this.alLlegar = alLlegar;
   }
 
   update(tiempo, delta) {
+    delta = Math.min(delta, 50);              // tope: tras un tirón no salta obstáculos
     const dt = delta / 1000;
     const camina = this.controlActivo ? this.mover(dt) : !this.saliendo;   // al entrar también camina
 

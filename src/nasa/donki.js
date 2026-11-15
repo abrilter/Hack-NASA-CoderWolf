@@ -1,4 +1,5 @@
 // Conexión con NASA DONKI. Dueño: Rol 4.
+// Lee: la API DONKI de la NASA · Escribe: nada (devuelve la CME más rápida o null).
 // TODO(Rol 4): poner la clave gratis de https://api.nasa.gov
 const API_KEY = "DEMO_KEY";
 

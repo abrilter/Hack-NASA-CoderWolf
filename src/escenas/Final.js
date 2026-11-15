@@ -1,4 +1,5 @@
 // Final: cuatro finales, bitácora en cadena, "¿Y si…?", la planta, fuentes NASA
+// Lee: todo el estado y datos.json · Escribe: insignia; «Jugar otra vez» → nuevaPartida() · Sigue: Equipo.
 // e insignia. Dueño: Rol 5.
 // Finales (ninguno castiga), según oxígeno, radiación y los 2 mensajes del Rescate:
 //   misión completa (tormenta + hielo) · hielo en secreto (tormenta + ayuda)
@@ -8,11 +9,10 @@
 // ejemplo como real) y se puede tocar para abrir su página.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton } from "../ui.js";
+import { titulo, texto, boton, etiquetaDato, navegarConTeclado, llenar } from "../ui.js";
 import { crearTexturasEquipo, crearTextura } from "../pixelart.js";
 import { finalDeMision, simularCierre, proteccion } from "../modelo/simulacion.js";
 
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 // ---------------------------------------------------------------- insignia (A-10)
 const FORMAS = ["circulo", "escudo", "hexagono", "estrella"];
@@ -75,17 +75,17 @@ export function dibujarInsignia(escena, cx, cy, r, ins, exito = false) {
 
 // Todas las fuentes NASA que usa el juego, con su etiqueta real/ejemplo
 export function fuentesNASA(d) {
-  const z = d.zona_aterrizaje;
+  const z = d.zona_aterrizaje, T = estado.textos.final.temas;
   const lista = [
-    { tema: "Tormenta solar (CME)", ...d.cme },
-    z && { tema: "Zona de aterrizaje", ...z, fuente: `${z.fuente} · ${z.nombre}` },
-    d.polo_sur && { tema: "Cráteres donde nunca llega el Sol", ...d.polo_sur },
-    { tema: "Rutas del rescate", fuente: d.rutas_fuente, link: d.rutas_link, ejemplo: d.rutas.some(r => r.ejemplo) },
-    { tema: "Velocidad del rover", ...d.rover },
-    { tema: "Radiación de la tormenta", ...d.radiacion },
-    { tema: "Planta de Chispa", ...d.planta },
-    d.luz_polo_sur && { tema: "Luz en el polo sur", ...d.luz_polo_sur },
-    d.crater_helado && { tema: "Frío en el cráter", ...d.crater_helado.temperatura },
+    { tema: T.cme, ...d.cme },
+    z && { tema: T.zona, ...z, fuente: `${z.fuente} · ${z.nombre}` },
+    d.polo_sur && { tema: T.polo_sur, ...d.polo_sur },
+    { tema: T.rutas, fuente: d.rutas_fuente, link: d.rutas_link, ejemplo: d.rutas.some(r => r.ejemplo) },
+    { tema: T.rover, ...d.rover },
+    { tema: T.radiacion, ...d.radiacion },
+    { tema: T.planta, ...d.planta },
+    d.luz_polo_sur && { tema: T.luz, ...d.luz_polo_sur },
+    d.crater_helado && { tema: T.frio, ...d.crater_helado.temperatura },
     d.itzel_estacion && { tema: d.itzel_estacion.tema, ...d.itzel_estacion },
     d.planta_espacio && { tema: d.planta_espacio.tema, ...d.planta_espacio },
     ...(d.fuentes_extra || []).filter(f => f.tema)
@@ -101,9 +101,11 @@ export class Final extends Phaser.Scene {
   constructor() { super("Final"); }
 
   create() {
+    navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
     crearTexturasEquipo(this);                    // chispa_px, planta y naves (por si se abre en modo prueba)
     crearTextura(this, "luna_px", LUNA, { k: CONTORNO, M: 0xc2c3c7, N: 0x566c86 });
     this.t = estado.textos.final;
+    this.capaInsignia = null;          // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     const t = this.t, r = estado.misiones?.rescate;
     this.final = estado.causaDerrota() ? "evacuacion" : finalDeMision(estado, r?.mensajes?.length ? r.mensajes : null);
     this.exito = this.final === "completa";       // insignia dorada con estrellas
@@ -111,7 +113,7 @@ export class Final extends Phaser.Scene {
 
     titulo(this, f.titulo, 6);
     this.dibujarFinal(this.final);
-    const cuerpo = texto(this, 126, 24, `${estado.nombreClave || "Astronauta"}: ${f.texto}`, { tam: 6, ancho: 186, origenX: 0, align: "left" });
+    const cuerpo = texto(this, 126, 24, `${estado.nombreClave || t.sin_nombre}: ${f.texto}`, { tam: 6, ancho: 186, origenX: 0, align: "left" });
     const voz = this.final === "evacuacion" ? this.porQueEvacuacion() : f.voz;
     if (this.final === "evacuacion" || this.final === "completa") this.add.image(132, cuerpo.y + cuerpo.height + 8, "chispa_px");
     texto(this, 142, cuerpo.y + cuerpo.height + 3, voz, { tam: 6, ancho: 170, origenX: 0, align: "left", color: "#ffcd75" });
@@ -179,7 +181,7 @@ export class Final extends Phaser.Scene {
       // evacuación: una nave automática baja por todos
       g.fillStyle(0x94b0c2).fillRect(X + 1, Y + H - 18, W - 2, 17);
       g.fillStyle(0xc2c3c7).fillRect(X + 1, Y + H - 18, W - 2, 1);
-      const nave = this.add.image(cx, Y + 20, "nave_pequena").setScale(0.6).setOrigin(0.5, 1);
+      const nave = this.add.image(cx, Y + 20, "nave_pequena").setScale(0.5).setOrigin(0.5, 1);
       this.tweens.add({ targets: nave, y: Y + H - 18, duration: 2600, ease: "Sine.easeOut" });
       this.add.image(cx - 26, Y + H - 18, "chispa_px").setOrigin(0.5, 1);
     }
@@ -269,7 +271,7 @@ export class Final extends Phaser.Scene {
     const capa = this.panel(t.titulo_planta, [
       { texto: t.planta_itzel, color: "#ffcd75" },
       { texto: p.texto },
-      { texto: `${p.ejemplo ? "⚠ " + t.etiqueta_ejemplo : "✓ " + t.etiqueta_real} · ${p.fuente} · ${p.fecha} ↗`, color: "#5cff8a", link: p.link }
+      { texto: `${p.ejemplo ? "⚠ " : "✓ "}${etiquetaDato(p)} · ${p.fuente} · ${p.fecha} ↗`, color: "#5cff8a", link: p.link }
     ]);
     capa.add([this.add.image(ANCHO / 2 - 10, 140, "planta").setScale(3).setOrigin(0.5, 1), this.add.image(ANCHO / 2 + 22, 136, "chispa_px")]);
   }
@@ -353,7 +355,7 @@ export class Final extends Phaser.Scene {
 
   panelFuentes(fuentes) {
     const filas = fuentes.map(f => ({
-      texto: `${f.ejemplo ? "⚠ " + this.t.etiqueta_ejemplo : "✓ " + this.t.etiqueta_real} · ${f.tema}: ${f.fuente}` +
+      texto: `${f.ejemplo ? "⚠ " : "✓ "}${etiquetaDato(f)} · ${f.tema}: ${f.fuente}` +
              `${f.fecha ? " · " + f.fecha : ""}${f.link ? " ↗" : ""}`,
       color: f.ejemplo ? "#ffcd75" : "#5cff8a",
       link: f.link

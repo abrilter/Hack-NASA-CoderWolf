@@ -7,128 +7,123 @@
 <style>
   body { font-family: system-ui, sans-serif; background: #0b1026; color: #eef1ff; margin: 0; padding: 16px; }
   h1, h2 { color: #ffd45c; font-weight: 600; }
-  p { color: #a7b0d8; max-width: 70ch; }
+  p, li { color: #a7b0d8; max-width: 80ch; }
   table { border-collapse: collapse; font-size: 13px; margin: 8px 0 24px; }
   th, td { border: 1px solid #29366f; padding: 3px 8px; text-align: left; }
   th { background: #1d2650; }
-  .ok { color: #5cff8a; } .mal { color: #ff5c5c; }
-  pre { background: #1d2650; padding: 8px; }
-  #tabla td.x { color: #ff8a5c; }
+  .ok { color: #5cff8a; } .mal { color: #ff5c5c; } .medio { color: #ffcd75; }
+  code { color: #7ee6ff; }
 </style>
 </head>
 <body>
-<h1>Prueba de balance: ninguna opción gratis</h1>
-<p>Esta página juega todas las combinaciones de traje, nave, mochila, escudo y ruta con el <b>modelo real del juego</b>
-(<code>src/modelo/simulacion.js</code>, <code>config.js</code> y <code>datos/datos.json</code>). Si cambian un número de balance,
-recarguen esta página (con Live Server) y revisen que todos los criterios sigan en verde.</p>
+<h1>Prueba de balance: ninguna opción gratis, ninguna trampa</h1>
+<p>Juega <b>todas</b> las partidas posibles con el <b>modelo real del juego</b> (<code>src/modelo/simulacion.js</code>,
+<code>src/config.js</code>, <code>datos/datos.json</code>), en el orden de la historia:
+Equipo → CentroControl → Ruta → CraterHelado → Huellas → Tormenta → Rescate (aire, radio, 2 mensajes, regreso) → Final.</p>
+<p>Supuestos: aterrizaje al primer intento; el cráter cuesta lo que estima <code>estimarCruceCrater</code> (calefacción encendida, sin choques);
+en Huellas se revisan 3 pistas y se acierta. Velocidad de la CME: <code>?vel=1500</code> (por defecto, la guardada).
+Si cambian un número de balance, recarguen esta página con Live Server.</p>
 <div id="res">Calculando…</div>
 
 <script type="module">
 import { TRAJES, NAVES, OBJETOS, CAPACIDAD_MOCHILA, O2_TANQUE } from "../src/config.js";
-import { estado } from "../src/estado.js";
-import { opcionesDeRuta, costosRescate, aplicar, horasDeLlegada } from "../src/modelo/simulacion.js";
+import { LIMITE_RADIACION } from "../src/estado.js";
+import { opcionesDeRuta, opcionesTormenta, opcionesRescate, costoRadio, efectosRegreso, estimarCruceCrater,
+         finalDeMision, copiaEstado, aplicar, tieneRover, MENSAJES } from "../src/modelo/simulacion.js";
 
-// Efectos de la escena Viaje (src/escenas/Viaje.js): si cambian allá, cambiar aquí
-const CARGAR_ESCUDO = { escudo: 30, oxigeno: -10 };
-const VELOCIDADES = [1200, 1500, 2000];   // CME rápidas reales típicas (km/s)
+const base = await (await fetch("../datos/datos.json")).json();
+const vel = Number(new URLSearchParams(location.search).get("vel")) || base.cme.velocidad_kms;
+const datos = { ...base, cme: { ...base.cme, velocidad_kms: vel } };
 
-const datos = await (await fetch("../datos/datos.json")).json();
-
-// Mochilas "llenas" (no tiene sentido dejar kilos libres) con el tanque obligatorio
+// Mochilas válidas: con el tanque obligatorio y sin pasar de la capacidad
 function mochilas() {
   const ids = OBJETOS.map(o => o.id), peso = id => OBJETOS.find(o => o.id === id).peso, lista = [];
   for (let m = 0; m < 1 << ids.length; m++) {
     const sel = ids.filter((_, i) => m & (1 << i));
-    const p = sel.reduce((s, id) => s + peso(id), 0);
-    if (!sel.includes("oxigeno") || p > CAPACIDAD_MOCHILA) continue;
-    if (ids.some(id => !sel.includes(id) && p + peso(id) <= CAPACIDAD_MOCHILA)) continue;
-    lista.push(sel);
+    if (sel.includes("oxigeno") && sel.reduce((s, id) => s + peso(id), 0) <= CAPACIDAD_MOCHILA) lista.push(sel);
   }
   return lista;
 }
+const PARES = [["tormenta", "hielo"], ["tormenta", "ayuda"], ["ayuda", "hielo"]];
+const perdio = e => e.oxigeno <= 0 || e.radiacion >= LIMITE_RADIACION;
 
-// Juega Equipo → Viaje → Ruta → Rescate (sin reparar la radio) y devuelve el final
-function jugar(v, traje, nave, mochila, cargar) {
-  const d = { ...datos, cme: { ...datos.cme, velocidad_kms: v } };
-  const resultados = {};
-  for (const op of opcionesDeRuta(d, preparar(traje, nave, mochila, cargar))) {
-    preparar(traje, nave, mochila, cargar);
-    aplicar(estado, op.efectos);
-    aplicar(estado, costosRescate(d, estado, false));
-    resultados[op.id] = { o2: estado.oxigeno, rad: estado.radiacion, gana: !estado.causaDerrota(), hR: op.hR, hT: op.hT };
-  }
-  return resultados;
+// Una partida completa; devuelve el estado final y el final de la misión
+function jugar(traje, nave, mochila, rutaId, torId, aire, mensajes, regreso) {
+  const e = copiaEstado({ oxigeno: 100, radiacion: 0, escudo: 40, traje, nave, mochila, misiones: {} });
+  e.misiones = {};
+  aplicar(e, { oxigeno: nave.oxigenoExtra + O2_TANQUE });                      // Equipo + tanque
+  const ruta = opcionesDeRuta(datos, e).find(o => o.id === rutaId);
+  aplicar(e, ruta.efectos);
+  e.misiones.ruta = { id: rutaId, horas: Math.round(ruta.hR) };
+  if (rutaId === "crater") aplicar(e, { oxigeno: -estimarCruceCrater(datos, e) });
+  aplicar(e, { oxigeno: -3 * datos.huellas.o2_pista });
+  const tor = opcionesTormenta(datos, e).find(o => o.id === torId);
+  if (!tor.disponible) return null;
+  aplicar(e, tor.efectos);
+  e.misiones.tormenta = { horasPerdidas: tor.horasPerdidas, tormentaPendiente: tor.tormentaPendiente };
+  aplicar(e, opcionesRescate(datos, e).aire[aire].efectos);
+  aplicar(e, costoRadio(datos, e));
+  aplicar(e, efectosRegreso(datos, e, tieneRover(e) ? regreso : "caminar", mensajes));
+  return { e, final: perdio(e) ? "evacuacion" : finalDeMision(e, mensajes), ruta };
 }
-function preparar(traje, nave, mochila, cargar) {
-  estado.nuevaPartida();
-  Object.assign(estado, { traje, nave, mochila: [...mochila] });
-  estado.oxigeno += nave.oxigenoExtra + (mochila.includes("oxigeno") ? O2_TANQUE : 0);   // como Equipo
-  if (cargar) aplicar(estado, CARGAR_ESCUDO);                                             // como Viaje
-  return estado;
+
+const partidas = [], equipos = [];
+for (const traje of TRAJES) for (const nave of NAVES) for (const mochila of mochilas()) for (const rutaId of datos.rutas.map(r => r.id)) {
+  const eq = { traje: traje.id, nave: nave.id, mochila, ruta: rutaId, total: 0, ganan: 0, completa: 0 };
+  for (const tor of Object.keys(datos.tormenta.opciones)) for (const aire of ["manguera", "reserva"])
+    for (const m of PARES) for (const reg of ["rover", "caminar"]) {
+      const r = jugar(traje, nave, mochila, rutaId, tor, aire, m, reg);
+      if (!r) continue;
+      eq.total++; eq.hR = r.ruta.hR; eq.hT = r.ruta.hT;
+      const gana = r.final !== "evacuacion";
+      if (gana) eq.ganan++;
+      if (r.final === "completa") eq.completa++;
+      partidas.push({ traje: traje.id, nave: nave.id, mochila, ruta: rutaId, tor, aire, regreso: reg, mensajes: m.join("+"), gana });
+    }
+  equipos.push(eq);
 }
-const puntaje = r => (r.gana ? 1000 : 0) + Math.min(r.o2, 100 - r.rad);
 
-// ------------------------------------------------------------------ simular
-const filas = [], por = {}, mejorRuta = {}, mejor = new Map();
-const cuenta = (k, g) => { por[k] ??= [0, 0]; por[k][0] += g; por[k][1]++; };
-for (const v of VELOCIDADES) for (const traje of TRAJES) for (const nave of NAVES)
-  for (const m of mochilas()) for (const cargar of [false, true]) {
-    const res = jugar(v, traje, nave, m, cargar);
-    const rutas = Object.keys(res);
-    rutas.forEach(r => { const g = +res[r].gana; [traje.id, nave.id, r, cargar ? "cargar escudo" : "ahorrar"].forEach(k => cuenta(k, g)); cuenta("TOTAL", g); });
-    const b = rutas.reduce((a, r) => puntaje(res[r]) > puntaje(res[a]) ? r : a);
-    mejorRuta[b] = (mejorRuta[b] || 0) + 1;
-    mejor.set([v, traje.id, nave.id, m.join(), cargar].join("|"), puntaje(res[b]));
-    filas.push({ v, traje: traje.id, nave: nave.id, mochila: m.filter(x => x !== "oxigeno").join(" + "), cargar, res });
-  }
-
-// Dominancia: con todo lo demás igual, ¿cuántas veces es mejor cada opción?
-function comparar(eje, a, b) {
-  let ga = 0, gb = 0;
-  for (const [k, s] of mejor) {
-    const p = k.split("|");
-    const i = { traje: 1, nave: 2, escudo: 4 }[eje];
-    if (p[i] !== String(a)) continue;
-    p[i] = String(b);
-    const o = mejor.get(p.join("|"));
-    if (s > o) ga++; else if (o > s) gb++;
-  }
-  return [ga, gb];
+// ---------------------------------------------------------------- criterios
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+const clase = p => p >= 60 ? "ok" : p >= 30 ? "medio" : "mal";
+const ganables = equipos.filter(q => q.ganan > 0).length;
+// Cada opción de cada decisión: ¿cuántas veces gana cuando se elige?
+const decisiones = {
+  traje: TRAJES.map(t => t.id), nave: NAVES.map(n => n.id), ruta: datos.rutas.map(r => r.id),
+  tor: Object.keys(datos.tormenta.opciones), aire: ["manguera", "reserva"], regreso: ["rover", "caminar"], mensajes: PARES.map(m => m.join("+"))
+};
+let filasDec = "";
+for (const [d, ops] of Object.entries(decisiones)) for (const op of ops) {
+  const sel = partidas.filter(p => p[d] === op), g = sel.filter(p => p.gana).length, q = pct(g, sel.length);
+  filasDec += `<tr><td>${d}</td><td>${op}</td><td class="${clase(q)}">${q} %</td><td>${g} / ${sel.length}</td></tr>`;
 }
-const dom = { traje: comparar("traje", "blindado", "ligero"), nave: comparar("nave", "grande", "pequena"), escudo: comparar("escudo", true, false) };
-
-// ------------------------------------------------------------------ criterios
-const pct = ([a, b]) => a / b;
-const total = Object.values(mejorRuta).reduce((s, x) => s + x, 0);
-const criterios = [
-  ["Se gana entre 55 % y 85 % de las partidas", pct(por.TOTAL) >= 0.55 && pct(por.TOTAL) <= 0.85, `${Math.round(pct(por.TOTAL) * 100)} %`],
-  ["Ninguna opción gana siempre ni pierde casi siempre (30 %–95 %)",
-    Object.entries(por).filter(([k]) => k !== "TOTAL").every(([, x]) => pct(x) >= 0.3 && pct(x) <= 0.95),
-    Object.entries(por).filter(([k]) => k !== "TOTAL").map(([k, x]) => `${k} ${Math.round(pct(x) * 100)} %`).join(" · ")],
-  ["Cada ruta es la mejor en al menos 10 % de los casos",
-    ["crater", "cresta", "refugio"].every(r => (mejorRuta[r] || 0) / total >= 0.1),
-    Object.entries(mejorRuta).map(([r, n]) => `${r} ${n}`).join(" · ") + ` (de ${total})`],
-  ["Cada traje es mejor en al menos 20 % de las comparaciones", Math.min(...dom.traje) / (dom.traje[0] + dom.traje[1]) >= 0.2, `blindado ${dom.traje[0]} · ligero ${dom.traje[1]}`],
-  ["Cada nave es mejor en al menos 20 % de las comparaciones", Math.min(...dom.nave) / (dom.nave[0] + dom.nave[1]) >= 0.2, `grande ${dom.nave[0]} · pequeña ${dom.nave[1]}`],
-  ["Cargar el escudo a veces es mejor (≥ 10 %)", dom.escudo[0] / (dom.escudo[0] + dom.escudo[1]) >= 0.1, `cargar ${dom.escudo[0]} · ahorrar ${dom.escudo[1]}`]
-];
-const pasan = criterios.every(c => c[1]);
-
-// ------------------------------------------------------------------ mostrar
-const vActual = datos.cme.velocidad_kms;
-const tabla = filas.filter(f => f.v === 1500).map(f => `<tr><td>${f.traje}</td><td>${f.nave}</td><td>${f.mochila}</td><td>${f.cargar ? "cargar" : "ahorrar"}</td>` +
-  ["crater", "cresta", "refugio"].map(r => { const x = f.res[r]; return `<td class="${x.gana ? "" : "x"}">${Math.round(x.hR)} h · O2 ${x.o2} · Rad ${x.rad}${x.gana ? "" : " ✗"}</td>`; }).join("") + "</tr>").join("");
+// Objetos de la mochila: ganar con el objeto contra sin él
+let filasObj = "";
+for (const o of OBJETOS.filter(o => o.id !== "oxigeno")) {
+  const con = partidas.filter(p => p.mochila.includes(o.id)), sin = partidas.filter(p => !p.mochila.includes(o.id));
+  const a = pct(con.filter(p => p.gana).length, con.length), b = pct(sin.filter(p => p.gana).length, sin.length);
+  // ¿cambia algo? mismas partidas con y sin el objeto (mismo resto de la mochila)
+  const efecto = equipos.some(q => q.mochila.includes(o.id) && equipos.some(r => r.traje === q.traje && r.nave === q.nave && r.ruta === q.ruta &&
+    r.mochila.join() === q.mochila.filter(x => x !== o.id).join() && r.ganan !== q.ganan));
+  filasObj += `<tr><td>${o.id} (${o.peso} kg)</td><td>${a} %</td><td>${b} %</td><td class="${efecto ? "ok" : "mal"}">${efecto ? "sí" : "NO: no cambia ninguna partida"}</td></tr>`;
+}
+const filasEq = equipos.map(q => `<tr><td>${q.traje}</td><td>${q.nave}</td><td>${q.mochila.slice(1).join(", ") || "—"}</td><td>${q.ruta}</td>` +
+  `<td>${q.hR.toFixed(1)} h</td><td>${q.hT.toFixed(1)} h</td><td class="${q.ganan ? "ok" : "mal"}">${q.ganan} / ${q.total}</td><td>${q.completa}</td></tr>`).join("");
 
 document.getElementById("res").innerHTML = `
-  <h2 class="${pasan ? "ok" : "mal"}">${pasan ? "✓ Todos los criterios pasan" : "✗ Hay criterios que no pasan"}</h2>
-  <table><tr><th>Criterio</th><th></th><th>Resultado</th></tr>
-  ${criterios.map(([n, ok, r]) => `<tr><td>${n}</td><td class="${ok ? "ok" : "mal"}">${ok ? "✓" : "✗"}</td><td>${r}</td></tr>`).join("")}</table>
-  <p>Escenarios: ${VELOCIDADES.join(", ")} km/s × ${TRAJES.length} trajes × ${NAVES.length} naves × ${mochilas().length} mochilas × cargar/ahorrar × 3 rutas = ${por.TOTAL[1]} partidas.
-  La CME actual del juego va a ${vActual} km/s (llega en ${horasDeLlegada(vActual).toFixed(1)} h).</p>
-  <h2>Detalle con CME de 1500 km/s</h2>
-  <table id="tabla"><tr><th>Traje</th><th>Nave</th><th>Mochila (+ oxígeno)</th><th>Viaje</th><th>Cráter</th><th>Cresta</th><th>Refugio</th></tr>${tabla}</table>`;
-document.title = pasan ? "Balance OK" : "Balance FALLA";
-window.resultadoBalance = { pasan, criterios };
+<h2>Resumen (CME ${vel} km/s)</h2>
+<ul>
+  <li>Equipos iniciales (traje × nave × mochila × ruta) que pueden ganar con alguna decisión posterior:
+      <b class="${clase(pct(ganables, equipos.length))}">${ganables} de ${equipos.length} (${pct(ganables, equipos.length)} %)</b></li>
+  <li>Partidas simuladas: ${partidas.length}; ganadas: ${pct(partidas.filter(p => p.gana).length, partidas.length)} %</li>
+</ul>
+<h2>Cada opción: % de partidas que gana cuando se elige</h2>
+<p>Una opción en rojo casi nunca sirve (trampa); si todas las demás están en rojo y una en verde, esa domina.</p>
+<table><tr><th>Decisión</th><th>Opción</th><th>Gana</th><th>Partidas</th></tr>${filasDec}</table>
+<h2>Objetos de la mochila</h2>
+<table><tr><th>Objeto</th><th>Gana con él</th><th>Gana sin él</th><th>¿Cambia algún resultado?</th></tr>${filasObj}</table>
+<h2>Cada equipo inicial</h2>
+<table><tr><th>Traje</th><th>Nave</th><th>Mochila (además del tanque)</th><th>Ruta</th><th>Horas ruta</th><th>Tormenta en</th><th>Gana</th><th>Final completo</th></tr>${filasEq}</table>`;
 </script>
 </body>
 </html>

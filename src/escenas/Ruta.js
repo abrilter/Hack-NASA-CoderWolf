@@ -1,4 +1,5 @@
 // Misión 6: la ruta hacia Itzel, calculada por el modelo. Dueño: Rol 4 + Rol 2.
+// Lee: datos (rutas, modelo, cme), traje, nave, mochila, escudo · Escribe: oxigeno, radiacion, misiones.ruta, bitacora · Sigue: CraterHelado.
 // Mapa del polo sur lunar visto desde arriba. El Sol va pegado al horizonte y
 // da vueltas alrededor del polo, así que las sombras de los montes giran
 // despacio (tiempo acelerado). Los fondos de los cráteres nunca reciben luz.
@@ -12,11 +13,10 @@
 // Modo prueba: index.html?escena=Ruta (estado de ejemplo de config.js).
 import { ANCHO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, barras, datoReal } from "../ui.js";
+import { titulo, texto, boton, barras, datoReal, llenar } from "../ui.js";
 import { opcionesDeRuta, aplicar, explicar, estimarCruceCrater } from "../modelo/simulacion.js";
 import { crearTextura, crearTexturasEquipo } from "../pixelart.js";
 
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 // ---------------------------------------------------------------- mapa (coordenadas de 320×180)
 const MAPA = { x: 12, y: 30, w: 202, h: 130 };
@@ -56,7 +56,9 @@ export class Ruta extends Phaser.Scene {
     this.t = estado.textos.ruta;
     this.angSol = -2.4;                       // el Sol empieza arriba a la izquierda
     this.marcada = null;                      // ruta bajo el cursor o tocada
+    this.fijada = false;                      // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     this.elegida = false;
+    this.saliendo = false;
     crearTexturasEquipo(this);
     crearTextura(this, "ruta_base", ICONO_BASE, PALETA_ICONOS);
     crearTextura(this, "ruta_itzel", ICONO_ITZEL, PALETA_ICONOS);
@@ -87,6 +89,20 @@ export class Ruta extends Phaser.Scene {
       const id = this.rutaEn(p.worldX, p.worldY);
       if (id) { this.fijada = true; this.marcar(id); }
     });
+    // teclado: las flechas cambian de ruta; Enter o Espacio la elige y luego continúa
+    const k = this.input.keyboard;
+    ["LEFT", "RIGHT", "UP", "DOWN"].forEach(t => k.on("keydown-" + t, () => {
+      if (this.elegida) return;
+      this.fijada = true;
+      this.marcar(this.marcada === "crater" ? "cresta" : "crater");
+    }));
+    ["ENTER", "SPACE"].forEach(t => k.on("keydown-" + t, () => (this.elegida ? this.continuar() : this.elegir())));
+  }
+
+  continuar() {
+    if (this.saliendo) return;
+    this.saliendo = true;
+    this.scene.start(siguienteEscena(this.scene.key));
   }
 
   // ---------------------------------------------------------------- terreno fijo
@@ -273,9 +289,7 @@ export class Ruta extends Phaser.Scene {
     barras(this, estado);
     this.add.image(ANCHO / 2, 50, "chispa_px");
     texto(this, ANCHO / 2, 70, frase, { ancho: 260 });
-    // El cráter lleva a la escena del cráter helado (si ya existe); si no, y
-    // con la cresta, sigue el orden de la historia (Rescate).
-    const destino = id === "crater" && this.scene.manager.keys.Crater ? "Crater" : siguienteEscena(this.scene.key);
-    boton(this, ANCHO / 2, 140, this.t.continuar, () => this.scene.start(destino));
+    // Sigue a CraterHelado: con la cresta, esa escena se salta sola.
+    boton(this, ANCHO / 2, 140, this.t.continuar, () => this.continuar());
   }
 }

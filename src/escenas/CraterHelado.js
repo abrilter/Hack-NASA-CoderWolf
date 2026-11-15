@@ -1,4 +1,5 @@
 // Misión: el cráter helado. Dueño: Rol 5.
+// Lee: misiones.ruta, traje, mochila · Escribe: oxigeno, misiones.crater, bitacora · Sigue: Huellas (Final si se acaba el O2).
 // Interior oscuro de un cráter en sombra permanente; el niño avanza con el rover
 // (mantener → / D o el clic). Solo se juega si la ruta elegida fue el cráter.
 //
@@ -19,7 +20,7 @@
 // Lee: mochila, traje. Escribe: oxigeno, bitacora. Números en datos.json → crater_helado.
 import { ANCHO, ALTO, COLOR, ORDEN, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { texto, boton, datoReal } from "../ui.js";
+import { texto, boton, datoReal, llenar } from "../ui.js";
 import { crearTexturasExterior } from "../arteExterior.js";
 
 const SUELO = 126;            // y donde apoyan las ruedas
@@ -30,12 +31,12 @@ const OSCURO = 0x05070f;
 const KMH = 0.25;             // misma escala que Exterior: 40 px/s ≈ 10 km/h
 // Rocas del camino: [x en el mundo, desfase vertical]
 const ROCAS = [[230, 0], [380, 2], [500, -1], [640, 1], [760, 0], [880, 2], [990, -1], [1080, 1]];
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 export class CraterHelado extends Phaser.Scene {
   constructor() { super("CraterHelado"); }
 
   create() {
+    this.saliendo = false;            // Phaser reutiliza la escena en cada partida
     this.t = estado.textos.crater_helado;
     this.d = estado.datos.crater_helado;
     this.J = this.d.juego;
@@ -354,7 +355,9 @@ export class CraterHelado extends Phaser.Scene {
       o2: this.o2Gastado, esquivas: this.esquivas, choques: this.choques, limpiezas: this.limpiezas, calef: pct
     }), { tam: 6, ancho: 220 }).setDepth(P);
     texto(this, ANCHO / 2, 98, consejo, { tam: 6, ancho: 220, color: "#ffcd75" }).setDepth(P);
-    const b = boton(this, ANCHO / 2, 124, t.continuar, () => this.scene.start(this.sig), 100);
+    const seguir = () => { if (this.saliendo) return; this.saliendo = true; this.scene.start(this.sig); };
+    const b = boton(this, ANCHO / 2, 124, t.continuar, seguir, 100);
+    ["ENTER", "SPACE"].forEach(k => this.input.keyboard.once("keydown-" + k, seguir));   // también con teclado
     b.caja.setDepth(P); b.etiqueta.setDepth(P + 1);
     [this.btnCalef, this.btnLimpiar].forEach(x => { x.caja.disableInteractive().setAlpha(0.4); x.etiqueta.setAlpha(0.4); });
   }

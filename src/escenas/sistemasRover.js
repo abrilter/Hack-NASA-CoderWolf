@@ -1,4 +1,5 @@
 // Sistemas del rover para la escena Exterior. Dueño: Rol 2 (pantalla) y Rol 4 (parámetros).
+// Lee: textos.exterior · Escribe: misiones.exterior (registro de emergencias).
 // A. Tutorial holográfico de STELLA al abordar: se oculta al acelerar (W/↑) y
 //    se vuelve a consultar con H o el botón "? AYUDA".
 // B. Análisis del terreno y emergencias:
@@ -13,7 +14,7 @@
 // "gateo", detección de pendientes; VIPER se diseñó para pendientes de unos
 // 15°), pero no es VIPER. La asistencia robótica es tecnología ficticia de
 // CoderWolf, no de NASA. Los métodos se mezclan en Exterior.prototype.
-import { texto } from "../ui.js";
+import { texto, llenar } from "../ui.js";
 import { Stella } from "../stella.js";
 
 export const SIM = {
@@ -38,7 +39,6 @@ const TX = 166, TY = 48, TW = 150, TH = 96;      // holograma de ayuda (derecha)
 const CIAN = 0x7ee6ff, NARANJA = 0xff8a5c;
 const ATENCION = ["pendiente", "rocas", "traccion_aviso", "crater_peligro", "crater", "rugoso"];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 const op = (color = "#eef1ff", ancho = 158) => ({ tam: 6, origenX: 0, align: "left", ancho, color });
 
 export const SistemasRover = {

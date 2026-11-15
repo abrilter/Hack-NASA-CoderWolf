@@ -1,6 +1,7 @@
 // ===========================================================================
 // CONFIGURACIÓN COMÚN — reglas de la Guía de arranque. Dueño: Rol 1.
 // ===========================================================================
+// Lee: nada · Escribe: nada (constantes compartidas: tamaños, colores, ORDEN, balance).
 
 // Resolución base pixel art (se agranda sin suavizar)
 export const ANCHO = 320;
@@ -97,6 +98,15 @@ export const NAVES = [
   { id: "pequena", agilidad: 1.3, combustible: 90,  oxigenoExtra: 0,  horasViaje: 2,  w: 32 }
 ];
 export const O2_TANQUE = 20;          // si la mochila trae el tanque de oxígeno
+
+// Aterrizaje (Misión 5): dificultades y costo de reintentar.
+// altura en m, vel0 y segura en m/s, combustible = multiplicador del de la nave.
+export const DIFICULTAD_ATERRIZAJE = {
+  facil:   { altura: 50, vel0: 0, segura: 5,   combustible: 1.2 },
+  normal:  { altura: 60, vel0: 2, segura: 3.5, combustible: 1 },
+  dificil: { altura: 75, vel0: 5, segura: 2.5, combustible: 0.9 }
+};
+export const O2_REINTENTO_ATERRIZAJE = 5;
 
 // Objetos de la mochila (Centro de Control).
 // La linterna pesa 2 kg: con 1 kg siempre cabía junto a oxígeno y escudo (era "gratis").

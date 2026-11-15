@@ -1,4 +1,5 @@
 // STELLA, la asistente holográfica de la Misión 2. Dueño: Rol 3 (arte) y Rol 2.
+// Lee: nada · Escribe: nada (personaje que usan CentroControl, Exterior y Huellas).
 // Personaje en pixel art hecho con mapas de letras (como src/pixelart.js):
 // se genera un spritesheet transparente "stella_sheet" (12 cuadros de 21×24)
 // y sus animaciones. La clase Stella arma el holograma completo (plataforma,

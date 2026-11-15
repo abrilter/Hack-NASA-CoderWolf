@@ -1,4 +1,5 @@
 // Misión 4: alerta solar con dato real de DONKI. Dueño: Rol 2 + Rol 4.
+// (Fuera del recorrido.) Lee: datos.cme · Escribe: escudo, oxigeno, bitacora · Sigue: Aterrizaje.
 import { ANCHO } from "../config.js";
 import { estado } from "../estado.js";
 import { titulo, texto, boton, barras } from "../ui.js";

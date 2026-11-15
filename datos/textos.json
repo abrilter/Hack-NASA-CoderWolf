@@ -1,26 +1,39 @@
 {
   "_nota": "Dueño: Rol 5. Todos los diálogos del juego viven aquí. Se pueden cambiar sin tocar el código.",
 
+  "comun": {
+    "_nota": "Etiquetas de las fuentes NASA (ui.js → etiquetaDato). en_vivo / no_en_vivo solo salen en el dato de DONKI.",
+    "dato_real": "Dato real",
+    "dato_ejemplo": "DATO DE EJEMPLO",
+    "en_vivo": "en vivo",
+    "no_en_vivo": "no en vivo"
+  },
+
   "intro": [
-    { "titulo": "Una noche de estrellas", "texto": "Miras el cielo con tu familia. Una luz cruza muy rápido: es la Estación Espacial. Algún dia quieres explorar el espacio." },
+    { "titulo": "Una noche de estrellas", "texto": "Miras el cielo con tu familia. Una luz cruza muy rápido: es la Estación Espacial. Algún día quieres explorar el espacio." },
     { "titulo": "Noticia urgente", "texto": "La Dra. Itzel Ramos estudiaba el hielo del polo sur de la Luna con Chispa, su robot. Chispa detectó que viene una tormenta solar enorme." },
-    { "titulo": "Problemas", "texto": "La radio de la base se daño, Chispa se perdió en un cráter y a Itzel se le acaba el oxígeno. Sus datos pueden proteger los satélites de la Tierra." },
-    { "titulo": "Se busca rescatista", "texto": "Todos los astronautas están en otra misión. El Control de Misión busca a alguien valiente. No hay edad límite!" }
+    { "titulo": "Problemas", "texto": "La radio de la base se dañó, Chispa se perdió en un cráter y a Itzel se le acaba el oxígeno. Sus datos pueden proteger los satélites de la Tierra." },
+    { "titulo": "Se busca rescatista", "texto": "Todos los astronautas están en otra misión. El Control de Misión busca a alguien valiente. ¡No hay edad límite!" }
   ],
 
   "carta": {
+    "responde": "Control de Misión responde",
+    "ir": "Ir al hangar",
     "pregunta_nombre": "Escoge tu nombre clave:",
     "nombres": ["Cometa", "Nova", "Órbita", "Luna Azul"],
     "pregunta_motivo": "Quiero ir al rescate porque...",
     "motivos": [
-      { "texto": "Quiero ayudar a Itzel y Chispa", "respuesta": "Un buen rescatista piensa primero en los demás!" },
-      { "texto": "Me encanta el espacio", "respuesta": "La curiosidad mueve a los exploradores!" },
-      { "texto": "Quiero proteger la Tierra", "respuesta": "Esa responsabilidad es justo lo que buscamos!" }
+      { "texto": "Quiero ayudar a Itzel y Chispa", "respuesta": "¡Un buen rescatista piensa primero en los demás!" },
+      { "texto": "Me encanta el espacio", "respuesta": "¡La curiosidad mueve a los exploradores!" },
+      { "texto": "Quiero proteger la Tierra", "respuesta": "¡Esa responsabilidad es justo lo que buscamos!" }
     ],
     "elegido": "Has sido elegido. Antes de ir, pasarás la simulación de la misión."
   },
 
   "centro_control": {
+    "prefijo_stella": "STELLA: ",
+    "sombra": "sombra",
+    "bitacora": "Mochila: {lista} ({kg} kg).",
     "titulo": "Misión 2 · La mochila",
     "letrero": "CENTRO DE CONTROL",
     "bienvenida": "Explora la zona de la mochila: junto a la puerta está STELLA, el monitor que analiza la misión. Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
@@ -197,7 +210,7 @@
           "recomendacion": "Una linterna podría ayudarnos a buscar sus huellas.",
           "objeto": "Linterna · 2 kg",
           "icono": "px_obj_linterna",
-          "fuente": "● DATO REAL · NASA LRO",
+          "fuente": "● Dato real · NASA LRO",
           "mas": {
             "titulo": "Regiones de sombra permanente",
             "texto": "El eje de la Luna está casi derecho: en los polos el Sol apenas sube sobre el horizonte. Por eso el fondo de algunos cráteres lleva miles de millones de años sin luz directa. La sonda LRO de la NASA los estudia; ahí podría haber hielo.",
@@ -214,7 +227,7 @@
           "recomendacion": "Verifica que el sistema térmico y la energía del traje funcionen antes de salir.",
           "objeto": "Tu traje (sistema térmico y energía)",
           "icono": "astro32_0",
-          "fuente": "● DATO REAL · NASA LRO (Diviner)",
+          "fuente": "● Dato real · NASA LRO (Diviner)",
           "mas": {
             "titulo": "El frío de la sombra",
             "texto": "El instrumento Diviner de la sonda LRO midió en cráteres del polo sur temperaturas de más de 200 °C bajo cero. En el juego, la protección térmica básica ya viene en tu traje espacial.",
@@ -231,7 +244,7 @@
           "recomendacion": "El módulo de protección puede ser útil, pero durante una emergencia intensa debemos alcanzar un refugio adecuado.",
           "objeto": "Escudo de radiación · 5 kg",
           "icono": "px_obj_escudo",
-          "fuente": "● DATO REAL: tormentas solares · ◆ SIMULACIÓN: alertas del juego",
+          "fuente": "● Dato real: tormentas solares · ◆ SIMULACIÓN: alertas del juego",
           "simulado": "◆ simulado",
           "mas": {
             "titulo": "Tormentas solares y DONKI",
@@ -249,7 +262,7 @@
           "recomendacion": "Observa el mapa y selecciona una ruta segura.",
           "objeto": "Mapa de la sección «Señal»",
           "icono": "stella_px",
-          "fuente": "● DATO REAL · NASA Moon / Moon Trek",
+          "fuente": "● Dato real · NASA Moon / Moon Trek",
           "mas": {
             "titulo": "Polvo lunar y relieve",
             "texto": "El polvo lunar (regolito) es muy fino y de bordes afilados porque en la Luna no hay viento ni agua que lo desgasten. En las misiones Apolo se pegaba a los trajes. NASA Moon Trek muestra mapas reales del relieve del polo sur.",
@@ -325,6 +338,7 @@
   },
 
   "equipo": {
+    "bitacora": "Equipo: {traje} y {nave}.",
     "centro": "CENTRO DE CONTROL",
     "titulo": "Hangar de la\nEstación Terrestre",
     "bienvenida": "¡Hola, soy Bit, el robot del hangar! Elige tu traje y tu nave. Camina hacia donde quieras empezar.",
@@ -356,8 +370,6 @@
     "estacion_o2": "OXÍGENO",
     "o2_si": "¡Tu mochila trae un tanque! Te suma +20 de oxígeno.",
     "o2_no": "Tu mochila no trae tanque de oxígeno: la estación está apagada.",
-    "dato_real": "DATO REAL",
-    "dato_ejemplo": "DATO DE EJEMPLO",
     "tecnicos": [
       "En el polo sur de la Luna hay cráteres que llevan miles de millones de años sin ver el Sol.",
       "En esos cráteres hay hielo de agua: podría dar agua y oxígeno a los astronautas.",
@@ -389,7 +401,14 @@
     "base": "BASE LUNAR",
     "entrando_base": "Entrando a la base lunar...",
     "base_titulo": "Base Lunar · Polo Sur",
-    "base_texto": "¡Bienvenido a la base! La esclusa se cerró y ya estás a salvo. Antes de buscar a Itzel, prepara tu equipo."
+    "base_texto": "¡Bienvenido a la base! La esclusa se cerró y ya estás a salvo. Antes de buscar a Itzel, prepara tu equipo.",
+    "hud_gravedad": "g Luna 1.62 m/s²",
+    "hud_altura": "Altura {m} m",
+    "hud_vel": "Vel {v} m/s {dir}",
+    "hud_combustible": "Combustible {c}",
+    "reintentar": "Reintentar (−{o2} O2)",
+    "cambiar_dificultad": "Cambiar dificultad",
+    "bitacora": "Aterrizaste en el polo sur lunar a {vel} m/s."
   },
 
   "ruta": {
@@ -408,7 +427,7 @@
     "nombre_cresta": "CRESTA",
     "sol": "Sol",
     "tiempo_acelerado": "tiempo acelerado",
-    "pasa_cursor": "Pasa el cursor o toca una ruta",
+    "pasa_cursor": "Toca una ruta (o usa las flechas)",
     "tiempo": "Tiempo: {horas} h",
     "oxigeno": "Oxígeno: {o2}",
     "radiacion": "Radiación: +{rad}",
@@ -528,6 +547,8 @@
   },
 
   "final": {
+    "sin_nombre": "Astronauta",
+    "temas": { "cme": "Tormenta solar (CME)", "zona": "Zona de aterrizaje", "polo_sur": "Cráteres donde nunca llega el Sol", "rutas": "Rutas del rescate", "rover": "Velocidad del rover", "radiacion": "Radiación de la tormenta", "planta": "Planta de Chispa", "luz": "Luz en el polo sur", "frio": "Frío en el cráter" },
     "finales": {
       "completa": {
         "titulo": "¡Misión completa!",
@@ -587,9 +608,7 @@
     "ver_fuentes": "Fuentes NASA",
     "otra_vez": "Jugar otra vez",
     "titulo_fuentes": "Fuentes NASA",
-    "leyenda_fuentes": "✓ Dato real: medido por la NASA, con su página.  ⚠ Dato de ejemplo: un número de prueba que aún no verificamos. Toca una fila para abrir su fuente.",
-    "etiqueta_real": "Dato real",
-    "etiqueta_ejemplo": "Dato de ejemplo",
+    "leyenda_fuentes": "✓ Dato real: medido por la NASA, con su página.  ⚠ DATO DE EJEMPLO: un número de prueba que aún no verificamos. «No en vivo»: la NASA no respondió y usamos un registro guardado. Toca una fila para abrir su fuente.",
     "titulo_bitacora": "Bitácora de la misión",
     "bitacora_mas": "… y {n} decisiones más (toca para ver todo)",
     "cerrar": "Cerrar",
@@ -608,6 +627,8 @@
     "causa_radiacion": "Chispa: La tormenta solar nos alcanzó y la radiación llegó a {radiacion} (el límite es 100). La próxima vez carga el escudo, usa un traje que proteja más o refúgiate antes de que llegue la tormenta."
   },
   "exterior": {
+    "letrero_base": "BASE POLO SUR",
+    "letrero_vehiculos": "ZONA DE VEHÍCULOS",
     "bienvenida": "¡Bienvenido a la superficie lunar, astronauta! Nuestro vehículo de exploración nos espera cerca de la estación. Vamos a buscarlo.",
     "objetivo": "OBJETIVO: camina a la zona de vehículos y aborda el rover",
     "abordar": "Camina hasta el rover (o tócalo) para subir",

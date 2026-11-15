@@ -1,4 +1,5 @@
 // Dibujos del exterior de la estación (escena Exterior). Dueño: Rol 3.
+// Lee: nada · Escribe: nada (crea texturas de Phaser).
 // Mismo método que src/pixelart.js: mapas de letras, "." = transparente.
 // Todo mira a la derecha. TODO(Rol 3): si se cambian por PNG, respetar tamaños.
 

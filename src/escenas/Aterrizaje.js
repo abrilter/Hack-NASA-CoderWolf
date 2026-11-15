@@ -1,4 +1,5 @@
 // Misión 5: minijuego de aterrizaje. Dueño: Rol 2.
+// Lee: nave, traje · Escribe: oxigeno (−al reintentar), bitacora · Sigue: CentroControl.
 // La nave cae con la gravedad lunar real (1.62 m/s²). Mantener presionado
 // (clic, ↑ o ESPACIO) = propulsor: frena y gasta combustible. En la Luna casi
 // no hay aire, así que solo el propulsor puede frenar.
@@ -6,9 +7,9 @@
 // correcto, el astronauta baja de la nave, camina hasta la base y entra →
 // siguiente escena (preparar el equipo). Si falla, solo puede reintentar.
 // Fondo, nave y fuego en pixel art hechos con código (src/pixelart.js).
-import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
+import { ANCHO, ALTO, COLOR, siguienteEscena, DIFICULTAD_ATERRIZAJE, O2_REINTENTO_ATERRIZAJE } from "../config.js";
 import { estado } from "../estado.js";
-import { texto, titulo, boton, barras } from "../ui.js";
+import { texto, titulo, boton, barras, navegarConTeclado } from "../ui.js";
 import { crearTextura, crearTexturasEquipo } from "../pixelart.js";
 
 // ---------------------------------------------------------------- física
@@ -25,12 +26,8 @@ const PROPULSOR = {
 };
 const NAVE_PRUEBA = { id: "pequena", agilidad: 1.3, combustible: 90 };   // si se abre la escena directo
 
-// D-6: dificultad. TODO(Rol 4): ajustar los números.
-const DIFICULTAD = {
-  facil:   { altura: 50, vel0: 0, segura: 5,   combustible: 1.2 },
-  normal:  { altura: 60, vel0: 2, segura: 3.5, combustible: 1 },
-  dificil: { altura: 75, vel0: 5, segura: 2.5, combustible: 0.9 }
-};
+// D-6: dificultad (números en config.js → DIFICULTAD_ATERRIZAJE)
+const DIFICULTAD = DIFICULTAD_ATERRIZAJE;
 
 // ---------------------------------------------------------------- escenario
 const SUELO = 150;                         // y de las patas al tocar el piso
@@ -73,6 +70,7 @@ export class Aterrizaje extends Phaser.Scene {
   constructor() { super("Aterrizaje"); }
 
   create(datos = {}) {
+    navegarConTeclado(this);          // flechas + Enter en el menú y en "Reintentar" (ver ui.js)
     this.t = estado.textos.aterrizaje;
     this.naveDatos = estado.nave || NAVE_PRUEBA;
     this.prop = PROPULSOR[this.naveDatos.id] || PROPULSOR.pequena;
@@ -295,7 +293,7 @@ export class Aterrizaje extends Phaser.Scene {
     this.textoAlt = texto(this, P.x + 4, P.y + 3, "", { tam: 6, origenX: 0, align: "left" });
     this.textoVel = texto(this, P.x + 4, P.y + 14, "", { tam: 6, origenX: 0, align: "left" });
     this.textoComb = texto(this, P.x + 4, P.y + 32, "", { tam: 6, origenX: 0, align: "left" });
-    texto(this, P.x + 4, P.y + 50, "g Luna 1.62 m/s²", { tam: 6, origenX: 0, align: "left", color: COLOR.tenue });
+    texto(this, P.x + 4, P.y + 50, this.t.hud_gravedad, { tam: 6, origenX: 0, align: "left", color: COLOR.tenue });
     this.barrasHud = this.add.graphics();
     this.P = P;
     this.textoAviso = texto(this, NAVE_X, 34, "", { tam: 7, color: "#ff5c5c" });
@@ -309,10 +307,10 @@ export class Aterrizaje extends Phaser.Scene {
     const alt = Math.max(0, (SUELO - this.nave.y) / PX_POR_METRO);
     const segura = this.vy <= this.dif.segura;
 
-    this.textoAlt.setText(`Altura ${alt.toFixed(0)} m`);
-    this.textoVel.setText(`Vel ${Math.abs(this.vy).toFixed(1)} m/s ${this.vy >= 0 ? "↓" : "↑"}`)
+    this.textoAlt.setText(this.t.hud_altura.replace("{m}", alt.toFixed(0)));
+    this.textoVel.setText(this.t.hud_vel.replace("{v}", Math.abs(this.vy).toFixed(1)).replace("{dir}", this.vy >= 0 ? "↓" : "↑"))
       .setColor(segura ? "#5cff8a" : "#ff5c5c");
-    this.textoComb.setText(`Combustible ${Math.max(0, Math.round(this.combustible))}`);
+    this.textoComb.setText(this.t.hud_combustible.replace("{c}", Math.max(0, Math.round(this.combustible))));
 
     // velocidad: barra con marca de velocidad segura
     const v = Phaser.Math.Clamp(Math.max(0, this.vy) / VEL_MAX_BARRA, 0, 1);
@@ -435,13 +433,13 @@ export class Aterrizaje extends Phaser.Scene {
 
     if (ok) {
       // Solo con un aterrizaje correcto se entra a la base (sola, sin botón)
-      estado.bitacora.push(`Aterrizaste en el polo sur lunar a ${vel.toFixed(1)} m/s.`);
+      estado.bitacora.push(this.t.bitacora.replace("{vel}", vel.toFixed(1)));
       this.panelFin.push(texto(this, cx, 108, this.t.entrando_base, { tam: 6, color: "#5cff8a" }));
       this.time.delayedCall(2500, () => this.entrarBase());
     } else {
-      estado.oxigeno -= 5;
-      boton(this, cx - 52, 108, "Reintentar (-5 O2)", () => this.scene.restart({ dificultad: this.dificultad }), 100);
-      boton(this, cx + 52, 108, "Cambiar dificultad", () => this.scene.restart({}), 100);
+      estado.cambiar("oxigeno", -O2_REINTENTO_ATERRIZAJE);
+      boton(this, cx - 52, 108, this.t.reintentar.replace("{o2}", O2_REINTENTO_ATERRIZAJE), () => this.scene.restart({ dificultad: this.dificultad }), 100);
+      boton(this, cx + 52, 108, this.t.cambiar_dificultad, () => this.scene.restart({}), 100);
     }
   }
 

@@ -1,13 +1,15 @@
 // Misión 1c: la señal de Chispa. Dueño: Rol 2 (pantalla) y Rol 5 (textos).
+// (Fuera del recorrido.) Lee: textos.senal · Escribe: mision1 · Sigue: CentroControl.
 // Ya elegido, el niño llega al Control de Misión: el receptor capta el collar
 // de Chispa, identifica la señal (corto, corto, largo) y ve en el mapa del polo
 // sur dónde está → Misión 2 (CentroControl). Resultado en estado.mision1.
 // Reutiliza el cuadro de diálogo y los fondos animados de la Intro.
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
-import { texto, boton } from "../ui.js";
+import { texto, boton, llenar } from "../ui.js";
 import { crearTexturasEquipo, crearTexturasMochila } from "../pixelart.js";
 import { Intro } from "./Intro.js";
+import { tono, sonar } from "../sonidos.js";
 
 // Minijuego: cada pulso es [duración, silencio] en unidades
 const SENALES = {
@@ -59,7 +61,7 @@ export class Senal extends Intro {
 
   actualizarControl() {}
   marcarLocalizada() {}
-  llenar(plantilla, o) { return plantilla.replace(/\{(\w+)\}/g, (_, k) => o[k]); }
+  llenar(plantilla, o) { return llenar(plantilla, o); }
 
   crearTarjeta() {
     this.tarjeta = this.add.container(ANCHO / 2, 36).setDepth(2000).setVisible(false);
@@ -256,42 +258,8 @@ export class Senal extends Intro {
   }
 
   // ---------------------------------------------------------------- sonidos (Web Audio, sin archivos)
-  tono(f, ini, dur, forma = "square", vol = 0.04) {
-    const ctx = this.sound.context;
-    if (!ctx) return null;
-    if (ctx.state === "suspended") ctx.resume();
-    const t0 = ctx.currentTime + ini, o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = forma;
-    o.frequency.setValueAtTime(f, t0);
-    g.gain.setValueAtTime(vol, t0);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    o.connect(g).connect(ctx.destination);
-    o.start(t0);
-    o.stop(t0 + dur + 0.02);
-    return { o, t0 };
-  }
-
-  sonar(tipo) {
-    const ctx = this.sound.context;
-    if (!ctx) return;
-    if (tipo === "alerta") [0, 0.18, 0.36].forEach(i => this.tono(1200, i, 0.12));
-    if (tipo === "bien") [660, 880, 1100].forEach((f, i) => this.tono(f, i * 0.1, 0.15));
-    if (tipo === "mal") [300, 200].forEach((f, i) => this.tono(f, i * 0.15, 0.15));
-    if (tipo === "ladrido") [0, 0.28].forEach(i => {
-      const s = this.tono(520, i, 0.16, "sawtooth", 0.025);
-      s?.o.frequency.exponentialRampToValueAtTime(240, s.t0 + 0.16);
-    });
-    if (tipo === "estatica") {
-      if (ctx.state === "suspended") ctx.resume();
-      const b = ctx.createBuffer(1, ctx.sampleRate * 0.8, ctx.sampleRate), d = b.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      const s = ctx.createBufferSource(), g = ctx.createGain();
-      s.buffer = b;
-      g.gain.value = 0.02;
-      s.connect(g).connect(ctx.destination);
-      s.start();
-    }
-  }
+  tono(...a) { return tono(this, ...a); }      // src/sonidos.js
+  sonar(tipo) { sonar(this, tipo); }
 
   sonarPatron(patron) {
     let t = 0;

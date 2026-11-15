@@ -1,11 +1,13 @@
 // ===========================================================================
 // MODELO DE SIMULACIÓN. Dueño: Rol 4.
 // Calcula opciones y consecuencias con los datos reales + elecciones previas.
+// Lee: estado y datos.json · Escribe: solo con aplicar() (recursos, con sus límites).
 // Regla: ninguna opción gratis; los números NASA vienen de datos.json/DONKI.
 // Los números de balance están en config.js (trajes, naves, mochila) y en
 // datos.json → "modelo". Se verifican con pruebas/balance.html.
 // ===========================================================================
 import { LIMITES, LIMITE_RADIACION } from "../estado.js";
+import { llenar } from "../ui.js";
 
 const KM_SOL_TIERRA = 149_600_000;
 
@@ -225,7 +227,6 @@ export function aplicar(estado, efectos) {
 // Frase de Chispa explicando el resultado (plantillas en textos.json → ruta)
 export function explicar(op, t) {
   const n = x => Math.max(0, Math.round(x));
-  const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
   let frase;
   if (op.id === "refugio") {
     frase = llenar(t.refugio, { espera: n(op.espera), ruta: op.rutaDespues.toLowerCase() });

@@ -1,4 +1,5 @@
 // Misión final: el rescate ("Tres mensajes"). Dueño: Rol 5.
+// Lee: misiones.tormenta, misiones.rocas, mochila, oxigeno · Escribe: oxigeno, radiacion, misiones.rescate, bitacora · Sigue: Final.
 // Pasos:
 //  0. Reencuentro: en la última posición conocida no hay nadie. Una lucecita
 //     entre las rocas es Chispa, que reconoce al niño y lo guía hasta Itzel,
@@ -17,11 +18,10 @@
 // Modo prueba: index.html?escena=Rescate (&sinrover=1 para probar sin rover).
 import { ANCHO, ALTO, COLOR } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton, barras, datoReal } from "../ui.js";
+import { titulo, texto, boton, barras, datoReal, etiquetaDato, navegarConTeclado, llenar } from "../ui.js";
 import { aplicar, opcionesRescate, costoRadio, efectosRegreso, tieneRover, MENSAJES } from "../modelo/simulacion.js";
 import { crearTexturasEquipo, crearTexturasItzel } from "../pixelart.js";
 
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 const SUELO = 92;
 const LUZ = { x: 262, y: 84 };                 // la lucecita de Chispa entre las rocas
 const ITZEL = { x: 150, y: SUELO };
@@ -31,10 +31,12 @@ export class Rescate extends Phaser.Scene {
   constructor() { super("Rescate"); }
 
   create() {
+    navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
     crearTexturasEquipo(this);
     crearTexturasItzel(this);
     if (estado.modoPrueba && new URLSearchParams(location.search).has("sinrover")) estado.misiones.rocas = { dejoRover: true };
     this.t = estado.textos.rescate;
+    this.tarjeta = null;               // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     this.reg = estado.misiones.rescate = { mensajes: [] };
     this.barras = this.add.container(0, 0).setDepth(20);
     this.pintarBarras();
@@ -272,6 +274,7 @@ export class Rescate extends Phaser.Scene {
   }
 
   decidir(tipo, id, efectos, siguiente) {
+    if (this.reg[tipo]) return;            // doble toque: la decisión ya se tomó
     aplicar(estado, efectos);
     this.reg[tipo] = id;
     this.reg[tipo + "Efectos"] = efectos;
@@ -299,7 +302,7 @@ export class Rescate extends Phaser.Scene {
       texto(this, 72, 28, t.planta_titulo, { tam: 8, color: COLOR.titulo, origenX: 0, align: "left" }),
       texto(this, 72, 42, t.planta_texto, { tam: 6, ancho: 210, origenX: 0, align: "left" })
     ]);
-    const fuente = texto(this, ANCHO / 2, 126, `${p.ejemplo ? "DATO DE EJEMPLO" : "Dato real"} · ${p.fuente} · ${p.fecha} ↗`,
+    const fuente = texto(this, ANCHO / 2, 126, `${etiquetaDato(p)} · ${p.fuente} · ${p.fecha} ↗`,
       { tam: 5, color: "#5cff8a", ancho: 250 });
     if (p.link) {
       fuente.setInteractive({ useHandCursor: true })

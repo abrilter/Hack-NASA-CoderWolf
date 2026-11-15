@@ -1,4 +1,5 @@
 // Misión: Huellas. Dueño: Rol 2 (pantalla) y Rol 4 (números en datos.json → huellas).
+// Lee: datos.huellas · Escribe: oxigeno, bitacora · Sigue: Tormenta.
 // Vista desde arriba del suelo lunar. Dos rastros de ruedas se separan: uno es
 // del rover de Itzel y el otro de un rover de carga de la base. El niño acerca
 // la lupa (ratón o flechas/WASD) a los círculos "?" de cada rastro y ve 3 pistas:
@@ -9,11 +10,10 @@
 // Estado que usa: oxigeno y bitacora.
 import { ANCHO, ALTO, COLOR, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { texto, barras, boton, datoReal } from "../ui.js";
+import { texto, barras, boton, datoReal, llenar } from "../ui.js";
 import { crearTexturasHuellas } from "../arteHuellas.js";
 import { Stella } from "../stella.js";
 
-const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 const SUELO = 146;                       // el suelo va de y=0 a SUELO; abajo, la barra de STELLA
 const BIF = { x: 160, y: 122 };          // bifurcación
@@ -35,6 +35,7 @@ export class Huellas extends Phaser.Scene {
 
   create() {
     this.t = estado.textos.huellas;
+    this.saliendo = false;            // Phaser reutiliza la escena en cada partida: estas banderas se reinician aquí
     this.d = estado.datos.huellas;
     this.correcto = Math.random() < 0.5 ? 0 : 1;     // 0 = izquierda, 1 = derecha
     this.tipos = this.correcto === 0 ? ["itzel", "carga"] : ["carga", "itzel"];
@@ -360,6 +361,7 @@ export class Huellas extends Phaser.Scene {
 
   // ---------------------------------------------------------------- bucle
   update(_, dt) {
+    dt = Math.min(dt, 50);                    // tope, igual que las demás escenas
     if (!this.ocupado) {
       const k = this.teclas, v = 0.08 * dt;
       const dx = (k.RIGHT.isDown || k.D.isDown) - (k.LEFT.isDown || k.A.isDown);

@@ -9,7 +9,9 @@
     #juego { width: 100%; height: 100%; }
     canvas { image-rendering: pixelated; } /* pixeles nítidos */
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <!-- Phaser 3.80.1: copia local (funciona sin internet); si falta, se usa el CDN -->
+  <script src="lib/phaser.min.js"></script>
+  <script>window.Phaser || document.write('<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"><\/script>');</script>
 </head>
 <body>
   <div id="juego"></div>

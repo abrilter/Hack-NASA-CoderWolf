@@ -1,4 +1,5 @@
 // Carga dibujos, datos y textos. Dueño: Rol 1.
+// Lee: datos.json, textos.json, DONKI y la dirección (?escena=) · Escribe: datos, textos, datos.cme.en_vivo, donkiEnVivo.
 // También tiene el MODO PRUEBA: index.html?escena=NombreEscena abre esa escena
 // directo con un estado de prueba (ver ESTADO_PRUEBA en config.js).
 import { ASSETS, ANCHO, ALTO, MISIONES_JSON, ESTADO_PRUEBA, TRAJES, NAVES, OBJETOS, ORDEN } from "../config.js";
@@ -30,12 +31,13 @@ export class Carga extends Phaser.Scene {
     const params = new URLSearchParams(location.search);
     const prueba = params.get("escena");
 
+    estado.datos.cme.en_vivo = false;        // la guardada: se ve "no en vivo"
     if (!params.has("sinred")) {
       const cme = await cmeReciente(30);
       // Una CME lenta llegaría en días y la tormenta dejaría de importar:
       // en ese caso se usa la CME real guardada en datos.json.
       const minima = estado.datos.modelo?.cme_min_kms ?? 0;
-      if (cme && cme.velocidad_kms >= minima) { estado.datos.cme = cme; estado.donkiEnVivo = true; }
+      if (cme && cme.velocidad_kms >= minima) { estado.datos.cme = { ...cme, en_vivo: true }; estado.donkiEnVivo = true; }
       else if (cme) console.info(`[DONKI] la CME más rápida del mes va a ${cme.velocidad_kms} km/s (< ${minima}): se usa la guardada`);
     }
 

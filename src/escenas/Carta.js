@@ -1,8 +1,9 @@
 // Misión 1b: la carta al Control de Misión. Dueño: Rol 5.
+// Lee: textos.carta · Escribe: nuevaPartida(), nombreClave · Sigue: Equipo.
 // Sin datos personales: el niño elige un nombre clave y un motivo con botones.
-import { ANCHO } from "../config.js";
+import { ANCHO, siguienteEscena } from "../config.js";
 import { estado } from "../estado.js";
-import { titulo, texto, boton } from "../ui.js";
+import { titulo, texto, boton, navegarConTeclado } from "../ui.js";
 import { estrellas } from "./Intro.js";
 import { crearTexturasEquipo } from "../pixelart.js";
 
@@ -10,6 +11,7 @@ export class Carta extends Phaser.Scene {
   constructor() { super("Carta"); }
 
   create() {
+    navegarConTeclado(this);                      // flechas + Enter (ver ui.js)
     estado.nuevaPartida();          // aquí empieza la partida
     crearTexturasEquipo(this);
     estrellas(this, 40);
@@ -34,9 +36,9 @@ export class Carta extends Phaser.Scene {
     this.tweens.killAll();
     this.children.removeAll(true);
     estrellas(this, 40);
-    titulo(this, "Control de Misión responde", 20);
+    titulo(this, estado.textos.carta.responde, 20);
     texto(this, ANCHO / 2, 55, `${m.respuesta}\n\n${estado.nombreClave}, ${estado.textos.carta.elegido}`, { ancho: 280 });
-    boton(this, ANCHO / 2, 150, "Ir al Centro de Control", () => this.scene.start("Equipo"), 160);
+    boton(this, ANCHO / 2, 150, estado.textos.carta.ir, () => this.scene.start(siguienteEscena(this.scene.key)), 160);
     // el niño elegido salta de alegría junto a Chispa
     const nino = this.add.image(40, 162, "astro_base_0").setOrigin(0.5, 1);
     const chispa = this.add.image(280, 150, "chispa_px");
