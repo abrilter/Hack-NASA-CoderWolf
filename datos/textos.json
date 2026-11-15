@@ -35,11 +35,9 @@
   },
 
   "equipo": {
-    "vestidor": "VESTIDOR",
-    "hangar": "HANGAR",
     "centro": "CENTRO DE CONTROL",
-    "titulo": "Misión 3 · Traje y nave",
-    "bienvenida": "¡Bienvenido! Elige tu traje y tu nave. Camina hacia donde quieras empezar.",
+    "titulo": "Hangar de la\nEstación Terrestre",
+    "bienvenida": "¡Hola, soy Bit, el robot del hangar! Elige tu traje y tu nave. Camina hacia donde quieras empezar.",
     "elegir": "Enter o clic: elegir",
     "elegido": "✓ Elegido",
     "opciones": {
@@ -48,18 +46,28 @@
       "grande":   { "nombre": "Nave grande",    "ventaja": "+{oxigenoExtra} O2 y {combustible} de combustible", "costo": "- Lenta: cuesta frenar" },
       "pequena":  { "nombre": "Nave pequeña",   "ventaja": "+ Ágil: frena fácil",                      "costo": "- Solo {combustible} de combustible" }
     },
-    "chispa_traje": "¡Te queda genial el {nombre}!",
-    "chispa_nave": "¡La {nombre} está lista!",
-    "chispa_listos": "¡Todo listo! Sube a tu nave por la rampa.",
+    "rotulo_naves": { "grande": "GRANDE", "pequena": "PEQUEÑA" },
+    "bit_traje": "¡Te queda genial el {nombre}!",
+    "bit_nave": "¡La {nombre} está lista!",
+    "bit_listos": "¡Todo listo! Sube a tu nave por la rampa.",
+    "bit_falta": "Aún te falta elegir tu traje y tu nave.",
     "pista": "Itzel está lejos y viene una tormenta: piensa qué necesitas más, protección o aire.",
-    "bascula": "Pesas {peso} kg con este equipo.",
+    "bascula": "Pesas {tierra} kg en la Tierra y {luna} kg en la Luna.",
+    "bascula_luna": "En la Luna pesas seis veces menos, pero tu traje sigue costando el mismo esfuerzo de mover.",
     "bascula_base": "Pruébate un traje y súbete otra vez.",
-    "bascula_blindado": "¡Uf! El blindado pesa mucho: caminarás más lento.",
-    "bascula_ligero": "El traje ligero casi no pesa: ¡vas rápido!",
+    "pantalla_tierra": "T {kg} kg",
+    "pantalla_luna": "L {kg} kg",
     "arco_base": "Sin traje pasa toda la radiación. ¡Elige uno y vuelve!",
     "arco_blindado": "Mira: casi ningún puntito de radiación atraviesa el blindado.",
     "arco_ligero": "Con el ligero pasan muchos puntitos de radiación.",
-    "reloj": "TORMENTA EN",
+    "zona_pruebas": "PRUEBA DE TRAJE",
+    "rotulo_bascula": "BÁSCULA",
+    "rotulo_arco": "RADIACIÓN",
+    "estacion_o2": "OXÍGENO",
+    "o2_si": "¡Tu mochila trae un tanque! Te suma +20 de oxígeno.",
+    "o2_no": "Tu mochila no trae tanque de oxígeno: la estación está apagada.",
+    "dato_real": "DATO REAL",
+    "dato_ejemplo": "DATO DE EJEMPLO",
     "tecnicos": [
       "En el polo sur de la Luna hay cráteres que llevan miles de millones de años sin ver el Sol.",
       "En esos cráteres hay hielo de agua: podría dar agua y oxígeno a los astronautas.",
@@ -67,9 +75,7 @@
       "Una tormenta solar lanza partículas a cientos de kilómetros por segundo.",
       "Un día en la Luna dura casi un mes de la Tierra."
     ],
-    "chispa_falta_traje": "Primero necesitas un traje.",
-    "chispa_falta_nave": "Aún falta elegir la nave.",
-    "chispa_tanque": "¡Tu tanque de la mochila suma +20 O2!"
+    "bit_tanque": "¡Tu tanque de la mochila suma +20 O2!"
   },
 
   "viaje": {
