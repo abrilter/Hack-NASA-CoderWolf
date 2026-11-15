@@ -13,12 +13,10 @@
     "_nota": "Números del modelo de decisiones (Rol 4). Verificados con pruebas/balance.html; si cambian alguno, vuelvan a abrir esa página. Ver ANALISIS.md, sección 2.3.",
     "duracion_tormenta_h": 12,
     "factor_oscuro": 1.5,
-    "reposo": 0.5,
     "sin_comida_o2": 10,
     "sin_botiquin_o2": 8,
     "radio_con_kit_o2": 5,
     "radio_sin_kit_o2": 15,
-    "ruta_tras_refugio": "cresta",
     "cme_min_kms": 1000
   },
 
@@ -31,11 +29,11 @@
     "ejemplo": true
   },
 
-  "rover": { "kmh": 0.5, "fuente": "COMPLETAR", "ejemplo": true },
+  "rover": { "kmh": 0.5, "fuente": "NASA VIPER, rover del polo sur: 0.36 km/h normal y 0.72 km/h máximo (el juego usa 0.5)", "link": "https://assets.science.nasa.gov/content/dam/science/psd/lunar-science/documents/2025-02-13_VIPER_Updated_Technical_Briefing_Presentation-Shared.pdf", "fecha": "2025", "ejemplo": false },
 
   "rutas": [
     { "id": "crater", "nombre": "Cortar por el cráter", "km": 10, "subida_m": 400, "oscura": true, "parte_escena": 0.5,  "ejemplo": true },
-    { "id": "cresta", "nombre": "Rodear por la cresta", "km": 16, "subida_m": 100,  "oscura": false, "ejemplo": true }
+    { "id": "cresta", "nombre": "Rodear por la cresta", "km": 12, "subida_m": 100,  "oscura": false, "ejemplo": true }
   ],
   "rutas_fuente": "NASA Moon Trek (polo sur lunar)",
   "rutas_link": "https://trek.nasa.gov/moon/",
@@ -56,11 +54,11 @@
   },
 
   "luz_polo_sur": {
-    "_nota": "Dato de la escena Ruta. Sigue como ejemplo hasta que alguien revise el enlace y cambie ejemplo a false.",
+    "_nota": "Dato de la escena Ruta. Verificado en NASA Science: el Sol siempre va cerca del horizonte en los polos y las sombras son largas.",
     "texto": "En el polo sur de la Luna el Sol va pegado al horizonte y da vueltas alrededor. Las sombras son muy largas y hay cráteres donde nunca llega la luz.",
-    "fuente": "NASA LRO / Moon Trek",
-    "link": "https://science.nasa.gov/mission/lro/",
-    "ejemplo": true
+    "fuente": "NASA Science · sombras cerca del polo sur (LRO)",
+    "link": "https://science.nasa.gov/resource/shadows-near-the-moons-south-pole/",
+    "ejemplo": false
   },
 
   "polo_sur": {
@@ -93,11 +91,12 @@
       "ejemplo": false
     },
     "polvo": {
-      "_nota": "Hecho confirmado en estudios técnicos de NASA (NTRS) sobre el Apolo; falta elegir el documento exacto para el enlace. Cambiar a false cuando se verifique.",
+      "_nota": "Verificado: NASA/TM-2005-213610, Gaier, The Effects of Lunar Dust on EVA Systems During the Apollo Missions (abrasión de visores y sellos, trajes trabados).",
       "texto": "El polvo lunar es afilado: en las misiones Apolo rayó visores y dañó sellos de los trajes.",
-      "fuente": "NASA NTRS (estudios del polvo en el Apolo)",
-      "link": "https://ntrs.nasa.gov/citations/20100033103",
-      "ejemplo": true
+      "fuente": "NASA NTRS · Gaier, el polvo lunar en las misiones Apolo",
+      "link": "https://ntrs.nasa.gov/citations/20050160460",
+      "fecha": "2005",
+      "ejemplo": false
     },
     "juego": {
       "largo_px": 1150,

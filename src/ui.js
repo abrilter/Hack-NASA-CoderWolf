@@ -5,6 +5,7 @@ import { ANCHO, COLOR, ZOOM } from "./config.js";
 import { estado, LIMITES, LIMITE_RADIACION } from "./estado.js";
 
 const FUENTE = "monospace";
+const ALTO_BOTON = 18;
 
 // Llena una plantilla de textos.json: llenar("Gastas {o2} O2", { o2: 5 }) → "Gastas 5 O2"
 export const llenar = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
@@ -25,8 +26,9 @@ export function titulo(escena, contenido, y = 12) {
 }
 
 export function boton(escena, x, y, contenido, alPresionar, ancho = 120) {
-  const caja = escena.add.rectangle(x, y, ancho, 18, COLOR.panel)
-    .setStrokeStyle(1, COLOR.borde).setInteractive({ useHandCursor: true });
+  // la zona para tocar es 2 px más grande por cada lado que el dibujo (dedos en pantallas chicas)
+  const caja = escena.add.rectangle(x, y, ancho, ALTO_BOTON, COLOR.panel).setStrokeStyle(1, COLOR.borde)
+    .setInteractive({ hitArea: new Phaser.Geom.Rectangle(-2, -2, ancho + 4, ALTO_BOTON + 4), hitAreaCallback: Phaser.Geom.Rectangle.Contains, useHandCursor: true });
   const etiqueta = texto(escena, x, y, contenido, { ancho: ancho - 6, origenY: 0.5 });
   caja.on("pointerover", () => caja.setFillStyle(0x2c3770));
   caja.on("pointerout", () => caja.setFillStyle(COLOR.panel));
@@ -69,7 +71,7 @@ const BARRAS = {
 // así se nota cuando el tanque o la nave grande suman oxígeno.
 const LARGO_BARRA = 40;
 const maximo = id => (id === "radiacion" ? LIMITE_RADIACION : LIMITES[id]?.[1] ?? 100);
-export function barras(escena, e, recursos = ["oxigeno", "escudo", "radiacion"]) {
+export function barras(escena, e, recursos = ["oxigeno", "radiacion"]) {
   recursos.forEach((id, i) => {
     const [nombre, color] = BARRAS[id];
     const y = 6 + i * 8;
@@ -78,21 +80,6 @@ export function barras(escena, e, recursos = ["oxigeno", "escudo", "radiacion"])
     const largo = Math.round(LARGO_BARRA * Phaser.Math.Clamp(e[id] / maximo(id), 0, 1));
     escena.add.rectangle(24, y, largo, 4, color).setOrigin(0, 0.5);
   });
-}
-
-// Muestra una lista de páginas de texto con botón "Siguiente"
-export function paginas(escena, lista, alTerminar) {
-  let i = 0;
-  const t = titulo(escena, "", 20);
-  const p = texto(escena, ANCHO / 2, 50, "", { ancho: 280 });
-  const b = boton(escena, ANCHO / 2, 150, "Siguiente", () => { i++; mostrar(); });
-  function mostrar() {
-    if (i >= lista.length) return alTerminar();
-    t.setText(lista[i].titulo || "");
-    p.setText(lista[i].texto);
-  }
-  mostrar();
-  return b;
 }
 
 // Teclado para las escenas de solo botones (Carta, Tormenta, Rescate, Final):

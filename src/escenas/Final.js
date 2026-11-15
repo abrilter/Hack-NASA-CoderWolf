@@ -86,6 +86,7 @@ export function fuentesNASA(d) {
     { tema: T.planta, ...d.planta },
     d.luz_polo_sur && { tema: T.luz, ...d.luz_polo_sur },
     d.crater_helado && { tema: T.frio, ...d.crater_helado.temperatura },
+    d.crater_helado?.polvo && { tema: T.polvo, ...d.crater_helado.polvo },
     d.itzel_estacion && { tema: d.itzel_estacion.tema, ...d.itzel_estacion },
     d.planta_espacio && { tema: d.planta_espacio.tema, ...d.planta_espacio },
     ...(d.fuentes_extra || []).filter(f => f.tema)

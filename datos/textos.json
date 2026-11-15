@@ -415,12 +415,9 @@
     "titulo": "¿Cómo llegamos a Itzel?",
     "tormenta": "La tormenta llega en {horas} h. ¿Por dónde vamos?",
     "boton": "{nombre} ({km} km, {horas} h)",
-    "boton_refugio": "Refugiarse y esperar ({horas} h)",
     "antes": "La tormenta tardó {hT} h y el rescate {hR} h. ¡Llegamos {dif} h antes!",
     "expuestos": "La tormenta llegó en {hT} h y el rescate tardó {hR} h. Estuvimos {exp} h bajo la tormenta.",
-    "refugio": "Esperamos {espera} h en el refugio a que pasara la tormenta y luego fuimos a {ruta}. Nadie recibió radiación, pero gastamos mucho oxígeno.",
     "sin_linterna": " Sin linterna, el cráter oscuro nos hizo ir más lento.",
-    "sin_comida": " Sin comida, la espera nos cansó más.",
     "inicio": "BASE",
     "itzel": "Última señal de Itzel",
     "nombre_crater": "CRÁTER",
@@ -548,7 +545,7 @@
 
   "final": {
     "sin_nombre": "Astronauta",
-    "temas": { "cme": "Tormenta solar (CME)", "zona": "Zona de aterrizaje", "polo_sur": "Cráteres donde nunca llega el Sol", "rutas": "Rutas del rescate", "rover": "Velocidad del rover", "radiacion": "Radiación de la tormenta", "planta": "Planta de Chispa", "luz": "Luz en el polo sur", "frio": "Frío en el cráter" },
+    "temas": { "cme": "Tormenta solar (CME)", "zona": "Zona de aterrizaje", "polo_sur": "Cráteres donde nunca llega el Sol", "rutas": "Rutas del rescate", "rover": "Velocidad del rover", "radiacion": "Radiación de la tormenta", "planta": "Planta de Chispa", "luz": "Luz en el polo sur", "frio": "Frío en el cráter", "polvo": "Polvo lunar en el Apolo" },
     "finales": {
       "completa": {
         "titulo": "¡Misión completa!",
@@ -835,7 +832,7 @@
   },
   "huellas": {
     "intro": "Mira: hay dos rastros de ruedas. Uno es del rover de Itzel. El otro es de un rover de carga de la base.",
-    "ficha": "El rover de Itzel es ligero y de ruedas delgadas. El de carga es pesado y de ruedas anchas. Acerca la lupa a los círculos ?.",
+    "ficha": "El rover de Itzel es ligero y de ruedas delgadas. El de carga es pesado y de ruedas anchas. Acerca la lupa a los círculos ? (con el ratón, las flechas o arrastrando el dedo).",
     "decidir": "Cada pista nueva gasta {n} de oxígeno. Si eliges bien, seguimos sin gastar más. Si fallas, perdemos oxígeno al regresar.",
     "botones": [
       "1 ← Izquierda",
@@ -900,6 +897,7 @@
     },
     "sin_rover": "No hay rover: lo dejaste en las rocas.",
     "detalle": "Detiene {n} de cada 10\nOxígeno {o2} · Radiación +{rad}",
+    "sin_comida": "Sin comida, esperar cansa más ({o2} O2).",
     "contador": "Detenidas: {det}   Pasan: {pasan}",
     "personal": "Tu traje y escudo detienen {n} de cada 10.",
     "elegir": "Elegir",

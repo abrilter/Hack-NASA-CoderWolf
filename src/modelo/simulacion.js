@@ -36,7 +36,7 @@ function tramo(ruta, datos, estado) {
   return { horas, oscuro };
 }
 
-// Opciones de la escena Ruta: cada ruta de datos.json y refugiarse.
+// Opciones de la escena Ruta: una por cada ruta de datos.json.
 // Devuelve números (horas, efectos); los textos los arma la escena.
 export function opcionesDeRuta(datos, estado) {
   const M = datos.modelo;
@@ -62,25 +62,9 @@ export function opcionesDeRuta(datos, estado) {
     };
   });
 
-  // Refugiarse: esperar a que llegue y pase la tormenta (en reposo se respira
-  // menos) y después ir por la ruta segura. Sin comida, la espera cansa más.
-  const segura = datos.rutas.find(r => r.id === M.ruta_tras_refugio) || datos.rutas[datos.rutas.length - 1];
-  const espera = Math.max(0, hT) + D;
-  const { horas: hCamino } = tramo(segura, datos, estado);
-  const sinComida = !estado.lleva("comida");
-  rutas.push({
-    id: "refugio", espera, rutaDespues: segura.nombre, hR: espera + hCamino, hT, expuesto: 0, sinComida,
-    efectos: {
-      oxigeno: -Math.round(espera * gastoO2 * M.reposo + hCamino * gastoO2 + segura.subida_m / 100
-                           + (sinComida ? M.sin_comida_o2 : 0)),
-      radiacion: 0
-    }
-  });
   return rutas;
 }
 
-// Costos del Rescate: reparar la radio (más caro sin el kit) y, sin botiquín,
-// Itzel está herida y el regreso es más lento.
 // ---------------------------------------------------------------- tormenta
 // Fuerza de la tormenta (puntos de radiación por hora sin protección): la dosis
 // de juego, más fuerte si la nube (CME) de DONKI viene más rápida.
@@ -102,15 +86,18 @@ export function opcionesTormenta(datos, estado) {
   // solo cuenta la parte de la tormenta que queda (para no cobrarla dos veces).
   const queda = parteRestanteTormenta(datos, estado);
   const f = fuerzaTormenta(datos) * queda;
+  // Esperar en un refugio (saliente o rover) sin comida cansa más: se gasta más oxígeno.
+  const sinComida = !estado.lleva("comida");
   return Object.entries(T.opciones).map(([id, o]) => {
     const pTotal = 1 - (1 - o.proteccion) * (1 - pP);
+    const espera = o.horas_perdidas > 0, extraComida = espera && sinComida ? datos.modelo.sin_comida_o2 : 0;
     return {
       queda,
       id, disponible: id !== "rover" || tieneRover(estado),
       pRefugio: o.proteccion, pPersonal: pP, pTotal,
-      horasPerdidas: o.horas_perdidas, tormentaPendiente: !!o.tormenta_pendiente,
+      horasPerdidas: o.horas_perdidas, tormentaPendiente: !!o.tormenta_pendiente, extraComida,
       efectos: {
-        oxigeno: -Math.round((o.desvio_h + o.espera_h) * gasto * o.o2_factor),
+        oxigeno: -Math.round((o.desvio_h + o.espera_h) * gasto * o.o2_factor) - extraComida,
         // durante el desvío no hay refugio; durante la espera, sí
         radiacion: Math.round(f * (o.desvio_h * (1 - pP) + o.espera_h * (1 - pTotal)))
       }
@@ -210,14 +197,6 @@ export function finalDeMision(e, mensajes) {
   return "completa";
 }
 
-export function costosRescate(datos, estado, repararRadio) {
-  const M = datos.modelo;
-  let oxigeno = 0;
-  if (repararRadio) oxigeno -= estado.lleva("radio") ? M.radio_con_kit_o2 : M.radio_sin_kit_o2;
-  if (!estado.lleva("botiquin")) oxigeno -= M.sin_botiquin_o2;
-  return { oxigeno };
-}
-
 // Aplica los efectos de una decisión con los mismos límites para todos
 // (estado.cambiar en estado.js). Ej.: aplicar(estado, { oxigeno: -10, escudo: 30 })
 export function aplicar(estado, efectos) {
@@ -228,10 +207,7 @@ export function aplicar(estado, efectos) {
 export function explicar(op, t) {
   const n = x => Math.max(0, Math.round(x));
   let frase;
-  if (op.id === "refugio") {
-    frase = llenar(t.refugio, { espera: n(op.espera), ruta: op.rutaDespues.toLowerCase() });
-    if (op.sinComida) frase += t.sin_comida;
-  } else if (op.expuesto <= 0) {
+  if (op.expuesto <= 0) {
     frase = llenar(t.antes, { hT: n(op.hT), hR: n(op.hR), dif: n(op.hT - op.hR) });
   } else {
     frase = llenar(t.expuestos, { hT: n(op.hT), hR: n(op.hR), exp: n(op.expuesto) });

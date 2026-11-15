@@ -94,7 +94,7 @@ export const TRAJES = [
 // solar hasta aterrizar (la grande es lenta: la tormenta queda más cerca).
 // agilidad y combustible: minijuego de Aterrizaje. w: ancho del dibujo.
 export const NAVES = [
-  { id: "grande",  agilidad: 0.8, combustible: 140, oxigenoExtra: 10, horasViaje: 12, w: 46 },
+  { id: "grande",  agilidad: 0.8, combustible: 140, oxigenoExtra: 10, horasViaje: 8,  w: 46 },
   { id: "pequena", agilidad: 1.3, combustible: 90,  oxigenoExtra: 0,  horasViaje: 2,  w: 32 }
 ];
 export const O2_TANQUE = 20;          // si la mochila trae el tanque de oxígeno
@@ -106,7 +106,7 @@ export const DIFICULTAD_ATERRIZAJE = {
   normal:  { altura: 60, vel0: 2, segura: 3.5, combustible: 1 },
   dificil: { altura: 75, vel0: 5, segura: 2.5, combustible: 0.9 }
 };
-export const O2_REINTENTO_ATERRIZAJE = 5;
+export const O2_REINTENTO_ATERRIZAJE = 2;
 
 // Objetos de la mochila (Centro de Control).
 // La linterna pesa 2 kg: con 1 kg siempre cabía junto a oxígeno y escudo (era "gratis").

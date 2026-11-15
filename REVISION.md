@@ -26,12 +26,22 @@
 
 ⚙️ = archivo del núcleo (cambio mínimo).
 
+### Segunda ronda (cambios pendientes)
+| # | Qué | Dónde |
+|---|---|---|
+| 19 | **Balance**: la cresta pasa de 16 a 12 km; sin comida, esperar en un refugio de la Tormenta cuesta −10 O2 (y la tarjeta lo dice); la nave grande tarda 8 h en vez de 12; reintentar el Aterrizaje cuesta −2 O2. Resultado con la CME guardada: **79 de 104 equipos pueden ganar** (antes 33); cada opción gana entre 29 % y 65 % de las partidas; todos los objetos cambian algún resultado. Con linterna conviene el cráter; sin linterna, la cresta | datos.json, config.js ⚙️, simulacion.js, Tormenta |
+| 20 | Se probó bajar el regreso en rover a −6 O2, pero así el rover dominaba (menos oxígeno **y** menos radiación). Se dejó en −12: caminar ahorra oxígeno, el rover protege de la radiación, y la tarjeta ya lo explica | datos.json |
+| 21 | Barra ESC quitada (el escudo nunca cambiaba); el escudo sigue protegiendo por dentro | ui.js ⚙️ |
+| 22 | Táctil: aviso "Gira tu teléfono" en teléfonos en vertical; zona para tocar los botones 2 px más grande por lado (sin cambiar el dibujo); Huellas explica que la lupa se arrastra con el dedo | index.html, ui.js ⚙️, textos.json |
+| 23 | Código muerto quitado: la opción "refugio" (modelo, textos y datos), `costosRescate`, `ui.paginas()` | simulacion.js, Ruta, ui.js, datos, textos |
+| 24 | Datos verificados con fuente NASA: velocidad del rover (VIPER, 0.36–0.72 km/h; el juego usa 0.5), luz del polo sur (NASA Science), polvo lunar (Gaier 2005, NTRS). El polvo ahora aparece en "Fuentes NASA" | datos.json, Final, LEEME |
+
 ### Pendiente
-- **Balance (necesita decisión del equipo)**: hoy solo **33 de 104** equipos iniciales pueden ganar (`pruebas/balance.html`). Los problemas son la cresta dominada, la comida sin efecto, el traje ligero con nave grande que nunca gana, la barra ESC que no cambia, el regreso en rover que gasta más O2 que caminar y el costo del reintento del Aterrizaje. Las opciones con números están en el mensaje de cierre de la Fase 2.
-- Táctil en teléfono: botones de 18 px y sin aviso de "gira tu teléfono" (P5); pista para arrastrar la lupa en Huellas (P6). Cambian el diseño.
-- Posición dibujada redondeada al pixel (P2): obliga a separar la posición lógica de la dibujada en Equipo, CentroControl y Exterior. Mucho riesgo para un temblor de 1 pixel.
-- Código muerto que necesita decisión: Viaje, la opción "refugio", `costosRescate`, `paginas()` y los campos del estado sin uso.
-- Datos aún de ejemplo: rover ("COMPLETAR"), radiación, rutas, luz del polo sur, polvo. Clave propia de api.nasa.gov en lugar de `DEMO_KEY` (B8).
+- **CME en vivo muy rápida**: si DONKI trae una CME de 2500 km/s, solo el 18 % de los equipos puede ganar (con 1000 km/s, el 100 %). Opción: aceptar en vivo solo CME entre 1000 y 2000 km/s, o limitar su efecto en el modelo.
+- Clave propia de api.nasa.gov en `src/nasa/donki.js` en lugar de `DEMO_KEY` (la tiene que pedir alguien del equipo; es gratis).
+- Datos que siguen de ejemplo (son valores de juego): rutas, radiación (puntos de juego) y la CME guardada.
+- Posición dibujada redondeada al pixel (P2): obliga a separar la posición lógica de la dibujada en Equipo, CentroControl y Exterior; mucho riesgo para un temblor de 1 pixel.
+- Viaje y Senal siguen fuera del recorrido, y los campos reservados del estado (`hielo_kg`, `chispaEncontrado`, …) siguen sin uso: son de otras personas del equipo, no se borraron.
 - Escena Rocas (Shadia): debe escribir `estado.misiones.rocas = { dejoRover: true }`.
 - TODO de arte (Rol 3): fuente pixel y PNG.
 
@@ -42,14 +52,14 @@
 | Las 14 escenas abren en modo prueba sin errores de consola | ✅ |
 | Fugas al cerrar escena: listeners iguales después de 3 reinicios, en las 14 | ✅ |
 | Todas las claves `textos.*` y `datos.*` del código existen | ✅ |
-| Partida completa **ganada** desde la Carta (blindado, nave pequeña, linterna y radio, cráter) → "¡Misión completa!", O2 6, RAD 33 | ✅ |
-| Partida **perdida por radiación** (ligero, nave grande, escudo, cresta) → Evacuación; Chispa nombra «Por la cresta» (+132) | ✅ |
-| Partida **perdida por oxígeno** (blindado, nave pequeña, comida, cráter) → Evacuación al reparar la radio; Chispa nombra el cráter (−56 O2) | ✅ |
+| Partida completa **ganada** desde la Carta (blindado, nave pequeña, linterna + botiquín + comida, cráter) → "¡Misión completa!", O2 4, RAD 33 | ✅ |
+| Partida **perdida por radiación** (ligero, nave grande, comida, cráter sin linterna) → Evacuación; Chispa nombra «Por el cráter» (+172) | ✅ |
+| Partida **perdida por oxígeno** (blindado, nave pequeña, comida, cráter sin linterna) → Evacuación al reparar la radio; Chispa nombra el cráter (−56 O2) | ✅ |
 | Jugar dos veces seguidas (misma nave, Exterior, Huellas, Ruta, Tormenta) sin trabarse | ✅ |
 | Rescate → Final → Fuentes → Bitácora → Jugar otra vez **solo con teclado** | ✅ |
 | Carta, Ruta, Tormenta y Aterrizaje (menú, fallo y reintento) solo con teclado | ✅ |
-| Pantalla de fuentes con 14 filas y etiqueta "no en vivo" sin red | ✅ |
-| Balance sin opciones dominantes | ❌ pendiente de decisión |
+| Pantalla de fuentes con 15 filas (el resumen dice 11 datos reales y 3 de ejemplo) y etiqueta "no en vivo" sin red | ✅ |
+| Balance sin opciones dominantes (`pruebas/balance.html`, CME 1500 km/s) | ✅ 79/104 equipos ganables; opciones entre 29 % y 65 % |
 
 ---
 

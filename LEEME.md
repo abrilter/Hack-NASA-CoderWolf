@@ -59,7 +59,9 @@ El orden está en `ORDEN` (`src/config.js`). Si el oxígeno llega a 0 o la radia
 |---|---|---|
 | Tormentas solares (CME) | NASA DONKI – CMEAnalysis | https://ccmc.gsfc.nasa.gov/tools/DONKI/ · API: https://api.nasa.gov |
 | Zona de aterrizaje y rutas | NASA Moon Trek | https://trek.nasa.gov/moon/ |
-| Cráteres de sombra permanente y luz del polo sur | NASA LRO | https://science.nasa.gov/mission/lro/ |
+| Cráteres de sombra permanente | NASA LRO | https://science.nasa.gov/mission/lro/ |
+| Luz y sombras largas en el polo sur | NASA Science | https://science.nasa.gov/resource/shadows-near-the-moons-south-pole/ |
+| Velocidad del rover (VIPER: 0.36–0.72 km/h; el juego usa 0.5) | NASA VIPER | https://assets.science.nasa.gov/content/dam/science/psd/lunar-science/documents/2025-02-13_VIPER_Updated_Technical_Briefing_Presentation-Shared.pdf |
 | Frío en los cráteres (Diviner) | NASA SVS / LRO Diviner | https://svs.gsfc.nasa.gov/cgi-bin/details.cgi?aid=10595 |
 | Huellas del Apolo | NASA LRO, Apolo 17 | https://science.nasa.gov/resource/lro-apollo-17-landing-site-lithograph/ |
 | Gravedad de la Luna | NASA Moon Fact Sheet | https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html |
@@ -67,6 +69,6 @@ El orden está en `ORDEN` (`src/config.js`). Si el oxígeno llega a 0 o la radia
 | Plantas en la Estación Espacial | NASA OSDR · OSD-38 (BRIC-20) | https://osdr.nasa.gov/bio/repo/data/studies/OSD-38 |
 | Hueso y músculo en la Estación Espacial | NASA OSDR | https://osdr.nasa.gov/bio/ |
 | Radiación | NASA OSDR RadLab (aún de ejemplo) | https://visualization.osdr.nasa.gov/radlab/gui/data-api/ |
-| Polvo lunar en el Apolo | NASA NTRS (aún de ejemplo) | https://ntrs.nasa.gov/citations/20100033103 |
+| Polvo lunar en el Apolo | NASA NTRS · Gaier (2005) | https://ntrs.nasa.gov/citations/20050160460 |
 
 El juego muestra esta lista completa al final ("Fuentes NASA"), con su etiqueta real o de ejemplo. Motor del juego: Phaser 3, https://phaser.io

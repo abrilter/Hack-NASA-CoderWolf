@@ -63,9 +63,8 @@ export class Ruta extends Phaser.Scene {
     crearTextura(this, "ruta_base", ICONO_BASE, PALETA_ICONOS);
     crearTextura(this, "ruta_itzel", ICONO_ITZEL, PALETA_ICONOS);
 
-    // Solo las dos rutas (sin la opción de refugio)
     this.opciones = {};
-    opcionesDeRuta(estado.datos, estado).filter(o => o.id !== "refugio").forEach(o => (this.opciones[o.id] = o));
+    opcionesDeRuta(estado.datos, estado).forEach(o => (this.opciones[o.id] = o));
 
     barras(this, estado);
     titulo(this, this.t.titulo, 4);

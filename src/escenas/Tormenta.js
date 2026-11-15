@@ -181,7 +181,8 @@ export class Tormenta extends Phaser.Scene {
     }
     const op = this.opciones.find(o => o.id === id), info = this.t.opciones[id];
     this.detalle.setColor("#eef1ff").setText(`+ ${info.gana}\n− ${info.cuesta}\n` +
-      llenar(this.t.detalle, { n: Math.round(op.pTotal * 10), o2: op.efectos.oxigeno, rad: op.efectos.radiacion }));
+      llenar(this.t.detalle, { n: Math.round(op.pTotal * 10), o2: op.efectos.oxigeno, rad: op.efectos.radiacion }) +
+      (op.extraComida ? "\n" + llenar(this.t.sin_comida, { o2: -op.extraComida }) : ""));
     this.bElegir.caja.setVisible(true); this.bElegir.etiqueta.setVisible(true);
   }
 
