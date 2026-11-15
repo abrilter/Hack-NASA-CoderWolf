@@ -445,5 +445,217 @@
     "fallo": "Esta vez no alcanzó. Los astronautas reales también practican muchas veces.",
     "causa_oxigeno": "Chispa: ¡Nos quedamos sin oxígeno (quedó en {oxigeno})! El aire se gasta con cada hora de camino y con cada subida. La próxima vez prueba una ruta más corta, un traje que gaste menos aire o llevar el tanque extra.",
     "causa_radiacion": "Chispa: La tormenta solar nos alcanzó y la radiación llegó a {radiacion} (el límite es 100). La próxima vez carga el escudo, usa un traje que proteja más o refúgiate antes de que llegue la tormenta."
+  },
+  "exterior": {
+    "bienvenida": "¡Bienvenido a la superficie lunar, astronauta! Nuestro vehículo de exploración nos espera cerca de la estación. Vamos a buscarlo.",
+    "objetivo": "OBJETIVO: camina a la zona de vehículos y aborda el rover",
+    "abordar": "Presiona E para abordar el rover lunar",
+    "revisar": "Presiona E para revisar",
+    "activado": "¡Vehículo de exploración activado! Sigue las balizas para llegar a la zona de búsqueda.",
+    "balizas": "Sigue las balizas de navegación.",
+    "crater": "¡Cuidado! Hay un cráter cerca.",
+    "rugoso": "Reduce la velocidad en las zonas irregulares.",
+    "sombra": "La iluminación es limitada. Activaré los sistemas de navegación y los faros.",
+    "cerca": "Estamos acercándonos a la región donde se detectó la señal de Chispa.",
+    "choque": "¡Choque leve! Retrocede con S y rodea el obstáculo.",
+    "borde": "La zona de búsqueda está muy lejos para ir a pie. Usa el rover.",
+    "bajar_detente": "Primero detén el rover por completo.",
+    "bajar_zona": "Solo puedes bajar en una zona segura: la plataforma de estacionamiento.",
+    "llegada": "¡Hemos llegado! La señal de Chispa proviene de esta región. Tendremos que continuar con cuidado.",
+    "punto": "PUNTO DE EXPLORACIÓN ALCANZADO",
+    "continuar": "Presiona E o toca la pantalla para continuar ▶",
+    "bitacora": "Condujiste el rover hasta el punto de exploración ({choques} choques).",
+    "hud": {
+      "velocidad": "VELOCIDAD",
+      "energia": "ENERGÍA",
+      "baliza": "BALIZA {n}/{total}",
+      "faltan": "FALTAN {d}",
+      "senal": "SEÑAL DE CHISPA"
+    },
+    "info": {
+      "esclusa": "Esclusa de la base: la cerramos para no perder aire. La misión está afuera.",
+      "paneles": "Paneles solares: en el polo sur el Sol queda muy bajo, por eso se colocan casi de pie.",
+      "ciencia": "Vehículo científico: hoy toma muestras de suelo. No es para el rescate.",
+      "carga": "Robot de carga: lleva cajas entre los módulos. Es muy lento para la misión."
+    },
+    "pendiente": "Reduce la velocidad. El terreno presenta una inclinación considerable.",
+    "rocas": "Obstáculo detectado. Busca un espacio seguro para pasar.",
+    "traccion_aviso": "Las ruedas pierden tracción. Disminuye la potencia.",
+    "bateria": "Estamos consumiendo demasiada energía. Planifica el resto del recorrido.",
+    "ruta_recuperada": "¡Excelente! Volvemos a estar en la ruta hacia Chispa.",
+    "crater_peligro": "¡Cuidado! Detecto una inclinación considerable. Reduce la velocidad o busca otra ruta.",
+    "crater_leve": "El borde del cráter está muy inclinado. Retrocedimos un poco: rodéalo por terreno plano.",
+    "suelta": "¡Suelta el acelerador! Acelerar hunde más las ruedas.",
+    "tutorial": {
+      "titulo": "CONTROLES DEL ROVER",
+      "stella": "¡Bienvenido al rover lunar! Soy STELLA, tu copiloto. Utiliza los controles para conducir y sigue las balizas de navegación. ¡Ten cuidado con los cráteres!",
+      "filas": [
+        [
+          [
+            "W",
+            "↑"
+          ],
+          "Acelerar"
+        ],
+        [
+          [
+            "S",
+            "↓"
+          ],
+          "Frenar y retroceder"
+        ],
+        [
+          [
+            "A",
+            "←"
+          ],
+          "Girar a la izquierda"
+        ],
+        [
+          [
+            "D",
+            "→"
+          ],
+          "Girar a la derecha"
+        ],
+        [
+          [
+            "E"
+          ],
+          "Bajar (rover detenido)"
+        ],
+        [
+          [
+            "H"
+          ],
+          "Consultar ayuda"
+        ]
+      ],
+      "arrancar": "Pulsa W o ↑ para arrancar",
+      "boton": "? AYUDA"
+    },
+    "em": {
+      "inclinacion": "INCLINACIÓN",
+      "seguro": "SEGURO",
+      "precaucion": "PRECAUCIÓN",
+      "peligro": "PELIGRO",
+      "traccion_titulo": "PÉRDIDA DE TRACCIÓN",
+      "traccion": "TRACCIÓN",
+      "traccion_pasos": [
+        "Detener el rover",
+        "Reducir la potencia",
+        "Retroceder despacio (S)"
+      ],
+      "traccion_stella": "¡Atención, astronauta! Las ruedas están patinando sobre el regolito lunar. Si seguimos acelerando, podríamos quedar atrapados.",
+      "traccion_exito": "¡Excelente maniobra! Recuperamos la tracción. Ahora busca una ruta más segura.",
+      "traccion_consejo": "Consejo: en el regolito suelto avanza despacio. Acelerar fuerte solo hace girar las ruedas.",
+      "atasco_titulo": "ALERTA — MOVILIDAD COMPROMETIDA",
+      "atasco_stella": "Nuestro vehículo está atascado. Podemos intentar liberar las ruedas mediante una maniobra especial.",
+      "atasco_pasos": [
+        "Detener los motores",
+        "Activar modo recuperación",
+        "Elegir maniobra de tracción",
+        "Mover ruedas coordinadas",
+        "Retroceder a zona estable"
+      ],
+      "ruedas_hundidas": "Traseras hundidas",
+      "ruedas_ok": "Ruedas libres",
+      "motores": "Motores detenidos. Así las ruedas dejan de hundirse.",
+      "modo_rec": "Modo de recuperación activado: ahora cada rueda puede moverse por separado.",
+      "maniobra_pregunta": "¿Qué maniobra de tracción usamos?",
+      "maniobras": [
+        [
+          "Gateo de ruedas",
+          true,
+          "¡Bien! En el gateo, unas ruedas avanzan mientras las otras sostienen al rover, como un gusanito."
+        ],
+        [
+          "Acelerar al máximo",
+          false,
+          "Acelerar fuerte solo hace girar las ruedas y las hunde más en el regolito."
+        ],
+        [
+          "Girar sin parar",
+          false,
+          "Girar sin control remueve el suelo bajo las ruedas. Necesitamos un movimiento coordinado."
+        ]
+      ],
+      "impulsos": "Pulsa ESPACIO o IMPULSAR cuando la marca amarilla pase sobre la zona ▼. Impulsos: {n}/3",
+      "impulsar": "IMPULSAR",
+      "impulso_mal": "Casi. Espera a que la marca esté sobre la zona ▼ y vuelve a intentarlo.",
+      "impulsos_ok": "¡Las ruedas se movieron juntas! Ahora retrocedamos hacia terreno firme.",
+      "liberado": "¡ROVER LIBERADO!",
+      "atasco_exito": "¡Lo logramos! Utilizaste una maniobra de recuperación inspirada en la robótica espacial.",
+      "atasco_consejo": "Estas maniobras ayudan, pero no funcionan en cualquier terreno. Lo más seguro es rodear el suelo muy blando o entrar despacio.",
+      "ver_dato": "★ VER DATO NASA (opcional)",
+      "continuar": "CONTINUAR ▶",
+      "volver": "VOLVER",
+      "dato_titulo": "DATO NASA",
+      "dato_viper": "El rover VIPER fue diseñado con ruedas capaces de girar y ajustar su posición de forma independiente para mejorar su movilidad en terrenos difíciles.",
+      "dato_sim": "Simulación educativa: nuestro rover R-1 es inventado y tiene sus propios límites. VIPER se diseñó para pendientes de unos 15°.",
+      "crater_titulo": "ROVER ATRAPADO EN EL BORDE",
+      "crater_stella": "Nuestro rover ha quedado atrapado. Primero debemos comprobar su estabilidad antes de intentar moverlo.",
+      "comprobar": "1. COMPROBAR ESTABILIDAD",
+      "st_incl": "Inclinación: {g}",
+      "st_limite": "Salir retrocediendo: hasta {g}°",
+      "st_estab": "Estabilidad {e} · Energía {n}",
+      "analisis": "Inclinación de {g}° y estabilidad de {e}%. Analiza las opciones y elige la más segura.",
+      "opA": "A. Retroceder lentamente",
+      "opB": "B. Recuperación asistida",
+      "opC": "C. Asistencia robótica",
+      "no_disp": "(no disponible)",
+      "noA": "La pendiente es de {g}°: con más de {lim}° no es seguro salir retrocediendo.",
+      "noB": "No hay suficiente estabilidad o energía para usar los sistemas de movilidad sin riesgo.",
+      "noC": "Primero usemos los sistemas del rover. La asistencia es para cuando no son seguros o fallan.",
+      "A_proceso": "La pendiente permite salir. Retrocedemos muy despacio...",
+      "B_proceso": "Activo el gateo de ruedas para subir el borde poco a poco...",
+      "B_falla": "La maniobra no fue suficiente: las ruedas no encuentran apoyo. Ahora podemos pedir asistencia robótica.",
+      "estabilizado": "¡ROVER A SALVO!",
+      "crater_exito": "¡Rover estabilizado! Salimos del borde del cráter sin riesgos.",
+      "crater_consejo": "Observar la ruta y frenar a tiempo evita la mayoría de los accidentes. ¡Rodea los cráteres por terreno plano!",
+      "asist_titulo": "ASISTENCIA ROBÓTICA",
+      "asist_stella": "La recuperación no es segura. Solicitaré asistencia robótica desde la estación lunar.",
+      "asist_enlace": "Enlace con la estación lunar... (tecnología ficticia de CoderWolf, no de NASA)",
+      "asist_enviar": "ENVIAR SOLICITUD",
+      "asist_camino": "El robot auxiliar va en camino. Tú te quedas a salvo dentro del rover.",
+      "robot_llego": "El robot auxiliar llegó. Primero analicemos la posición del rover.",
+      "asist_analizar": "ANALIZAR POSICIÓN DEL ROVER",
+      "asist_resultado": "Inclinación {g}°, una rueda sin apoyo.",
+      "asist_apoyo_p": "¿Dónde se apoya el robot?",
+      "apoyos": [
+        [
+          "Una roca suelta del borde",
+          false,
+          "Una roca suelta podría moverse con el tirón. Busquemos algo más firme."
+        ],
+        [
+          "Suelo firme fuera del cráter",
+          true,
+          "¡Correcto! El suelo firme y plano da el mejor apoyo."
+        ],
+        [
+          "Dentro del cráter",
+          false,
+          "Dentro del cráter hay más pendiente: el robot también podría resbalar."
+        ]
+      ],
+      "asist_remolque_p": "¿Cómo activamos el remolque?",
+      "remolques": [
+        [
+          "Un tirón rápido y fuerte",
+          false,
+          "Un tirón brusco podría voltear el rover. Mejor despacio."
+        ],
+        [
+          "Remolque lento y constante",
+          true,
+          "¡Bien pensado! Un remolque lento mantiene el rover estable."
+        ]
+      ],
+      "asist_remolcando": "Remolcando despacio hacia terreno firme...",
+      "robot_exito": "¡Rescate completado! El robot auxiliar nos llevó a terreno firme y vuelve a la estación.",
+      "reinicio": "↺ Rescate: volver a la última baliza",
+      "reinicio_stella": "Un equipo de rescate nos llevó a la última baliza segura. Tu progreso se conserva: ¡sigamos!"
+    }
   }
 }
