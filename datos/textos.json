@@ -37,6 +37,8 @@
   "equipo": {
     "vestidor": "VESTIDOR",
     "hangar": "HANGAR",
+    "centro": "CENTRO DE CONTROL",
+    "titulo": "Misión 3 · Traje y nave",
     "bienvenida": "¡Bienvenido! Elige tu traje y tu nave. Camina hacia donde quieras empezar.",
     "elegir": "Enter o clic: elegir",
     "elegido": "✓ Elegido",
@@ -48,7 +50,23 @@
     },
     "chispa_traje": "¡Te queda genial el {nombre}!",
     "chispa_nave": "¡La {nombre} está lista!",
-    "chispa_listos": "¡Todo listo! Vamos a la compuerta.",
+    "chispa_listos": "¡Todo listo! Sube a tu nave por la rampa.",
+    "pista": "Itzel está lejos y viene una tormenta: piensa qué necesitas más, protección o aire.",
+    "bascula": "Pesas {peso} kg con este equipo.",
+    "bascula_base": "Pruébate un traje y súbete otra vez.",
+    "bascula_blindado": "¡Uf! El blindado pesa mucho: caminarás más lento.",
+    "bascula_ligero": "El traje ligero casi no pesa: ¡vas rápido!",
+    "arco_base": "Sin traje pasa toda la radiación. ¡Elige uno y vuelve!",
+    "arco_blindado": "Mira: casi ningún puntito de radiación atraviesa el blindado.",
+    "arco_ligero": "Con el ligero pasan muchos puntitos de radiación.",
+    "reloj": "TORMENTA EN",
+    "tecnicos": [
+      "En el polo sur de la Luna hay cráteres que llevan miles de millones de años sin ver el Sol.",
+      "En esos cráteres hay hielo de agua: podría dar agua y oxígeno a los astronautas.",
+      "La Luna casi no tiene aire: las naves solo frenan con sus propulsores.",
+      "Una tormenta solar lanza partículas a cientos de kilómetros por segundo.",
+      "Un día en la Luna dura casi un mes de la Tierra."
+    ],
     "chispa_falta_traje": "Primero necesitas un traje.",
     "chispa_falta_nave": "Aún falta elegir la nave.",
     "chispa_tanque": "¡Tu tanque de la mochila suma +20 O2!"
