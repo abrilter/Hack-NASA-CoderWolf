@@ -23,7 +23,7 @@
   "centro_control": {
     "titulo": "Misión 2 · La mochila",
     "letrero": "CENTRO DE CONTROL",
-    "bienvenida": "¡Prepara tu mochila! Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
+    "bienvenida": "Explora la zona de la mochila: junto a la puerta está STELLA, el monitor que analiza la misión. Toca un objeto para tomarlo o dejarlo. Solo caben 10 kg.",
     "mochila": "MOCHILA",
     "no_cabe": "¡No cabe! Pasarías de 10 kg. Deja algo primero.",
     "tomar": "{nombre} a la mochila (+{peso} kg).",
@@ -31,16 +31,20 @@
     "accion": "Enter o clic: tomar / dejar",
     "puerta": "SALIDA",
     "nombres": {
-      "oxigeno": "Tanque de oxígeno", "escudo": "Escudo de radiación", "radio": "Kit de radio",
-      "botiquin": "Botiquín", "comida": "Comida", "linterna": "Linterna"
+      "oxigeno": "Tanque de oxígeno",
+      "escudo": "Escudo de radiación",
+      "radio": "Kit de radio",
+      "botiquin": "Botiquín",
+      "comida": "Comida",
+      "linterna": "Linterna"
     },
     "objetos": {
-      "oxigeno":  "Tanque de oxígeno: +20 de oxígeno.",
-      "escudo":   "Escudo portátil: protege de la radiación.",
+      "oxigeno": "Tanque de oxígeno: +20 de oxígeno.",
+      "escudo": "Escudo portátil: protege de la radiación.",
       "linterna": "Linterna: hay cráteres donde nunca llega el Sol.",
-      "radio":    "Kit de radio: repara la radio de Itzel.",
+      "radio": "Kit de radio: repara la radio de Itzel.",
       "botiquin": "Botiquín: por si alguien se lastima.",
-      "comida":   "Comida: energía para el viaje."
+      "comida": "Comida: energía para el viaje."
     },
     "tarjeta": {
       "titulo": "Dato NASA · Linterna",
@@ -75,7 +79,7 @@
       "¡Bip, bip! ¡Un momento! Estoy detectando algo extraño...",
       "(Se escucha interferencia... y un ladrido débil)",
       "¡Es Chispa! Su collar sigue funcionando. ¡Tenemos que localizarlo!",
-      "La radio principal de la base está averiada, pero mi receptor de emergencia de corto alcance captó la señal. ¡Toca el monitor para analizarla!"
+      "La radio principal de la base está averiada, pero mi receptor de emergencia de corto alcance captó la señal. ¡Vamos al Centro de Control: STELLA nos ayudará a analizarla!"
     ],
     "indicador": "NUEVA SEÑAL DETECTADA",
     "localizada": "SEÑAL LOCALIZADA",
@@ -125,6 +129,197 @@
       "corte": "— TRANSMISIÓN INTERRUMPIDA —",
       "robot": "¡Todavía podemos ayudarlos! Ya tenemos nuestro oxígeno y el equipo que elegiste. ¿Estás listo para comenzar el rescate?",
       "boton": "COMENZAR EL RESCATE"
+    },
+    "stella": {
+      "_nota": "Textos de STELLA. Los textos con niveles {cadete (7-9), explorador (10-12), especialista (13+)} se eligen con estado.nivel; si no existe se usa nivel_defecto. ● = dato real de la NASA, ◆ = simulación del juego.",
+      "nivel_defecto": "explorador",
+      "nombre": "STELLA · Asistente de misión",
+      "ticker": "STELLA DISPONIBLE — CONSULTAR ANÁLISIS",
+      "accion": "Enter o clic: consultar",
+      "tocar": "▶ TOCAR",
+      "titulo": "STELLA — SISTEMA DE ASISTENCIA LUNAR",
+      "bienvenida": "¡Hola, astronauta! Soy STELLA, tu asistente de misión. Revisemos las condiciones lunares antes de comenzar el rescate de Itzel y Chispa.",
+      "cerrar": "✕ Cerrar",
+      "secciones": [
+        "Misión",
+        "Entorno",
+        "Señal",
+        "Equipo",
+        "Mochila"
+      ],
+      "fuentes": {
+        "moon_trek": "https://trek.nasa.gov/moon/",
+        "moon": "https://science.nasa.gov/moon/",
+        "donki": "https://ccmc.gsfc.nasa.gov/tools/DONKI/",
+        "lro": "https://science.nasa.gov/mission/lro/"
+      },
+      "consejos": {
+        "tomar": {
+          "linterna": "¡Buena elección! En los cráteres de sombra permanente no llega el Sol: la linterna nos ayudará a buscar las huellas de Chispa.",
+          "radio": "La comunicación principal está dañada: con este kit podríamos restablecerla.",
+          "escudo": "Protección extra contra la radiación. Recuerda: ante una tormenta solar intensa, lo más seguro es un refugio.",
+          "botiquin": "Si Itzel está lesionada, podremos darle primeros auxilios.",
+          "comida": "Provisiones por si el rescate se alarga. Cada kilogramo cuenta."
+        },
+        "dejar": {
+          "linterna": "Sin linterna, explorar los cráteres oscuros será más difícil.",
+          "radio": "Sin el kit, tendremos que buscar otra forma de comunicarnos.",
+          "escudo": "Sin escudo dependeremos de encontrar un refugio si hay una alerta solar.",
+          "botiquin": "Sin botiquín, tendremos que ser muy cuidadosos.",
+          "comida": "Sin comida, el rescate deberá ser rápido."
+        }
+      },
+      "mision": {
+        "titulo": "MISIÓN: RESCATE EN EL POLO SUR LUNAR",
+        "lineas": [
+          "• Objetivo: rescatar a la Dra. Itzel Ramos y Chispa.",
+          "• Ubicación: polo sur de la Luna.",
+          "• Situación: comunicación principal dañada.",
+          "• Riesgo narrativo: posible evento de radiación solar.",
+          "• Capacidad de mochila: 10 kg.",
+          "• ★ Equipo obligatorio: tanque de oxígeno de 4 kg."
+        ],
+        "aviso": "◆ Situación y riesgos de la misión: simulación del juego.",
+        "dialogo": "Nuestra prioridad es encontrar a Itzel y Chispa. Tendremos que administrar bien el equipo porque solamente podemos cargar 10 kilogramos.",
+        "boton": "CONSULTAR CONDICIONES LUNARES"
+      },
+      "entorno": {
+        "rec": "Recomendación:",
+        "saber": "SABER MÁS",
+        "A": {
+          "boton": "Oscuridad",
+          "explica": {
+            "cadete": "Hay cráteres donde nunca llega el Sol. ¡Ahí está muy oscuro! La señal de Chispa viene de ahí.",
+            "explorador": "En el polo sur lunar existen cráteres donde la luz solar nunca llega directamente. La señal de Chispa proviene de una zona muy oscura.",
+            "especialista": "Cerca del polo sur el Sol siempre se ve muy bajo, así que el fondo de algunos cráteres queda en sombra permanente. La señal de Chispa viene de una de esas regiones."
+          },
+          "recomendacion": "Una linterna podría ayudarnos a buscar sus huellas.",
+          "objeto": "Linterna · 1 kg",
+          "icono": "px_obj_linterna",
+          "fuente": "● DATO REAL · NASA LRO",
+          "mas": {
+            "titulo": "Regiones de sombra permanente",
+            "texto": "El eje de la Luna está casi derecho: en los polos el Sol apenas sube sobre el horizonte. Por eso el fondo de algunos cráteres lleva miles de millones de años sin luz directa. La sonda LRO de la NASA los estudia; ahí podría haber hielo.",
+            "fuente": "● Dato real · NASA LRO — science.nasa.gov/mission/lro"
+          }
+        },
+        "B": {
+          "boton": "Frío",
+          "explica": {
+            "cadete": "En la sombra hace muchísimo frío. ¡Nuestro traje nos protege!",
+            "explorador": "Algunas zonas de sombra permanente tienen temperaturas extremadamente bajas. Nuestro traje debe mantenernos protegidos.",
+            "especialista": "Sin luz solar, el suelo de las zonas de sombra permanente casi no recibe calor: están entre los lugares más fríos medidos en el sistema solar. El traje debe aislarnos y conservar su energía."
+          },
+          "recomendacion": "Verifica que el sistema térmico y la energía del traje funcionen antes de salir.",
+          "objeto": "Tu traje (sistema térmico y energía)",
+          "icono": "astro32_0",
+          "fuente": "● DATO REAL · NASA LRO (Diviner)",
+          "mas": {
+            "titulo": "El frío de la sombra",
+            "texto": "El instrumento Diviner de la sonda LRO midió en cráteres del polo sur temperaturas de más de 200 °C bajo cero. En el juego, la protección térmica básica ya viene en tu traje espacial.",
+            "fuente": "● Dato real · NASA LRO (Diviner) — science.nasa.gov/mission/lro"
+          }
+        },
+        "C": {
+          "boton": "Radiación",
+          "explica": {
+            "cadete": "El Sol a veces lanza tormentas. Si hay una alerta, ¡vamos a un refugio!",
+            "explorador": "Las tormentas solares pueden aumentar la radiación en el espacio. Si recibimos una alerta importante, tendremos que buscar un refugio protegido.",
+            "especialista": "Las eyecciones de masa coronal y las partículas solares aumentan la radiación fuera de la Tierra. La Luna no tiene un campo magnético global ni una atmósfera gruesa: ante un evento intenso lo más seguro es un refugio blindado."
+          },
+          "recomendacion": "El módulo de protección puede ser útil, pero durante una emergencia intensa debemos alcanzar un refugio adecuado.",
+          "objeto": "Escudo de radiación · 5 kg",
+          "icono": "px_obj_escudo",
+          "fuente": "● DATO REAL: tormentas solares · ◆ SIMULACIÓN: alertas del juego",
+          "simulado": "◆ simulado",
+          "mas": {
+            "titulo": "Tormentas solares y DONKI",
+            "texto": "La base de datos DONKI de la NASA registra eyecciones de masa coronal. Registro usado en el juego: {fecha}, a {vel} km/s. Las alertas del juego son simuladas: no son pronósticos reales de la NASA.",
+            "fuente": ""
+          }
+        },
+        "D": {
+          "boton": "Terreno",
+          "explica": {
+            "cadete": "El suelo tiene rocas, pendientes y polvo. ¡Caminemos con cuidado!",
+            "explorador": "El terreno lunar puede ser irregular y el polvo puede dañar algunos equipos. Tendremos que explorar con cuidado.",
+            "especialista": "El regolito lunar es un polvo fino y filoso que se pega a todo y puede desgastar sellos y mecanismos. Las pendientes de los cráteres y las rocas obligan a planear la ruta con el mapa."
+          },
+          "recomendacion": "Observa el mapa y selecciona una ruta segura.",
+          "objeto": "Mapa de la sección «Señal»",
+          "icono": "stella_px",
+          "fuente": "● DATO REAL · NASA Moon / Moon Trek",
+          "mas": {
+            "titulo": "Polvo lunar y relieve",
+            "texto": "El polvo lunar (regolito) es muy fino y de bordes afilados porque en la Luna no hay viento ni agua que lo desgasten. En las misiones Apolo se pegaba a los trajes. NASA Moon Trek muestra mapas reales del relieve del polo sur.",
+            "fuente": "● Dato real · NASA Moon / Moon Trek — trek.nasa.gov/moon"
+          }
+        }
+      },
+      "senal": {
+        "titulo": "ANÁLISIS DE SEÑALES — COLLAR DE CHISPA",
+        "detecta": "¡Detecté una señal débil! Podría provenir del collar de Chispa, pero necesitamos comprobar su patrón.",
+        "activa": "¡La señal de Chispa sigue activa! Viene de una región de cráteres oscuros. Si quieres, consulta el mapa.",
+        "sin": "Estado: señal sin identificar",
+        "ok": "Estado: ✓ señal identificada · intentos: {n}",
+        "aviso": "◆ SIMULACIÓN DEL JUEGO: la señal y la ubicación de Chispa son parte de la historia.",
+        "iniciar": "INICIAR ANÁLISIS",
+        "ver_mapa": "VER MAPA (opcional)",
+        "explica": "Buscamos dos pulsos cortos y uno largo. Fíjate en el largo de cada pulso o toca ♪ para escucharlo.",
+        "mal": "¡Buen intento! Observa las señales nuevamente. Buscamos dos pulsos cortos y uno largo.",
+        "bien": "¡Excelente, astronauta! Hemos identificado la señal del collar de Chispa. Ahora sabemos que debemos prepararnos para explorar una región de cráteres oscuros.",
+        "mapa": "Esta es la región aproximada de Chispa (simulación). Aún no sabemos dónde está Itzel: ¡la búsqueda empieza aquí!"
+      },
+      "equipo": {
+        "titulo": "STELLA — ANÁLISIS DE EQUIPO",
+        "intro": "Toca un objeto para escuchar mi análisis. Cada kilogramo cuenta: ¿qué herramienta crees que nos ayudará?",
+        "obligatorio": "★ Obligatorio",
+        "opcional": "Opcional",
+        "leyenda": "✓ = ya está en la mochila",
+        "rec": {
+          "oxigeno": "El oxígeno adicional es indispensable para ayudar a Itzel y Chispa. Este objeto debe estar siempre en nuestra mochila.",
+          "linterna": "Los cráteres oscuros pueden dificultar la búsqueda. Una linterna podría ser muy útil.",
+          "radio": "La comunicación principal está dañada. Este equipo podría ayudarnos a repararla.",
+          "escudo": "La protección adicional puede ser útil, pero recuerda que un refugio adecuado es esencial frente a radiación solar intensa.",
+          "botiquin": "Si encontramos a Itzel lesionada, tener materiales de primeros auxilios puede ayudarnos.",
+          "comida": "Las provisiones podrían ser útiles si la misión se prolonga."
+        }
+      },
+      "mochila": {
+        "titulo": "EVALUACIÓN DE MOCHILA",
+        "vacia": "(mochila vacía)",
+        "peso": "Peso: {kg}/10 kg",
+        "libre": "Disponible: {kg} kg",
+        "o2_si": "✓ Oxígeno incluido",
+        "o2_no": "✗ Falta el oxígeno",
+        "cubre": "Nos ayuda con:",
+        "limita": "Limitaciones:",
+        "cubre_obj": {
+          "oxigeno": "✓ Reserva de aire",
+          "linterna": "✓ Cráteres oscuros",
+          "radio": "✓ Comunicación",
+          "escudo": "✓ Radiación (parcial)",
+          "botiquin": "✓ Primeros auxilios",
+          "comida": "✓ Misión larga"
+        },
+        "limita_obj": {
+          "oxigeno": "✗ Sin reserva de aire",
+          "linterna": "✗ Sin iluminación",
+          "radio": "✗ Sin radio de repuesto",
+          "escudo": "✗ Solo el refugio",
+          "botiquin": "✗ Sin primeros auxilios",
+          "comida": "✗ Sin provisiones"
+        },
+        "eval": {
+          "falta": "No podemos comenzar el rescate sin el tanque de oxígeno obligatorio.",
+          "exceso": "¡Capacidad excedida! Debes retirar objetos opcionales hasta respetar los 10 kg.",
+          "linterna": "¡Buen análisis, astronauta! Tenemos oxígeno adicional e iluminación. Estamos mejor preparados para explorar cráteres oscuros.",
+          "radio": "Podremos ayudar con oxígeno e intentar restablecer las comunicaciones, pero debemos considerar cómo explorar zonas sin luz.",
+          "escudo": "Tenemos protección adicional, pero necesitaremos alternativas para la iluminación y la comunicación.",
+          "base": "Tenemos la reserva de oxígeno. Cada kilogramo cuenta: ¿qué herramienta crees que nos ayudará?"
+        },
+        "boton": "REVISAR EQUIPO Y SALIR"
+      }
     }
   },
 
