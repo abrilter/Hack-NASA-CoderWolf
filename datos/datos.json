@@ -130,6 +130,13 @@
       "choque_pausa": 1
     }
   },
+  "viaje": {
+    "_nota": "Escena Viaje (alerta solar en pleno vuelo). Valores de juego. escudo: el escudo de la nave (sube la protección: proteccion() usa escudo/100 × 0.5). acelerar: llegar antes a la Luna gastando combustible del aterrizaje.",
+    "escudo": { "escudo": 30, "oxigeno": -6 },
+    "acelerar": { "horas_ganadas": 3, "combustible_factor": 0.7 },
+    "guardar": {}
+  },
+
   "rocas": {
     "_nota": "Escena Rocas (Rol 2). 'juego' son valores de juego. A pie, el oxígeno sube con los kg que carga (mochila + traje) y más con el traje blindado.",
     "texto": "En la Luna la gravedad es de 1.62 m/s²: la sexta parte que en la Tierra. Por eso todo pesa la sexta parte.",

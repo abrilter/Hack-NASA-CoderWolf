@@ -56,7 +56,7 @@ export class Intro extends Phaser.Scene {
     this.dialogo(typeof p === "string" ? { titulo: "Control de Misión", texto: p } : p);
   }
 
-  // Las escenas hijas (Senal) cambian estas tres
+  // Una escena hija puede cambiar estas tres (páginas, dibujo y qué pasa al terminar)
   paginas() { return estado.textos.intro; }
   dibujar(i) { [this.noche, this.alerta, this.problemas, this.control][i]?.call(this); }
   alTerminar() {

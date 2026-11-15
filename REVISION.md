@@ -40,11 +40,15 @@
 | 27 | Clave propia de api.nasa.gov (1000 consultas por hora) y **5 tormentas reales verificadas en DONKI** que iban hacia la Tierra: San Patricio 2015 (1000 km/s), Halloween 2021 (1109), mayo 2024 (1332), octubre 2024 (1509) y septiembre 2017 (1636). Sin dato en vivo se elige una al azar: cada partida puede tocar una distinta, de fácil a muy difícil | donki.js, datos.json |
 | 28 | El Final cierra la historia del Sol: «☀ Tu tormenta es real: …» (en vivo, famosa o guardada), con enlace a DONKI | Final.js, textos.json |
 | 29 | **Escena Rocas** (entre Huellas y Tormenta): rodear con el rover (más oxígeno, el rover sigue) o cruzar a pie (el oxígeno sube con los kg de mochila + traje y con el traje blindado; el rover se queda, así que no hay refugio bajo el rover en la Tormenta y el regreso es caminando). Se ve el peso que se carga («en la Luna todo pesa la sexta parte») y se pueden soltar objetos antes de cruzar. Dato real: gravedad lunar 1.62 m/s² (NASA Moon Fact Sheet). Escribe `estado.misiones.rocas`; también entra en la bitácora del Final y en `pruebas/balance.html` (CME 1332 km/s: 90 de 104 equipos ganables; rodear 49 %, a pie 38 %) | src/escenas/Rocas.js (nueva), simulacion.js, datos.json, textos.json, main.js ⚙️, config.js ⚙️ (`ORDEN`), Final.js |
+| 30 | Títulos sin número: «Aterrizaje» y «La mochila» (antes «Misión 1/2 · …») | textos.json |
+| 31 | Escena **Senal** quitada: su minijuego ya vive en el Centro de Control (STELLA). `estado.mision1` queda por compatibilidad | Senal.js (borrada), main.js ⚙️, comentarios |
+| 32 | Rocas a **pantalla completa**: la ilustración ocupa todo el ancho; la carga y el detalle van en paneles sobre el cielo y las opciones abajo (ya no repite el formato de la Tormenta) | Rocas.js |
+| 33 | Escena **Viaje** rehecha: «¡Alerta solar!» en pleno vuelo con la nube real (DONKI o famosa), entre Equipo y Aterrizaje. Tres opciones: cargar el escudo (+30 escudo, −6 O2), acelerar (aterrizas 3 h antes, con 70 % del combustible) o guardar el aire. La mejor depende del Sol del día: con 1700 km/s conviene el escudo. Desde aquí la tormenta de la partida queda fija. Balance (CME 1332): 94 de 104 equipos ganables; las tres opciones entre 38 % y 47 % | Viaje.js, simulacion.js, Aterrizaje (combustible), datos.json, textos.json, config.js ⚙️ (`ORDEN`), Final, balance.html |
 
 ### Pendiente
 - Datos que siguen de ejemplo (son valores de juego): rutas y radiación (puntos de juego). Agregar más tormentas famosas verificadas a `cme_historicas` con `pruebas/tormentas.html`.
 - Posición dibujada redondeada al pixel (P2): obliga a separar la posición lógica de la dibujada en Equipo, CentroControl y Exterior; mucho riesgo para un temblor de 1 pixel.
-- Viaje y Senal siguen fuera del recorrido, y los campos reservados del estado (`hielo_kg`, `chispaEncontrado`, …) siguen sin uso: son de otras personas del equipo, no se borraron.
+- Los campos reservados del estado (`hielo_kg`, `chispaEncontrado`, …) siguen sin uso.
 - TODO de arte (Rol 3): fuente pixel y PNG.
 
 ### Lista de verificación final

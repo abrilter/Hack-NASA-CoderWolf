@@ -336,7 +336,7 @@ export class Aterrizaje extends Phaser.Scene {
       texto(this, ANCHO / 2 + 40, 92, this.t.tu_nave
         .replace("{nave}", op?.nombre || "Nave")
         .replace("{empuje}", empuje)
-        .replace("{combustible}", this.naveDatos.combustible), { tam: 6, ancho: 204, color: "#ffcd75" }),
+        .replace("{combustible}", Math.round(this.naveDatos.combustible * (estado.misiones?.viaje?.combustibleFactor ?? 1))), { tam: 6, ancho: 204, color: "#ffcd75" }),
       texto(this, ANCHO / 2 + 40, 112, this.t.elige, { tam: 7 })
     ];
     ["facil", "normal", "dificil"].forEach((id, i) => {
@@ -360,7 +360,8 @@ export class Aterrizaje extends Phaser.Scene {
     this.dificultad = id;
     this.dif = DIFICULTAD[id];
     this.vy = this.dif.vel0;
-    this.combustibleMax = Math.round(this.naveDatos.combustible * this.dif.combustible);
+    // si en el Viaje se aceleró, llega con menos combustible
+    this.combustibleMax = Math.round(this.naveDatos.combustible * this.dif.combustible * (estado.misiones?.viaje?.combustibleFactor ?? 1));
     this.combustible = this.combustibleMax;
     this.empuje = EMPUJE_BASE * this.naveDatos.agilidad;
     this.colocarNave(SUELO - this.dif.altura * PX_POR_METRO);

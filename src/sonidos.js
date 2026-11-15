@@ -1,5 +1,5 @@
 // Sonidos del juego hechos con Web Audio (sin archivos). Dueño: Rol 3.
-// Lo usan CentroControl, Senal y Exterior: sonar(escena, "bien").
+// Lo usan CentroControl y Exterior: sonar(escena, "bien").
 // No lee ni escribe el estado.
 
 // Un tono corto: frecuencia f (Hz), empieza en ini s, dura dur s
