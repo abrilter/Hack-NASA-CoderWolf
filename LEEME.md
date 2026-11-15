@@ -9,6 +9,9 @@ Juego web en pixel art (Phaser 3) para el reto Junior Astronaut Mission Trainer,
 
 No usen F5 ni doble clic en el archivo: el navegador bloquea la lectura de los datos.
 
+## Barra de pruebas (saltar escenas)
+Abran `index.html?dev=1&sinred=1`. Arriba a la derecha aparece una barra con la escena actual y el oxígeno, **◀** (escena anterior), **Saltar ▶** (siguiente en el orden de la historia) y una lista para ir directo a cualquier escena. Los niños no la ven: solo aparece con `?dev=1` o en modo prueba. Al saltar, si faltan traje, nave o mochila se usan los de prueba, y si el oxígeno llegó a 0 se recarga.
+
 ## Modo prueba (abrir una escena sola)
 Agreguen `?escena=NombreEscena` a la dirección. Ejemplos:
 - `index.html?escena=Ruta`: abre la Ruta con el estado de prueba (traje ligero, nave pequeña, mochila con oxígeno y escudo).

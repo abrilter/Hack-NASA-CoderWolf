@@ -17,6 +17,7 @@ import { Final } from "./escenas/Final.js";
 
 import { estado } from "./estado.js";
 import { ORDEN } from "./config.js";
+import { barraDePruebas } from "./pruebas.js";
 
 // Derrota a mitad de partida: si el oxígeno llegó a 0 o la radiación a 100,
 // cualquier cambio de escena después de la Carta va directo al Final
@@ -43,7 +44,7 @@ class ZoomPixel extends Phaser.Plugins.ScenePlugin {
   }
 }
 
-new Phaser.Game({
+const juego = new Phaser.Game({
   type: Phaser.AUTO,
   parent: "juego",
   width: ANCHO * ZOOM,
@@ -56,3 +57,6 @@ new Phaser.Game({
   // Orden de la historia (ver Guía de arranque)
   scene: [Carga, Intro, Carta, Equipo, Aterrizaje, CentroControl, Exterior, Huellas, CraterHelado, Senal, Viaje, Ruta, Rescate, Final]
 });
+
+// Barra para saltar escenas al probar (solo con ?dev=1 o ?escena=...)
+barraDePruebas(juego);
